@@ -1,0 +1,214 @@
+<div class="modal fade" id="modalAddProduct" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+            <form action="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCenterTitle">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameWithTitle" class="form-label">Name</label>
+                            <input type="text" id="nameWithTitle" class="form-control" placeholder="Enter Name" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mb-3">
+                            <label for="nameWithTitle" class="form-label">Description</label>
+                            <textarea id="description" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col mb-3">
+                            <label for="emailWithTitle" class="form-label">Color</label>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="checklistDropdown"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select Color
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="checklistDropdown">
+                                    <li class="m-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="item1">
+                                            <label class="form-check-label" for="item1">Item 1</label>
+                                        </div>
+                                    </li>
+                                    <li class="m-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="item2">
+                                            <label class="form-check-label" for="item2">Item 2</label>
+                                        </div>
+                                    </li>
+                                    <li class="m-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="item3">
+                                            <label class="form-check-label" for="item3">Item 3</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col mb-3">
+                            <label for="dobWithTitle" class="form-label">Price</label>
+                            <input type="text" id="dobWithTitle" class="form-control" placeholder="0.00" />
+                        </div>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col mb-0">
+                            <label for="emailWithTitle" class="form-label">Category</label>
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle" type="button" id="checklistDropdown"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    Select Category
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="checklistDropdown">
+                                    <li class="m-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="item1">
+                                            <label class="form-check-label" for="item1">Item 1</label>
+                                        </div>
+                                    </li>
+                                    <li class="m-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="item2">
+                                            <label class="form-check-label" for="item2">Item 2</label>
+                                        </div>
+                                    </li>
+                                    <li class="m-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="item3">
+                                            <label class="form-check-label" for="item3">Item 3</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col mb-0">
+                            <label for="dobWithTitle" class="form-label">Stock</label>
+                            <input type="number" id="dobWithTitle" class="form-control" value="1" placeholder="0"
+                                min="0" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Select image up to 3</label>
+                            <input type="file" class="form-control" name="image" accept="image/3"
+                                aria-describedby="emailHelp" multiple>
+                        </div>
+                        <div class="col mb-0">
+                            <label for="dobWithTitle" class="form-label">Discount in %</label>
+                            <input type="number" id="dobWithTitle" class="form-control" value="1" placeholder="0"
+                                min="0" max="70" />
+                        </div>
+                        <div class="col mb-0">
+                            <label for="dobWithTitle" class="form-label">Status</label>
+                            <input type="text" id="dobWithTitle" class="form-control" value="new" placeholder="new" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                    <button type="button" class="btn btn-primary" onclick="addProduct()">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function addProduct() {
+        var name = document.getElementById('nameWithTitle').value;
+        var description = document.getElementById('description').value;
+        var color = ''; // Get selected color value
+        var price = document.getElementById('dobWithTitle').value;
+        var category = ''; // Get selected category value
+        var stock = document.getElementById('dobWithTitle').value;
+        var discount = document.getElementById('dobWithTitle').value;
+        var status = document.getElementById('dobWithTitle').value;
+
+        var data = {
+            name: name,
+            description: description,
+            color: color,
+            price: price,
+            category: category,
+            stock: stock,
+            discount: discount,
+            status: status
+        };
+
+        $.ajax({
+            url: "/admin/addProduct",
+            data: data,
+            method: "POST",
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                }
+            }
+        });
+
+        var modal = document.getElementById('modalAddProduct');
+        var bootstrapModal = new bootstrap.Modal(modal);
+        bootstrapModal.hide();
+    }
+</script>
+
+
+<script>
+    function addProduct() {
+        // Retrieve the checked values from the color dropdown
+        var colorDropdown = document.getElementById('checklistDropdown');
+        var checkboxes = colorDropdown.querySelectorAll('input[type="checkbox"]:checked');
+        var selectedColors = [];
+
+        checkboxes.forEach(function (checkbox) {
+            selectedColors.push(checkbox.value);
+        });
+
+        // Rest of the code...
+
+        var data = {
+            name: name,
+            description: description,
+            colors: selectedColors,
+            price: price,
+            category: category,
+            stock: stock,
+            discount: discount,
+            status: status
+        };
+
+        // Rest of the code...
+    }
+
+</script>
+
+<div class="dropdown">
+    <button class="btn btn-light dropdown-toggle" type="button" id="productColorButton" data-bs-toggle="dropdown"
+        aria-expanded="false">
+        Select Color
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="productColorButton" id="productColor">
+        <li class="m-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="red" id="item1">
+                <label class="form-check-label" for="item1">Item 1</label>
+            </div>
+        </li>
+        <li class="m-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="green" id="item2">
+                <label class="form-check-label" for="item2">Item 2</label>
+            </div>
+        </li>
+        <li class="m-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="blue" id="item3">
+                <label class="form-check-label" for="item3">Item 3</label>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,78 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+
+<% if(message){
+  %>
+  <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+  <%= message %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+  <%
+} %>
+
+<nav class="layout-navbar container-xxl navbar navbar-expand-xl align-items-center bg-navbar-theme shadow rounded mb-4"
+        id="layout-navbar">
+        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+            </a>
+        </div>
+
+        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+            admin/productBrand/addBrand
+
+            
+
+        </div>
+    </nav>
+
+<div class="col-xxl">
+    <div class="card mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        
+        <h5 class="mb-0">Add Brand</h5>
+        <small class="text-muted float-end">Default label</small>
+      </div>
+      <div class="card-body">
+        <form id="addColorForm" action="addColor" method="POST">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="colorName">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="colorName" id="colorName" placeholder="enter the color" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="colorDescription">Description</label>
+            <div class="col-sm-10">
+              <textarea
+                id="colorDescription"
+                name="colorDescription"
+                class="form-control"
+                placeholder="description about color"
+                aria-label="description about color"
+                aria-describedby="basic-icon-default-message2"
+              ></textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="colorName">image</label>
+            <div class="col-sm-10">
+                <input type="file" class="form-control" name="image">
+            </div>
+          </div>
+          
+          
+          <div class="row justify-content-end">
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-primary ">Submit</button>
+            </div>
+          </div>
+          
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+  
+<%-include('../partials/adminPartials/adminFooter')-%>

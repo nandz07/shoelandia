@@ -1,0 +1,141 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+
+<div class="col-xxl">
+    <div class="card mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">Basic Layout</h5>
+        <small class="text-muted float-end">Default label</small>
+      </div>
+      <div class="card-body">
+        <form action="admin/addproduct" method="POST">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="productName">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" name="productName" id="productName" placeholder="abcd..." />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="productDescription">Description</label>
+            <div class="col-sm-10">
+              <textarea
+                id="productDescription"
+                name="productDescription"
+                class="form-control"
+                placeholder="This is a walking shoe...."
+                aria-label="This is a walking shoe...."
+                aria-describedby="basic-icon-default-message2"
+              ></textarea>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="basic-default-company">Color</label>
+            <div class="dropdown col-sm-4">
+                <button class="btn btn-light dropdown-toggle" type="button" id="productColorButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Color
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="productColorButton" name="productColor" id="productColor">
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="red" id="item1">
+                            <label class="form-check-label" for="item1">Item 1</label>
+                        </div>
+                    </li>
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="green" id="item2">
+                            <label class="form-check-label" for="item2">Item 2</label>
+                        </div>
+                    </li>
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="blue" id="item3">
+                            <label class="form-check-label" for="item3">Item 3</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <label class="col-sm-2 col-form-label" for="basic-default-company">product Category</label>
+            <div class="dropdown col-sm-4">
+                <button class="btn btn-light dropdown-toggle" type="button" id="productCategoryButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Category
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="productCategoryButton" name="productCategory" id="productCategory">
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="red" id="item1">
+                            <label class="form-check-label" for="item1">Item 1</label>
+                        </div>
+                    </li>
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="green" id="item2">
+                            <label class="form-check-label" for="item2">Item 2</label>
+                        </div>
+                    </li>
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="blue" id="item3">
+                            <label class="form-check-label" for="item3">Item 3</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="productPrice">Price</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" name="productPrice" id="productPrice" value="0" placeholder="0" min="0"/>
+            </div>
+            <label class="col-sm-2 col-form-label" for="productStock">Stock</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" name="productStock" value="0" id="productStock" placeholder="0" min="0"/>
+            </div>
+          </div>
+          <div class="row mb-3">
+            
+            <label class="col-sm-2 col-form-label" for="basic-default-company">product Brand</label>
+            <div class="dropdown col-sm-4">
+                <button class="btn btn-light dropdown-toggle" type="button" id="productBrandButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Select Brand
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="productBrandButton" name="productBrand" id="productBrand">
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="red" id="item1">
+                            <label class="form-check-label" for="item1">Item 1</label>
+                        </div>
+                    </li>
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="green" id="item2">
+                            <label class="form-check-label" for="item2">Item 2</label>
+                        </div>
+                    </li>
+                    <li class="m-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="blue" id="item3">
+                            <label class="form-check-label" for="item3">Item 3</label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <label class="col-sm-2 col-form-label" for="productDis">discount in %</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" name="productDis" id="productDis" value="0" placeholder="0" min="0" max="100"/>
+            </div>
+          </div>
+          
+          <div class="row justify-content-end">
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-primary ">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<%-include('../partials/adminPartials/adminFooter')-%>
