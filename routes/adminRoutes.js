@@ -18,10 +18,14 @@ router.get('/addColor', colorController.addColorAdminGet);
 router.get('/productBrand', brandController.productBrandAdminGet);
 router.get('/addBrand', brandController.addBrandAdminGet);
 router.get('/productCategory', categoryController.productCategoryAdminGet);
+router.get('/editCategory/:id', categoryController.editCategoryAdminGet);
+router.get('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
 
 // post
 router.post('/addProduct', productController.addProductAdminGet);
 router.post('/addColor', colorController.addColorAdminPost);
+router.post('/addCategory', categoryController.addCategoryAdminPost);
+router.post('/editCategoryPost/:id', categoryController.editCategoryAdminPost);
 
 module.exports=router

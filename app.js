@@ -28,7 +28,7 @@ app.use(nocache())
 
 //load static assets
 app.use('/static',express.static(path.join(__dirname,'public')))
-// app.use('/assets',express.static(path.join(__dirname,'public/assets')))
+app.use('/assets',express.static(path.join(__dirname,'public/assets')))
 
 app.use(express.static('public/users'));
 app.use(express.static('public/admin'));
@@ -53,5 +53,6 @@ app.use("",require('./routes/userRoutes'))
 app.use("/admin",require('./routes/adminRoutes'))
 
 app.listen(PORT,()=>{
-    console.log(`server started at http://localhost/${PORT}`);
+    console.log(`server started at http://localhost:${PORT}`);
+   // http://localhost:3000/
 })

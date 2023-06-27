@@ -1,0 +1,42 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+
+<div class="col-xxl">
+    <div class="card mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">Basic Layout</h5>
+        <small class="text-muted float-end">Default label</small>
+      </div>
+      <div class="card-body">
+        <form id="addCategoryForm" action="/admin/editCategoryPost/<%= data._id %>" method="POST">
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="categoryName">Category</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" value="<%= data.categoryName %>" name="categoryName" id="categoryName" placeholder="abcd..." />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label class="col-sm-2 col-form-label" for="categoryDescription">Description</label>
+            <div class="col-sm-10">
+              <textarea
+                id="categoryDescription"
+                name="categoryDescription"
+                class="form-control"
+                
+                placeholder="This is a walking shoe...."
+                aria-label="This is a walking shoe...."
+                aria-describedby="basic-icon-default-message2"
+              ><%= data.categoryDescription %></textarea>
+            </div>
+          </div>
+          
+          <div class="row justify-content-end">
+            <div class="col-sm-2">
+              <button type="submit" class="btn btn-primary ">Submit</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<%-include('../partials/adminPartials/adminFooter')-%>
