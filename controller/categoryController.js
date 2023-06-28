@@ -3,7 +3,7 @@ const Category = require('../models/categoryModel');
 const productCategoryAdminGet= async(req,res)=>{
     try {
         // res.send('hai')
-        const category=await Category.find({trashBin:false}).exec()
+        const category=await Category.find().exec()
         res.render('admin/productCategory',{category:category,message:''})
     } catch (error) {
         
@@ -14,7 +14,7 @@ const addCategoryAdminPost = async (req, res) => {
     try {
         
         let { categoryName, categoryDescription } = req.body;
-        const category=await Category.find({trashBin:false}).exec()
+        const category=await Category.find().exec()
         if(categoryName.trim()=='' || categoryDescription.trim()==''){
           return  res.render('admin/productCategory',{message:`can't store null value`,status:`danger`,category:category})
         }
@@ -28,10 +28,11 @@ const addCategoryAdminPost = async (req, res) => {
             const categoryUser = new Category({
                 categoryName,
                 categoryDescription,
-                createdOn: Date.now()
+                // createdOn: Date.now(),
+                // updatedOn: Date.now()
               });
             const categorySave=await categoryUser.save();
-            const category=await Category.find({trashBin:false}).exec()
+            const category=await Category.find().exec()
             if(categorySave){
                 console.log(categorySave);
                 res.render('admin/productCategory',{message:`Category ${categoryName} is added sucessfully`,status:'success',category:category})
@@ -64,9 +65,10 @@ const addCategoryAdminPost = async (req, res) => {
         console.log(categoryDescription);
             const categoryUpdate=await Category.findByIdAndUpdate(id, {
                 categoryName:categoryName,
-                categoryDescription:categoryDescription
+                categoryDescription:categoryDescription,
+                updatedOn:Date.now()
             }).exec();
-            const category=await Category.find({trashBin:false}).exec()
+            const category=await Category.find().exec()
             if(categoryUpdate){
                 console.log(categoryUpdate);
                 res.render('admin/productCategory',{message:`Category ${categoryName} is updated sucessfully`,status:'success',category:category})
@@ -79,22 +81,58 @@ const addCategoryAdminPost = async (req, res) => {
         console.log(error);
     }
   }
+  const unlistCategoryAdminGet= async(req,res)=>{
+    try {
+        const id=req.params.id
+            const categoryUpdate=await Category.findByIdAndUpdate(id, {
+                status:false,
+                updatedOn:Date.now()
+            }).exec();
+            const category=await Category.find().exec()
+            if(categoryUpdate){
+                console.log(categoryUpdate);
+                res.render('admin/productCategory',{message:`unlisted sucessfully`,status:'success',category:category})
+            }else{
+                res.render('admin/productCategory',{message:`failed to add color`,status:'danger'})
+            }
+
+    } catch (error) {
+        console.log(error);
+    }
+  }
+  const listCategoryAdminGet= async(req,res)=>{
+    try {
+        const id=req.params.id
+            const categoryUpdate=await Category.findByIdAndUpdate(id, {
+                status:true,
+                updatedOn:Date.now()
+            }).exec();
+            const category=await Category.find().exec()
+            if(categoryUpdate){
+                console.log(categoryUpdate);
+                res.render('admin/productCategory',{message:`listed sucessfully`,status:'success',category:category})
+            }else{
+                res.render('admin/productCategory',{message:`failed to add color`,status:'danger'})
+            }
+
+    } catch (error) {
+        console.log(error);
+    }
+  }
 
   const deleteCategoryAdminGet=async (req,res)=>{
     try {
-        // res.send('hai')
-        const id = req.params.id
-        const categoryUpdate=await Category.findByIdAndUpdate(id, {
-            trashBin:true
-        }).exec();
+        const id = req.query.id
+        console.log(id);
+        const categoryUpdate=await Category.findByIdAndRemove(id).exec();
         req.session.message = {
             type: 'info',
             message: 'user deleted successfully'
         }
-        const category=await Category.find({trashBin:false}).exec()
-        res.render('admin/productCategory',{category:category,message:'moved to trash bin',status:'danger'})
+        const category=await Category.find().exec()
+        res.render('admin/productCategory',{category:category,message:'deleted successfully',status:'danger'})
     } catch (error) {
-        
+        console.log(error);
     }
   }
   
@@ -103,5 +141,7 @@ module.exports={
     addCategoryAdminPost,
     editCategoryAdminGet,
     editCategoryAdminPost,
-    deleteCategoryAdminGet
+    deleteCategoryAdminGet,
+    unlistCategoryAdminGet,
+    listCategoryAdminGet
 }

@@ -8,27 +8,21 @@ const categoryschema = mongoose.Schema({
     type: String,
     required: true,
   },
-  status: {
-    type: Boolean,
-    default: false,
-  },
   createdOn: {
     type: Date,
-    required: true,
+    require: true,
+    default: Date.now()
   },
   updatedOn: {
     type: Date,
-    default: null
+    require: true,
+    default: Date.now()
   },
-  trashBin: {
+  status: {
     type: Boolean,
-    default: false
+    default: true
   }
 });
 
-categoryschema.pre('save', function (next) {
-  this.updatedOn = new Date();
-  next();
-});
 module.exports = mongoose.model("Category", categoryschema);
 
