@@ -1,0 +1,106 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+<% if(message){%>
+  <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+  <%= message %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+  <%
+} %>
+
+  <!-- Bootstrap Table with Header - Footer -->
+  <div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <h5 class="mb-0">Product Size</h5>
+      <small class="text-muted float-end"><a type="button" href="/admin/addProductSize" class="btn btn-primary">
+          Add
+      </a></small>
+    </div>
+
+    <div class="table-responsive text-nowrap container table">
+      <% if (size !='' ) { %>
+        <table class="table table-border-bottom-1 table-hover" id="categoryTable">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Size</th>
+              <th>Created On</th>
+              <th>updated On</th>
+              <th>status</th>
+              <th>action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% size.forEach((row, index)=> { %>
+              <tr >
+                <td>
+                  <%= index + 1 %>
+                </td>
+                <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                  <strong>
+                    <%= row.size %>
+                  </strong>
+                </td>
+
+                <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+                  const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+                  const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day}
+                  ${month} ${year} ${hours}:${minutes}`; return formattedDate } %>
+                  
+                  <td>
+                    <%= getDate(row.createdOn) %>
+                  </td>
+
+                  <td>
+                    <%= getDate(row.updatedOn) %>
+                  </td>
+                  <td>
+                    <% if(row.status) {%>
+                      <a class="badge bg-label-success me-1" href="/admin/unlistSize/<%= row._id %>"><i
+                          class='bx bx-list-plus'></i>
+                        listed</a>
+                      <% }else{%>
+                        <a class="badge bg-label-danger me-1" href="/admin/listSize/<%= row._id %>"><i
+                            class='bx bx-list-minus'></i>
+                          unlisted</a>
+                        <% } %>
+                  </td>
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/admin/editProductSize/<%= row._id %>"><i
+                            class="bx bx-edit-alt me-1"></i> Edit</a>
+                        <a class="dropdown-item btn" onclick="remove('<%= row._id %>')">
+                          <i class="bx bx-trash me-1"></i>
+                          Delete
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+          </tbody>
+          <tfoot class="table-border-bottom-0">
+            <tr>
+              <th>ID</th>
+              <th>Size</th>
+              <th>Created On</th>
+              <th>updated On</th>
+              <th>status</th>
+              <th>action</th>
+            </tr>
+          </tfoot>
+        </table>
+        <% } else { %>
+          <h1 class="text-center text-secondary mt-5">
+            No Product Size found in the database
+          </h1>
+          <% } %>
+    </div>
+    
+  </div>
+
+  <%-include('../partials/adminPartials/adminFooter')-%>

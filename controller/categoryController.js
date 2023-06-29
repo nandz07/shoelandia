@@ -28,8 +28,8 @@ const addCategoryAdminPost = async (req, res) => {
             const categoryUser = new Category({
                 categoryName,
                 categoryDescription,
-                // createdOn: Date.now(),
-                // updatedOn: Date.now()
+                createdOn: Date.now(),
+                updatedOn: Date.now()
               });
             const categorySave=await categoryUser.save();
             const category=await Category.find().exec()

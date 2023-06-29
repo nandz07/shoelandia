@@ -1,10 +1,11 @@
-const express=require('express')
-const router=express.Router()
-const adminController=require('../controller/adminController')
-const productController=require('../controller/productController')
-const colorController=require('../controller/colorController')
-const brandController=require('../controller/brandsController')
-const categoryController=require('../controller/categoryController')
+const express = require('express')
+const router = express.Router()
+const adminController = require('../controller/adminController')
+const productController = require('../controller/productController')
+const colorController = require('../controller/colorController')
+const brandController = require('../controller/brandsController')
+const categoryController = require('../controller/categoryController')
+const sizeController = require('../controller/sizeController')
 
 
 
@@ -23,6 +24,13 @@ router.get('/deleteCategory', categoryController.deleteCategoryAdminGet);
 router.get('/unlistCategory/:id', categoryController.unlistCategoryAdminGet);
 router.get('/listCategory/:id', categoryController.listCategoryAdminGet);
 
+router.get('/productSize', sizeController.productSizeAdminGet);
+router.get('/addProductSize', sizeController.addSizeAdminGet);
+router.get('/editProductSize/:id', sizeController.editProductSizeAdminGet);
+router.get('/listSize/:id', sizeController.listSizeAdminGet);
+router.get('/unlistSize/:id', sizeController.unlistSizeAdminGet);
+// router.get('/deleteProductSize', sizeController.deleteCategoryAdminGet);
+
 
 // post
 router.post('/addProduct', productController.addProductAdminGet);
@@ -31,4 +39,7 @@ router.post('/addCategory', categoryController.addCategoryAdminPost);
 router.post('/editCategoryPost/:id', categoryController.editCategoryAdminPost);
 router.post('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
-module.exports=router
+router.post('/addProductSize', sizeController.addSizeAdminPost);
+router.post('/editProductSize/:id', sizeController.editProductSizeAdminPost);
+
+module.exports = router
