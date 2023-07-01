@@ -1,139 +1,70 @@
 <%-include('../partials/adminPartials/adminHeader')-%>
 
+<% if(message){
+    %>
+    <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  
+    <%
+  } %>
+
 <div class="col-xxl">
     <div class="card mb-4">
       <div class="card-header d-flex align-items-center justify-content-between">
-        <h5 class="mb-0">Basic Layout</h5>
-        <small class="text-muted float-end">Default label</small>
+        <h5 class="mb-0">Add product</h5>
+        <small class="text-muted float-end">enter new product</small>
       </div>
       <div class="card-body">
-        <form action="admin/addproduct" method="POST">
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="productName">Name</label>
-            <div class="col-sm-10">
-              <input type="text" class="form-control" name="productName" id="productName" placeholder="abcd..." />
+        <form action="/admin/addproduct" method="POST" id="productForm" enctype="multipart/form-data" >
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="productName">Name</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" name="productName" id="productName" placeholder="Enter product name" required/>
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="productDescription">Description</label>
-            <div class="col-sm-10">
-              <textarea
-                id="productDescription"
-                name="productDescription"
-                class="form-control"
-                placeholder="This is a walking shoe...."
-                aria-label="This is a walking shoe...."
-                aria-describedby="basic-icon-default-message2"
-              ></textarea>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="productDescription">Description</label>
+              <div class="col-sm-10">
+                <textarea id="productDescription" name="productDescription" class="form-control" placeholder="This is a walking shoe...." aria-label="This is a walking shoe...." aria-describedby="basic-icon-default-message2"></textarea>
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="basic-default-company">Color</label>
-            <div class="dropdown col-sm-4">
-                <button class="btn btn-light dropdown-toggle" type="button" id="productColorButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Color
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="productColorButton" name="productColor" id="productColor">
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="red" id="item1">
-                            <label class="form-check-label" for="item1">Item 1</label>
-                        </div>
-                    </li>
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="green" id="item2">
-                            <label class="form-check-label" for="item2">Item 2</label>
-                        </div>
-                    </li>
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="blue" id="item3">
-                            <label class="form-check-label" for="item3">Item 3</label>
-                        </div>
-                    </li>
-                </ul>
+            <div class="row mb-3">
+              <% if(category && category.length > 0){ %>
+              <label class="col-sm-2 col-form-label" for="productCategory">Product Category</label>
+              <div class="dropdown col-sm-4">
+                <select class="form-select" id="productCategory" name="productCategory" aria-label="Default select example">
+                  <option selected value="">Select a category</option>
+                  <% category.forEach((row, index) => { %>
+                  <option value="<%= row.categoryName %>"><%= row.categoryName %></option>
+                  <% }) %>
+                </select>
+              </div>
+              <% } %>
+              <label class="col-sm-2 col-form-label" for="productStock">Stock</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" name="productStock" value="" id="productStock" placeholder="0" min="0"/>
+              </div>
             </div>
-            <label class="col-sm-2 col-form-label" for="basic-default-company">product Category</label>
-            <div class="dropdown col-sm-4">
-                <button class="btn btn-light dropdown-toggle" type="button" id="productCategoryButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Category
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="productCategoryButton" name="productCategory" id="productCategory">
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="red" id="item1">
-                            <label class="form-check-label" for="item1">Item 1</label>
-                        </div>
-                    </li>
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="green" id="item2">
-                            <label class="form-check-label" for="item2">Item 2</label>
-                        </div>
-                    </li>
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="blue" id="item3">
-                            <label class="form-check-label" for="item3">Item 3</label>
-                        </div>
-                    </li>
-                </ul>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="productPrice">Price</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" name="productPrice" id="productPrice" value="" placeholder="0" min="0"/>
+              </div>
+              <label for="productImage" class="col-sm-2 col-form-label">Select image(s) </label>
+              <div class="col-sm-4">
+                <input type="file" class="form-control" name="image" id="productImage" aria-describedby="emailHelp" multiple required/>
+              </div>
             </div>
-          </div>
-          <div class="row mb-3">
-            <label class="col-sm-2 col-form-label" for="productPrice">Price</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" name="productPrice" id="productPrice" value="0" placeholder="0" min="0"/>
-            </div>
-            <label class="col-sm-2 col-form-label" for="productStock">Stock</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" name="productStock" value="0" id="productStock" placeholder="0" min="0"/>
-            </div>
-          </div>
-          <div class="row mb-3">
             
-            <label class="col-sm-2 col-form-label" for="basic-default-company">product Brand</label>
-            <div class="dropdown col-sm-4">
-                <button class="btn btn-light dropdown-toggle" type="button" id="productBrandButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Select Brand
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="productBrandButton" name="productBrand" id="productBrand">
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="red" id="item1">
-                            <label class="form-check-label" for="item1">Item 1</label>
-                        </div>
-                    </li>
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="green" id="item2">
-                            <label class="form-check-label" for="item2">Item 2</label>
-                        </div>
-                    </li>
-                    <li class="m-2">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="blue" id="item3">
-                            <label class="form-check-label" for="item3">Item 3</label>
-                        </div>
-                    </li>
-                </ul>
+            <div class="row justify-content-end">
+              <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
             </div>
-            <label class="col-sm-2 col-form-label" for="productDis">discount in %</label>
-            <div class="col-sm-4">
-              <input type="number" class="form-control" name="productDis" id="productDis" value="0" placeholder="0" min="0" max="100"/>
-            </div>
-          </div>
+          </form>
           
-          <div class="row justify-content-end">
-            <div class="col-sm-2">
-              <button type="submit" class="btn btn-primary ">Submit</button>
-            </div>
-          </div>
-        </form>
       </div>
     </div>
   </div>

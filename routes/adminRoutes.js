@@ -7,13 +7,36 @@ const brandController = require('../controller/brandsController')
 const categoryController = require('../controller/categoryController')
 const sizeController = require('../controller/sizeController')
 
-
+// image storage
+const multer = require('multer');
+const fs=require('fs')
+const path=require('path')
+const storage = multer.diskStorage({
+    destination:function(req,file,cb){
+        let dir=path.join(__dirname,'../public/admin/productImages')
+        if(!fs.existsSync(dir)){
+            fs.mkdirSync(dir)
+        }
+        cb(null,dir)
+    },
+    filename:function(req,file,cb){
+        const name = Date.now()+'-'+file.originalname;
+        cb(null,name);
+    }
+})
+const upload = multer({storage:storage});
 
 // get
 router.get('/', adminController.dashboardAdminGet);
 router.get('/banner', adminController.bannerAdminGet);
+
 router.get('/productDetails', productController.productDetailsAdminGet);
 router.get('/addProduct', productController.addProductAdminGet);
+router.get('/editProductDetails/:id', productController.editProductDetailsAdminGet);
+router.get('/unlistProduct/:id', productController.unlistProductDetailsAdminGet);
+router.get('/listProduct/:id', productController.listProductDetailsAdminGet);
+
+
 router.get('/productColor', colorController.productColorAdminGet);
 router.get('/addColor', colorController.addColorAdminGet);
 router.get('/productBrand', brandController.productBrandAdminGet);
@@ -33,7 +56,9 @@ router.get('/unlistSize/:id', sizeController.unlistSizeAdminGet);
 
 
 // post
-router.post('/addProduct', productController.addProductAdminGet);
+router.post('/addProduct',upload.array('image',10), productController.addProductAdminPost);
+router.post('/editproductPost/:id',upload.array('image',10), productController.editProductDetailsAdminPost);
+
 router.post('/addColor', colorController.addColorAdminPost);
 router.post('/addCategory', categoryController.addCategoryAdminPost);
 router.post('/editCategoryPost/:id', categoryController.editCategoryAdminPost);

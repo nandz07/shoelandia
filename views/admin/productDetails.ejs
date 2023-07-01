@@ -1,118 +1,161 @@
 <%-include('../partials/adminPartials/adminHeader')-%>
+<% if(message){%>
+  <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+  <%= message %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 
+  <%
+} %>
 
+  <!-- Bootstrap Table with Header - Footer -->
+  <div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <h5 class="mb-0">Product Size</h5>
+      <small class="text-muted float-end"><a type="button" href="/admin/addProduct" class="btn btn-primary">
+          Add
+      </a></small>
+    </div>
 
+    <div class="table-responsive text-nowrap container table">
+      <% if (product !='' ) { %>
+        <table class="table table-border-bottom-1 table-hover" id="categoryTable">
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>description</th>
+                <th>price</th>
+                <th>category</th>
+                <th>image</th>
+                <th>stock</th>
+                <th>status</th>
+                <th>Created on</th>
+                <th>updated on</th>
+                <th>action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% product.forEach((row, index)=> { %>
+              <tr >
+                <td>
+                  <%= index + 1 %>
+                </td>
+                <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                  <strong>
+                    <%= row.productName %>
+                  </strong>
+                </td>
+                <td>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalScrollable<%= index %>"
+                        data-mydata="<%= row.productName %>">more</a>
+                </td>
+                <td>
+                    <%= row.price %>
+                </td>
+                <td>
+                    <%= row.category %>
+                </td>
+                
+                <td>
+                    <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                        <% row.image.forEach((img)=> { %>
+                            <li
+                        data-bs-toggle="tooltip"
+                        data-popup="tooltip-custom"
+                        data-bs-placement="top"
+                        class="avatar avatar-xl pull-up"
+                        title="<%= row.productName  %>"
+                      >
+                        <img src="/productImages/<%= img %>" alt="Avatar" class="rounded-circle" />
+                      </li>
+                        <% }) %>
+                    </ul>
+                </td>
+                
+                <td>
+                    <%= row.stockQuantity %>
+                </td>
+                <td>
+                    <% if(row.status) {%>
+                      <a class="badge bg-label-success me-1" href="/admin/unlistProduct/<%= row._id %>"><i
+                          class='bx bx-list-plus'></i>
+                        listed</a>
+                      <% }else{%>
+                        <a class="badge bg-label-danger me-1" href="/admin/listProduct/<%= row._id %>"><i
+                            class='bx bx-list-minus'></i>
+                          unlisted</a>
+                        <% } %>
+                </td>
 
-    <!-- Modal modalAddProduct-->
+                <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+                  const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+                  const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day}
+                  ${month} ${year} ${hours}:${minutes}`; return formattedDate } %>
+                  
+                  <td>
+                    <%= getDate(row.createdOn) %>
+                  </td>
+
+                  <td>
+                    <%= getDate(row.updatedOn) %>
+                  </td>
+                  
+                  <td>
+                    <div class="dropdown">
+                      <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                        <i class="bx bx-dots-vertical-rounded"></i>
+                      </button>
+                      <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/admin/editProductDetails/<%= row._id %>"><i
+                            class="bx bx-edit-alt me-1"></i> Edit</a>
+                        <a class="dropdown-item btn" onclick="remove('<%= row._id %>')">
+                          <i class="bx bx-trash me-1"></i>
+                          Delete
+                        </a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <% }); %>
+          </tbody>
+          <tfoot class="table-border-bottom-0">
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>description</th>
+              <th>price</th>
+              <th>category</th>
+              <th>image</th>
+              <th>stock</th>
+              <th>status</th>
+              <th>Created on</th>
+              <th>updated on</th>
+              <th>action</th>
+            </tr>
+          </tfoot>
+        </table>
+        <% } else { %>
+          <h1 class="text-center text-secondary mt-5">
+            No Product Size found in the database
+          </h1>
+          <% } %>
+    </div>
     
-
-
-    <nav class="layout-navbar container-xxl navbar navbar-expand-xl align-items-center bg-navbar-theme shadow rounded mb-4"
-        id="layout-navbar">
-        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-                <i class="bx bx-menu bx-sm"></i>
-            </a>
-        </div>
-
-        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-            admin/productDetails
-
-            <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Button ModalScrollable -->
-                <a  href="/admin/addProduct" class="btn btn-primary" >
-                    Add
-                </a>
-            </ul>
-
-        </div>
-    </nav>
-    <!-- Modal description-->
-    <div class="modal fade" id="modalScrollable" tabindex="-1" aria-hidden="true">
+  </div>
+  <!-- Modal description -->
+  <% if (product !='' ) { %>
+<% product.forEach((row, index) => { %>
+    <div class="modal fade" id="modalScrollable<%= index %>" tabindex="-1" aria-hidden="true" style="white-space: normal;">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalScrollableTitle">Modal title</h5>
+                    <h5 class="modal-title" id="modalScrollableTitle"><%= row.productName %></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                    </p>
-                    <p>
-                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                        lacus vel augue laoreet rutrum faucibus dolor auctor.
-                    </p>
-                    <p>
-                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                        auctor fringilla.
-                    </p>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                    </p>
-                    <p>
-                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                        lacus vel augue laoreet rutrum faucibus dolor auctor.
-                    </p>
-                    <p>
-                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                        auctor fringilla.
-                    </p>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                    </p>
-                    <p>
-                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                        lacus vel augue laoreet rutrum faucibus dolor auctor.
-                    </p>
-                    <p>
-                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                        auctor fringilla.
-                    </p>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                    </p>
-                    <p>
-                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                        lacus vel augue laoreet rutrum faucibus dolor auctor.
-                    </p>
-                    <p>
-                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                        auctor fringilla.
-                    </p>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                    </p>
-                    <p>
-                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                        lacus vel augue laoreet rutrum faucibus dolor auctor.
-                    </p>
-                    <p>
-                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                        auctor fringilla.
-                    </p>
-                    <p>
-                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
-                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
-                    </p>
-                    <p>
-                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
-                        lacus vel augue laoreet rutrum faucibus dolor auctor.
-                    </p>
-                    <p>
-                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
-                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
-                        auctor fringilla.
+                    <p id="modalData" style="word-wrap: break-word;">
+                        <%= row.description %>
                     </p>
                 </div>
                 <div class="modal-footer">
@@ -123,248 +166,8 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Bootstrap Table with Header - Footer -->
-    <div class="card">
-        <h5 class="card-header">Table Header & Footer</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>name</th>
-                        <th>description</th>
-                        <th>color</th>
-                        <th>price</th>
-                        <th>category</th>
-                        <th>image</th>
-                        <th>stock</th>
-                        <th>discount</th>
-                        <th>createdOn</th>
-                        <th>updatedOn</th>
-                        <th>status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular Project</strong></td>
-
-                        <td class="table-responsive">
-                            <a href="" data-bs-toggle="modal" data-bs-target="#modalScrollable">
-                                more
-                            </a>
-                        </td>
-
-                        <td>
-                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Red">
-                                    <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
-                                    <div class="test rounded-circle" style="background-color:violet; height: 20px; width: 20px;">
-                                    </div>
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
-                                <div class=" rounded-circle" style="background-color: indigo;height: 20px;width: 20px;">
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
-                                <div class=" rounded-circle" style="background-color: blue;height: 20px;width: 20px;">
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
-                                <!-- <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" /> -->
-                                <div class=" rounded-circle" style="background-color: green;height: 20px;width: 20px;">
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Christina Parker">
-                                <!-- <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" /> -->
-                                <div class=" rounded-circle" style="background-color: yellow;height: 20px;width: 20px;">
-                                </li>
-                            </ul>
-                        </td>
-
-                        <td>200.00</td>
-
-                        <td>
-                            walking
-                        </td>
-                        <td>
-                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Red">
-                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
-                                    <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Christina Parker">
-                                    <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                            </ul>
-                        </td>
-                        <td>
-                            234
-                        </td>
-                        <td>
-                            10 %
-                        </td>
-                        <td>
-                            12/05/2023
-                        </td>
-                        <td>
-                            25/05/2023
-                        </td>
-                        <td><span class="badge bg-label-success me-1">new</span></td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                    data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"><i
-                                            class="bx bx-edit-alt me-1"></i> Edit</a>
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
-                                        Delete</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular Project</strong></td>
-
-                        <td class="table-responsive">
-                            <a href="" data-bs-toggle="modal" data-bs-target="#modalScrollable">
-                                more
-                            </a>
-                        </td>
-
-                        <td>
-                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Red">
-                                    <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
-                                    <div class="test rounded-circle" style="background-color:<%= color[0] %>; height: 20px; width: 20px;">
-                                    </div>
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
-                                <script>
-                                    
-                                </script>
-                                <div class=" rounded-circle" style="background-color: <%= color[1] %>;height: 20px;width: 20px;">
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
-                                <div class=" rounded-circle" style="background-color: <%= color[2] %>;height: 20px;width: 20px;">
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
-                                <!-- <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" /> -->
-                                <div class=" rounded-circle" style="background-color: <%= color[3] %>;height: 20px;width: 20px;">
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                class="avatar avatar-xs pull-up" title="<%= color[0] %>">
-                                <!-- <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" /> -->
-                                
-                                <div class=" rounded-circle" style="background-color: <%= color[4] %>;height: 20px;width: 20px;">
-                                </li>
-                            </ul>
-                        </td>
-
-                        <td>200.00</td>
-
-                        <td>
-                            walking
-                        </td>
-                        <td>
-                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Red">
-                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
-                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
-                                    <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
-                                    class="avatar avatar-xs pull-up" title="Christina Parker">
-                                    <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
-                                </li>
-                            </ul>
-                        </td>
-                        <td>
-                            234
-                        </td>
-                        <td>
-                            10 %
-                        </td>
-                        <td>
-                            12/05/2023
-                        </td>
-                        <td>
-                            25/05/2023
-                        </td>
-                        <td><span class="badge bg-label-success me-1">new</span></td>
-                        <td>
-                            <div class="dropdown">
-                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                    data-bs-toggle="dropdown">
-                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                </button>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="javascript:void(0);"><i
-                                            class="bx bx-edit-alt me-1"></i> Edit</a>
-                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
-                                        Delete</a>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-
-                </tbody>
-                <tfoot class="table-border-bottom-0">
-                    <tr>
-                        <th>name</th>
-                        <th>description</th>
-                        <th>color</th>
-                        <th>price</th>
-                        <th>category</th>
-                        <th>image</th>
-                        <th>stock</th>
-                        <th>discount</th>
-                        <th>createdOn</th>
-                        <th>updatedOn</th>
-                        <th>status</th>
-                        <th>Actions</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+<% }); %>
+<% }; %>
     </div>
-    
-    <%-include('../partials/adminPartials/adminFooter')-%>
+
+  <%-include('../partials/adminPartials/adminFooter')-%>

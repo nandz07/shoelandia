@@ -1,0 +1,370 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+
+
+
+
+    <!-- Modal modalAddProduct-->
+    
+
+
+    <nav class="layout-navbar container-xxl navbar navbar-expand-xl align-items-center bg-navbar-theme shadow rounded mb-4"
+        id="layout-navbar">
+        <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+            </a>
+        </div>
+
+        <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+            admin/productDetails
+
+            <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- Button ModalScrollable -->
+                <a  href="/admin/addProduct" class="btn btn-primary" >
+                    Add
+                </a>
+            </ul>
+
+        </div>
+    </nav>
+    <!-- Modal description-->
+    <div class="modal fade" id="modalScrollable" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalScrollableTitle">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                    </p>
+                    <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                        lacus vel augue laoreet rutrum faucibus dolor auctor.
+                    </p>
+                    <p>
+                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                        auctor fringilla.
+                    </p>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                    </p>
+                    <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                        lacus vel augue laoreet rutrum faucibus dolor auctor.
+                    </p>
+                    <p>
+                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                        auctor fringilla.
+                    </p>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                    </p>
+                    <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                        lacus vel augue laoreet rutrum faucibus dolor auctor.
+                    </p>
+                    <p>
+                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                        auctor fringilla.
+                    </p>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                    </p>
+                    <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                        lacus vel augue laoreet rutrum faucibus dolor auctor.
+                    </p>
+                    <p>
+                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                        auctor fringilla.
+                    </p>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                    </p>
+                    <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                        lacus vel augue laoreet rutrum faucibus dolor auctor.
+                    </p>
+                    <p>
+                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                        auctor fringilla.
+                    </p>
+                    <p>
+                        Cras mattis consectetur purus sit amet fermentum. Cras justo odio, dapibus ac facilisis
+                        in, egestas eget quam. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.
+                    </p>
+                    <p>
+                        Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis
+                        lacus vel augue laoreet rutrum faucibus dolor auctor.
+                    </p>
+                    <p>
+                        Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel
+                        scelerisque nisl consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus
+                        auctor fringilla.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap Table with Header - Footer -->
+    <div class="card">
+        <h5 class="card-header">Table Header & Footer</h5>
+        <div class="table-responsive text-nowrap">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>name</th>
+                        <th>description</th>
+                        <th>color</th>
+                        <th>price</th>
+                        <th>category</th>
+                        <th>image</th>
+                        <th>stock</th>
+                        <th>discount</th>
+                        <th>createdOn</th>
+                        <th>updatedOn</th>
+                        <th>status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular Project</strong></td>
+
+                        <td class="table-responsive">
+                            <a href="" data-bs-toggle="modal" data-bs-target="#modalScrollable">
+                                more
+                            </a>
+                        </td>
+
+                        <td>
+                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Red">
+                                    <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
+                                    <div class="test rounded-circle" style="background-color:violet; height: 20px; width: 20px;">
+                                    </div>
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
+                                <div class=" rounded-circle" style="background-color: indigo;height: 20px;width: 20px;">
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
+                                <div class=" rounded-circle" style="background-color: blue;height: 20px;width: 20px;">
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
+                                <!-- <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" /> -->
+                                <div class=" rounded-circle" style="background-color: green;height: 20px;width: 20px;">
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Christina Parker">
+                                <!-- <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" /> -->
+                                <div class=" rounded-circle" style="background-color: yellow;height: 20px;width: 20px;">
+                                </li>
+                            </ul>
+                        </td>
+
+                        <td>200.00</td>
+
+                        <td>
+                            walking
+                        </td>
+                        <td>
+                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Red">
+                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
+                                    <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Christina Parker">
+                                    <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            234
+                        </td>
+                        <td>
+                            10 %
+                        </td>
+                        <td>
+                            12/05/2023
+                        </td>
+                        <td>
+                            25/05/2023
+                        </td>
+                        <td><span class="badge bg-label-success me-1">new</span></td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);"><i
+                                            class="bx bx-edit-alt me-1"></i> Edit</a>
+                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
+                                        Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><i class="fab fa-angular fa-lg text-danger me-3"></i> <strong>Angular Project</strong></td>
+
+                        <td class="table-responsive">
+                            <a href="" data-bs-toggle="modal" data-bs-target="#modalScrollable">
+                                more
+                            </a>
+                        </td>
+
+                        <td>
+                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Red">
+                                    <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
+                                    <div class="test rounded-circle" style="background-color:<%= color[0] %>; height: 20px; width: 20px;">
+                                    </div>
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
+                                <script>
+                                    
+                                </script>
+                                <div class=" rounded-circle" style="background-color: <%= color[1] %>;height: 20px;width: 20px;">
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                <!-- <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" /> -->
+                                <div class=" rounded-circle" style="background-color: <%= color[2] %>;height: 20px;width: 20px;">
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
+                                <!-- <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" /> -->
+                                <div class=" rounded-circle" style="background-color: <%= color[3] %>;height: 20px;width: 20px;">
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                class="avatar avatar-xs pull-up" title="<%= color[0] %>">
+                                <!-- <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" /> -->
+                                
+                                <div class=" rounded-circle" style="background-color: <%= color[4] %>;height: 20px;width: 20px;">
+                                </li>
+                            </ul>
+                        </td>
+
+                        <td>200.00</td>
+
+                        <td>
+                            walking
+                        </td>
+                        <td>
+                            <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Red">
+                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Lilian Fuller">
+                                    <img src="../assets/img/avatars/5.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Sophia Wilkerson">
+                                    <img src="../assets/img/avatars/6.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                                <li data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                                    class="avatar avatar-xs pull-up" title="Christina Parker">
+                                    <img src="../assets/img/avatars/7.png" alt="Avatar" class="rounded-circle" />
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            234
+                        </td>
+                        <td>
+                            10 %
+                        </td>
+                        <td>
+                            12/05/2023
+                        </td>
+                        <td>
+                            25/05/2023
+                        </td>
+                        <td><span class="badge bg-label-success me-1">new</span></td>
+                        <td>
+                            <div class="dropdown">
+                                <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                    data-bs-toggle="dropdown">
+                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                </button>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="javascript:void(0);"><i
+                                            class="bx bx-edit-alt me-1"></i> Edit</a>
+                                    <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-trash me-1"></i>
+                                        Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+
+                </tbody>
+                <tfoot class="table-border-bottom-0">
+                    <tr>
+                        <th>name</th>
+                        <th>description</th>
+                        <th>color</th>
+                        <th>price</th>
+                        <th>category</th>
+                        <th>image</th>
+                        <th>stock</th>
+                        <th>discount</th>
+                        <th>createdOn</th>
+                        <th>updatedOn</th>
+                        <th>status</th>
+                        <th>Actions</th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    
+    <%-include('../partials/adminPartials/adminFooter')-%>

@@ -42,10 +42,10 @@ app.use(session({
 // set template engine
 app.set('view engine','ejs')
 
-app.get('/',(req,res)=>{
-    res.render('users/index')
-    // res.send('hai')
-})
+// app.get('/',(req,res)=>{
+//     res.render('users/index')
+//     // res.send('hai')
+// })
 
 
 // routes prefix
