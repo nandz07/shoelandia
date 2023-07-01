@@ -1,0 +1,75 @@
+<%-include('../partials/userPartials/userHeader')-%>
+<!-- Start Banner Area -->
+<section class="banner-area organic-breadcrumb">
+    <div class="container">
+        <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+            <div class="col-first">
+                <h1><%= product.productName %></h1>
+                <nav class="d-flex align-items-center">
+                    <!-- <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+                    <a href="single-product.html">product-details</a> -->
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Banner Area -->
+
+<!--================Single Product Area =================-->
+<div class="product_image_area mb-5">
+    <div class="container">
+        <div class="row s_product_inner">
+            <div class="col-lg-6">
+                <!-- <div class="s_Product_carousel"> -->
+                    <img src="/productImages/<%= product.image[0] %>" width="500px" class="xzoom" xriginal="/productImages/<%= product.image[0] %>">
+                    <div class="single-prd-item">
+                    <% product.image.forEach((element)=> { %>
+                        <!-- <img class="img-fluid" src="/productImages/<-%= element %>" alt=""> -->
+                        <div class="xzoom-thumbs d-flex">
+                            <a href="/productImages/<%= element %>">
+                                <img class="xzoom-gallery" src="/productImages/<%= element %>" xprevies="/productImages/<%= element %>">
+                            </a>
+                        </div>
+                        <% }); %>
+                    </div>
+                <!-- </div> -->
+            </div>
+            <div class="col-lg-5 offset-lg-1">
+                <div class="s_product_text">
+                    <h3><%= product.productName %></h3>
+                    <h2>₹ <%= product.price %></h2>
+                    <ul class="list">
+                        <li><a class="active" href="#"><span>Category</span> : <%= product.category%></a></li>
+                        <li><a href="#"><span>Availibility</span> :
+                            <% if(product.stockQuantity > 0) {%>
+                            In Stock
+                                <% }else{ %>
+                                    out of stock
+                                    <% } %>
+                        </a></li>
+                    </ul>
+                    <p><%= product.description%></p>
+                    <div class="product_count">
+                        <label for="qty">Quantity:</label>
+                        <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
+                            class="input-text qty">
+                        <button
+                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
+                            class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
+                        <button
+                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                            class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
+                    </div>
+                    <div class="card_area d-flex align-items-center">
+                        <a class="primary-btn" href="#">Add to Cart</a>
+                        <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--================End Single Product Area =================-->
+
+<%-include('../partials/userPartials/userFooter')-%>

@@ -49,7 +49,7 @@ app.set('view engine','ejs')
 
 
 // routes prefix
-app.use("",require('./routes/userRoutes'))
+app.use("/",require('./routes/userRoutes'))
 app.use("/admin",require('./routes/adminRoutes'))
 
 app.listen(PORT,()=>{
