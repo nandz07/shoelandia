@@ -24,14 +24,16 @@
                 <!-- <div class="s_Product_carousel"> -->
                     <img src="/productImages/<%= product.image[0] %>" width="500px" class="xzoom" xriginal="/productImages/<%= product.image[0] %>">
                     <div class="single-prd-item">
+                        <div class="col mt-2 ml-0 d-flex align-items-center justify-content-start">
                     <% product.image.forEach((element)=> { %>
                         <!-- <img class="img-fluid" src="/productImages/<-%= element %>" alt=""> -->
-                        <div class="xzoom-thumbs d-flex">
+                        <div class="xzoom-thumbs">
                             <a href="/productImages/<%= element %>">
                                 <img class="xzoom-gallery" src="/productImages/<%= element %>" xprevies="/productImages/<%= element %>">
                             </a>
                         </div>
                         <% }); %>
+                    </div>
                     </div>
                 <!-- </div> -->
             </div>
