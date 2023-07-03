@@ -1,0 +1,57 @@
+
+<%-include('../partials/userPartials/userHeader')-%>
+<!--================Login Box Area =================-->
+<section class="login_box_area section_gap mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="login_box_img">
+                    <img class="img-fluid" src="/myImg/signUp1.jpeg" alt="" >
+                    <div class="hover">
+                        <h4>Already have an account?</h4>
+                        <p>Step into Sholandia: Login and Embrace Seamless Shopping!</p>
+                        <a class="primary-btn" href="/userLogin">Login</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="login_form_inner">
+                    <h3>Create new account</h3>
+                    <% if(message){%>
+                        <p><%= message %></p>
+                   <% } %>
+                    <form class="row login_form" action="userSignupPost" method="post" id="signUpForm"
+                        novalidate="novalidate">
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Name'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="number" class="form-control" id="mobile" name="mobile" placeholder="Mobile"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Mobile'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="password" class="form-control" id="password" name="password" placeholder="Password"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Password'">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm Password"
+                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Confirm Password'">
+                        </div>
+                        
+                        <div class="col-md-12 form-group">
+                            <button type="submit" value="submit" class="primary-btn">Log In</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!--================End Login Box Area =================-->
+
+<%-include('../partials/userPartials/userFooter')-%>
