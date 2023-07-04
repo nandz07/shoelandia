@@ -69,7 +69,7 @@ const homeGet=async (req,res)=>{
     try {
         const productDb = await ProductModel.find({ status: true }).exec();
         console.log(productDb);
-        res.render('users/index',{ product: productDb, message: '' })
+        res.render('users/index',{ product: productDb, message: '' ,user:req.session.user})
     } catch (error) {
         console.log(error);
     }
@@ -81,7 +81,7 @@ const productDetailsGetUser=async(req,res)=>{
         let id=req.params.id
         const productDb= await ProductModel.findOne({_id:id})
         if(productDb){
-            res.render('users/singeProductDetails',{product:productDb})
+            res.render('users/singeProductDetails',{product:productDb,user:req.session.user})
         }
     } catch (error) {
         console.log(error);
@@ -90,8 +90,12 @@ const productDetailsGetUser=async(req,res)=>{
 
 const userLoginGet=async (req,res)=>{
     try {
-        
-        res.render('users/userLogin',{message:''})
+        user=req.session.user
+        if(!user){
+        res.render('users/userLogin',{message:'',user:req.session.user})
+        }else{
+            res.redirect('/')
+        }
     } catch (error) {
         console.log(error);
     }
@@ -103,14 +107,23 @@ const userLoginPost=async (req,res)=>{
         let password=req.body.password
         let userDb=await userModel.findOne({email:email})
         console.log(userDb);
+        if(userDb){
         if(userDb.is_verified){
             const passwordMatch = await bcrypt.compare(password,userDb.password)
             if(passwordMatch){
-                res.send('hai')
+                req.session.user = userDb.name
+                req.session.userLogedIn = true
+                res.redirect('/')
             }else{
-                res.render('users/userLogin',{message:'invalid user name or password'})
+                res.render('users/userLogin',{message:' Password is incorrect',user:req.session.user})
             }
+        }else{
+            const redirectUrl = '/otpVerificationGet?email=' + encodeURIComponent(email);
+            res.redirect(redirectUrl);
         }
+    }else{
+        res.render('users/userLogin',{message:'invalid user name or password',user:req.session.user})
+    }
         // res.render('users/userLogin',{message:''})
     } catch (error) {
         console.log(error);
@@ -118,7 +131,7 @@ const userLoginPost=async (req,res)=>{
 }
 const userSignUpGet=async (req,res)=>{
     try {
-        res.render('users/userSignUp',{message:'Please enter an active email'})
+        res.render('users/userSignUp',{message:'Please enter an active email',user:req.session.user})
     } catch (error) {
         console.log(error);
     }
@@ -131,7 +144,7 @@ const userSignupPost=async (req,res)=>{
         const spassword = await securePassword(req.body.password);
         const isUser=await UserModel.findOne({email:email})
         if(isUser){
-           return res.render('users/userSignUp',{message:'this email is already taken'})
+           return res.render('users/userSignUp',{message:'this email is already taken',user:req.session.user})
         }else{
         const user = new UserModel({
             name: req.body.name,
@@ -158,7 +171,7 @@ const otpVerificationGet=async (req,res)=>{
     try {
         const email = req.query.email;
         console.log(email);
-        res.render('users/otpVerification',{message:'',email:email})
+        res.render('users/otpVerification',{message:'',email:email,user:req.session.user})
     } catch (error) {
         console.log(error);
     }
@@ -179,16 +192,29 @@ const otpVerificationPost=async (req,res)=>{
             let id=otpDb._id
             await userModel.updateOne({email:email},{$set:{is_verified:true}})
             await otpModel.findByIdAndRemove(id)
-            res.render('users/userLogin',{message:'your email has been verified sucessfully'})
+            res.render('users/userLogin',{message:'your email has been verified sucessfully',user:req.session.user})
         }else{
             console.log(otp);
-            res.render('users/otpVerification',{message:'invalid otp',email:email})
+            res.render('users/otpVerification',{message:'invalid otp',email:email,user:req.session.user})
         }
 
     } catch (error) {
         console.log(error);
     }
 }
+
+const userLogoutGet = async (req, res) => {
+    try {
+
+                req.session.user = ''
+                req.session.userLogedIn = false
+                res.redirect('/')
+            
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports={
     homeGet,
     productDetailsGetUser,
@@ -197,5 +223,6 @@ module.exports={
     userSignUpGet,
     userSignupPost,
     otpVerificationPost,
-    otpVerificationGet
+    otpVerificationGet,
+    userLogoutGet
 }
