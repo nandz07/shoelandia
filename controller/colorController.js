@@ -4,7 +4,7 @@ const productColorAdminGet=async (req,res)=>{
     try {
         const colors=await Color.find().exec()
         console.log(colors);
-        res.render('admin/productColor',{colors: colors})
+        res.render('admin/productColor',{colors: colors,admin:req.session.admin})
         
     } catch (error) {
         console.log(error);
@@ -12,7 +12,7 @@ const productColorAdminGet=async (req,res)=>{
 }
 const addColorAdminGet=async (req,res)=>{
     try {
-        res.render('admin/addColor',{message:''})
+        res.render('admin/addColor',{message:'',admin:req.session.admin})
     } catch (error) {
         console.log(error);
     }
@@ -25,7 +25,7 @@ const addColorAdminPost=async (req,res)=>{
         console.log(colorDescription);
         const isColor=await Color.findOne({colorName:colorName})
         if(isColor){
-            res.render('admin/addColor',{message:`Color ${colorName} is already exist`,status:`warning`})
+            res.render('admin/addColor',{message:`Color ${colorName} is already exist`,status:`warning`,admin:req.session.admin})
         }else{
             const color = new Color({
                 colorName:colorName,
@@ -34,9 +34,9 @@ const addColorAdminPost=async (req,res)=>{
             })
             const colorSave=await color.save();
             if(colorSave){
-                res.render('admin/addColor',{message:`Color ${colorName} is added sucessfully`,status:'success'})
+                res.render('admin/addColor',{message:`Color ${colorName} is added sucessfully`,status:'success',admin:req.session.admin})
             }else{
-                res.render('admin/addColor',{message:`failed to add color`,status:'danger'})
+                res.render('admin/addColor',{message:`failed to add color`,status:'danger',admin:req.session.admin})
             }
         }
     } catch (error) {

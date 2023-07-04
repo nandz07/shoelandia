@@ -120,7 +120,7 @@
                   <div data-i18n="Analytics">View products</div>
                 </a>
               </li>
-            <li class="menu-item ">
+            <!-- <li class="menu-item ">
                 <a href="/admin/productColor" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-palette"></i>
                   <div data-i18n="Analytics">view Colors</div>
@@ -131,7 +131,7 @@
                   <i class="menu-icon tf-icons bx bx-expand-alt"></i>
                   <div data-i18n="Analytics">View Size</div>
                 </a>
-              </li>
+              </li> -->
             <li class="menu-item ">
                 <a href="/admin/productCategory" class="menu-link">
                   <i class="menu-icon tf-icons bx bx-category"></i>
@@ -144,7 +144,7 @@
             <li class="menu-header small text-uppercase"><span class="menu-header-text">users</span></li>
             <!-- Cards -->
             <li class="menu-item">
-              <a href="cards-basic.html" class="menu-link">
+              <a href="/admin/userDetails" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Basic">User details</div>
               </a>
@@ -213,7 +213,16 @@
   
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
-                klsdhl
+
+                <div class="dropdown">
+                  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <%= admin ? admin :'Login System' %>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" href="adminLogout">Logout</a></li>
+                  </ul>
+                </div>
               </ul>
             </div>
           </nav>

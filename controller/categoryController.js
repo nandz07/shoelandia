@@ -4,7 +4,7 @@ const productCategoryAdminGet= async(req,res)=>{
     try {
         // res.send('hai')
         const category=await Category.find().exec()
-        res.render('admin/productCategory',{category:category,message:''})
+        res.render('admin/productCategory',{category:category,message:'',admin:req.session.admin})
     } catch (error) {
         
     }
@@ -16,14 +16,14 @@ const addCategoryAdminPost = async (req, res) => {
         let { categoryName, categoryDescription } = req.body;
         const category=await Category.find().exec()
         if(categoryName.trim()=='' || categoryDescription.trim()==''){
-          return  res.render('admin/productCategory',{message:`can't store null value`,status:`danger`,category:category})
+          return  res.render('admin/productCategory',{message:`can't store null value`,status:`danger`,category:category,admin:req.session.admin})
         }
         console.log(categoryName);
         console.log(categoryDescription);
         const isCategory=await Category.findOne({categoryName:categoryName})
         if(isCategory){
             
-            res.render('admin/productCategory',{message:`Category ${categoryName} is already exist`,status:`warning`,category:category})
+            res.render('admin/productCategory',{message:`Category ${categoryName} is already exist`,status:`warning`,category:category,admin:req.session.admin})
         }else{
             const categoryUser = new Category({
                 categoryName,
@@ -35,10 +35,10 @@ const addCategoryAdminPost = async (req, res) => {
             const category=await Category.find().exec()
             if(categorySave){
                 console.log(categorySave);
-                res.render('admin/productCategory',{message:`Category ${categoryName} is added sucessfully`,status:'success',category:category})
+                res.render('admin/productCategory',{message:`Category ${categoryName} is added sucessfully`,status:'success',category:category,admin:req.session.admin})
                 // res.render('admin/productCategory',{category:category,message:''})
             }else{
-                res.render('admin/productCategory',{message:`failed to add color`,status:'danger'})
+                res.render('admin/productCategory',{message:`failed to add color`,status:'danger',admin:req.session.admin})
             }
         }
     } catch (error) {
@@ -51,7 +51,7 @@ const addCategoryAdminPost = async (req, res) => {
         const catId=req.params.id
         const catData= await Category.findOne({_id:catId})
         console.log(catData);
-        res.render('admin/editCategory',{data:catData})
+        res.render('admin/editCategory',{data:catData,admin:req.session.admin})
     } catch (error) {
         console.log(error);
     }
@@ -71,10 +71,10 @@ const addCategoryAdminPost = async (req, res) => {
             const category=await Category.find().exec()
             if(categoryUpdate){
                 console.log(categoryUpdate);
-                res.render('admin/productCategory',{message:`Category ${categoryName} is updated sucessfully`,status:'success',category:category})
+                res.render('admin/productCategory',{message:`Category ${categoryName} is updated sucessfully`,status:'success',category:category,admin:req.session.admin})
                 // res.render('admin/productCategory',{category:category,message:''})
             }else{
-                res.render('admin/productCategory',{message:`failed to add color`,status:'danger'})
+                res.render('admin/productCategory',{message:`failed to add color`,status:'danger',admin:req.session.admin})
             }
 
     } catch (error) {
@@ -91,9 +91,9 @@ const addCategoryAdminPost = async (req, res) => {
             const category=await Category.find().exec()
             if(categoryUpdate){
                 console.log(categoryUpdate);
-                res.render('admin/productCategory',{message:`unlisted sucessfully`,status:'success',category:category})
+                res.render('admin/productCategory',{message:`unlisted sucessfully`,status:'success',category:category,admin:req.session.admin})
             }else{
-                res.render('admin/productCategory',{message:`failed to add color`,status:'danger'})
+                res.render('admin/productCategory',{message:`failed to add color`,status:'danger',admin:req.session.admin})
             }
 
     } catch (error) {
@@ -110,9 +110,9 @@ const addCategoryAdminPost = async (req, res) => {
             const category=await Category.find().exec()
             if(categoryUpdate){
                 console.log(categoryUpdate);
-                res.render('admin/productCategory',{message:`listed sucessfully`,status:'success',category:category})
+                res.render('admin/productCategory',{message:`listed sucessfully`,status:'success',category:category,admin:req.session.admin})
             }else{
-                res.render('admin/productCategory',{message:`failed to add color`,status:'danger'})
+                res.render('admin/productCategory',{message:`failed to add color`,status:'danger',admin:req.session.admin})
             }
 
     } catch (error) {
@@ -130,7 +130,7 @@ const addCategoryAdminPost = async (req, res) => {
             message: 'user deleted successfully'
         }
         const category=await Category.find().exec()
-        res.render('admin/productCategory',{category:category,message:'deleted successfully',status:'danger'})
+        res.render('admin/productCategory',{category:category,message:'deleted successfully',status:'danger',admin:req.session.admin})
     } catch (error) {
         console.log(error);
     }

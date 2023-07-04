@@ -4,7 +4,7 @@ const ProductModel = require('../models/productModel');
 const productDetailsAdminGet = async (req, res) => {
     try {
         let productDb = await ProductModel.find().exec()
-        res.render('admin/productDetails', { product: productDb, message: '' })
+        res.render('admin/productDetails', { product: productDb, message: '',admin:req.session.admin })
     } catch (error) {
         console.log(error);
     }
@@ -14,7 +14,7 @@ const addProductAdminGet = async (req, res) => {
         let categoryDb = await CategoryModel.find().exec()
         res.render('admin/addProduct', {
             category: categoryDb,
-            message: ''
+            message: '',admin:req.session.admin
         })
     } catch (error) {
         console.log(error);
@@ -41,9 +41,9 @@ const addProductAdminPost = async (req, res) => {
         const productData = await product.save();
         let categoryDb = await CategoryModel.find().exec()
         if (productData) {
-            res.render('admin/addProduct', { category: categoryDb, message: `Product ${req.body.productName} added successfully`, status: "success" });
+            res.render('admin/addProduct', { category: categoryDb, message: `Product ${req.body.productName} added successfully`, status: "success",admin:req.session.admin });
         } else {
-            res.render('admin/addProduct', { message: "Failed adding product", status: "danger" });
+            res.render('admin/addProduct', { message: "Failed adding product", status: "danger",admin:req.session.admin});
         }
     } catch (error) {
         console.log(error);
@@ -54,7 +54,7 @@ const editProductDetailsAdminGet = async (req, res) => {
         const productId = req.params.id
         const productData = await ProductModel.findOne({ _id: productId })
         let categoryDb = await CategoryModel.find().exec()
-        res.render('admin/editProduct', { product: productData, category: categoryDb })
+        res.render('admin/editProduct', { product: productData, category: categoryDb ,admin:req.session.admin})
     } catch (error) {
         console.log(error);
     }
@@ -87,9 +87,9 @@ const editProductDetailsAdminPost = async (req, res) => {
         })
         let productDb = await ProductModel.find().exec()
         if (productUpdate) {
-            res.render('admin/productDetails', { product: productDb, message: '' })
+            res.render('admin/productDetails', { product: productDb, message: '' ,admin:req.session.admin})
         } else {
-            res.render('admin/productDetails', { product: productDb, message: `product updation failed`, status: 'danger' })
+            res.render('admin/productDetails', { product: productDb, message: `product updation failed`, status: 'danger',admin:req.session.admin })
         }
 
     } catch (error) {
@@ -105,9 +105,9 @@ const unlistProductDetailsAdminGet = async (req, res) => {
         }).exec();
         let productDb = await ProductModel.find().exec()
         if (productUpList) {
-            res.render('admin/productDetails', { message: `unlisted sucessfully`, status: 'success', product: productDb })
+            res.render('admin/productDetails', { message: `unlisted sucessfully`, status: 'success', product: productDb ,admin:req.session.admin})
         } else {
-            res.render('admin/productDetails', { message: `failed to unlist`, status: 'danger', product: productDb })
+            res.render('admin/productDetails', { message: `failed to unlist`, status: 'danger', product: productDb ,admin:req.session.admin})
         }
     } catch (error) {
         console.log(error);
@@ -122,9 +122,9 @@ const listProductDetailsAdminGet = async (req, res) => {
         }).exec();
         let productDb = await ProductModel.find().exec()
         if (productUpList) {
-            res.render('admin/productDetails', { message: `listed sucessfully`, status: 'success', product: productDb })
+            res.render('admin/productDetails', { message: `listed sucessfully`, status: 'success', product: productDb ,admin:req.session.admin})
         } else {
-            res.render('admin/productDetails', { message: `failed to unlisted`, status: 'danger', product: productDb })
+            res.render('admin/productDetails', { message: `failed to unlisted`, status: 'danger', product: productDb ,admin:req.session.admin})
         }
     } catch (error) {
         console.log(error);

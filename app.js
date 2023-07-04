@@ -33,11 +33,7 @@ app.use('/assets',express.static(path.join(__dirname,'public/assets')))
 app.use(express.static('public/users'));
 app.use(express.static('public/admin'));
 
-app.use(session({
-    secret:'my secret key',
-    saveUninitialized:true,
-    resave:false
-}))
+
 
 // set template engine
 app.set('view engine','ejs')
