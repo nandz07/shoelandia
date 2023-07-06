@@ -32,7 +32,7 @@
         },
         confirm_password: {
           required: "Please confirm your password",
-          equalTo: "Passwords do not match"
+          equalTo: "Passwords do not match anymore"
         }
       },
     });

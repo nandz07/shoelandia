@@ -66,17 +66,18 @@ const creatOtp=async(name,email)=>{
 // --------------------------------------
 const homeGet=async (req,res)=>{
     try {
-        const productDb = await ProductModel.find({ status: true },).sort({createdOn:-1}).exec();
+        const productDb = await ProductModel.find({ status: true },).populate("category").sort({createdOn:-1}).exec();
         res.render('users/index',{ product: productDb, message: '' ,user:req.session.user})
     } catch (error) {
-        console.log(error);
+        // console.log(error);
     }
 }
 
 const productDetailsGetUser=async(req,res)=>{
     try {
         let id=req.params.id
-        const productDb= await ProductModel.findOne({_id:id})
+        const productDb= await ProductModel.findOne({_id:id}).populate("category")
+        console.log(productDb);
         if(productDb){
             res.render('users/singeProductDetails',{product:productDb,user:req.session.user})
         }

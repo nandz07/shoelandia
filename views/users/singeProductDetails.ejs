@@ -42,7 +42,7 @@
                     <h3><%= product.productName %></h3>
                     <h2>₹ <%= product.price %></h2>
                     <ul class="list">
-                        <li><a class="active" href="#"><span>Category</span> : <%= product.category%></a></li>
+                        <li><a class="active" href="#"><span>Category</span> : <%= product.category.categoryName %></a></li>
                         <li><a href="#"><span>Availibility</span> :
                             <% if(product.stockQuantity > 0) {%>
                             In Stock

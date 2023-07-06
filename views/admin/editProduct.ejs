@@ -28,9 +28,9 @@
               <div class="dropdown col-sm-4">
                 <select class="form-select" id="productCategory" name="productCategory" aria-label="Default select example">
                   <option selected value="<%= product.category %>"><%= product.category %></option>
-                  <% category.forEach((row, index) => { %>
-                    <% if(row.categoryName != product.category){  %>
-                        <option value="<%= row.categoryName %>"><%= row.categoryName %></option>
+                  <% category.forEach((category, index) => { %>
+                    <% if(category.categoryName != product.category){  %>
+                        <option value="<%= category._id %>"><%= category.categoryName %></option>
                         <% } %>
                   <% }) %>
                 </select>

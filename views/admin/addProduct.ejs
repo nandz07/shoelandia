@@ -37,7 +37,7 @@
                 <select class="form-select" id="productCategory" name="productCategory" aria-label="Default select example">
                   <option selected value="">Select a category</option>
                   <% category.forEach((row, index) => { %>
-                  <option value="<%= row.categoryName %>"><%= row.categoryName %></option>
+                  <option value="<%= row._id %>"><%= row.categoryName %></option>
                   <% }) %>
                 </select>
               </div>

@@ -3,7 +3,7 @@ const SizeModel = require('../models/sizeModel');
 const ProductModel = require('../models/productModel');
 const productDetailsAdminGet = async (req, res) => {
     try {
-        let productDb = await ProductModel.find().exec()
+        let productDb = await ProductModel.find().populate("category").exec()
         res.render('admin/productDetails', { product: productDb, message: '',admin:req.session.admin })
     } catch (error) {
         console.log(error);
@@ -30,7 +30,7 @@ const addProductAdminPost = async (req, res) => {
             productName: req.body.productName,
             price: req.body.productPrice,
             image: image,
-            category: req.body.productCategory,
+            category: req.body.productCategory, 
             stockQuantity: req.body.productStock,
             status: req.body.status,
             description: req.body.productDescription,
