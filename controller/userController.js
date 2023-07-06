@@ -75,14 +75,18 @@ const homeGet=async (req,res)=>{
 
 const productDetailsGetUser=async(req,res)=>{
     try {
-        let id=req.params.id
-        const productDb= await ProductModel.findOne({_id:id}).populate("category")
+        let productId=req.params.id
+        let a="hai"
+        console.log(a);
+        console.log(productId);
+        const productDb = await ProductModel.findOne({ _id: productId.toString() }).populate("category").exec()
+
         console.log(productDb);
         if(productDb){
             res.render('users/singeProductDetails',{product:productDb,user:req.session.user})
         }
     } catch (error) {
-        console.log(error);
+        console.log(error.message);
     }
 }
 

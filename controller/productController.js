@@ -52,7 +52,8 @@ const addProductAdminPost = async (req, res) => {
 const editProductDetailsAdminGet = async (req, res) => {
     try {
         const productId = req.params.id
-        const productData = await ProductModel.findOne({ _id: productId })
+        console.log(productId);
+        const productData = await ProductModel.findOne({ _id: productId }).populate("category").exec()
         let categoryDb = await CategoryModel.find({status:true}).exec()
         res.render('admin/editProduct', { product: productData, category: categoryDb ,admin:req.session.admin})
     } catch (error) {
@@ -85,9 +86,9 @@ const editProductDetailsAdminPost = async (req, res) => {
             description: req.body.productDescription,
             updatedOn: Date.now()
         })
-        let productDb = await ProductModel.find().exec()
-        if (productUpdate) {
-            res.render('admin/productDetails', { product: productDb, message: '' ,admin:req.session.admin})
+        let productDb = await ProductModel.find().populate("category").exec()
+                if (productUpdate) {
+            res.render('admin/productDetails', { product: productDb, message: 'product has been edited sucessfully', status: 'success',admin:req.session.admin})
         } else {
             res.render('admin/productDetails', { product: productDb, message: `product updation failed`, status: 'danger',admin:req.session.admin })
         }
@@ -103,7 +104,7 @@ const unlistProductDetailsAdminGet = async (req, res) => {
             status: false,
             updatedOn: Date.now()
         }).exec();
-        let productDb = await ProductModel.find().exec()
+        let productDb = await ProductModel.find().populate("category").exec()
         if (productUpList) {
             res.render('admin/productDetails', { message: `unlisted sucessfully`, status: 'success', product: productDb ,admin:req.session.admin})
         } else {
@@ -120,7 +121,7 @@ const listProductDetailsAdminGet = async (req, res) => {
             status: true,
             updatedOn: Date.now()
         }).exec();
-        let productDb = await ProductModel.find().exec()
+        let productDb = await ProductModel.find().populate("category").exec()
         if (productUpList) {
             res.render('admin/productDetails', { message: `listed sucessfully`, status: 'success', product: productDb ,admin:req.session.admin})
         } else {

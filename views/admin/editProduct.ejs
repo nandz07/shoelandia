@@ -27,9 +27,9 @@
               <label class="col-sm-2 col-form-label" for="productCategory">Product Category</label>
               <div class="dropdown col-sm-4">
                 <select class="form-select" id="productCategory" name="productCategory" aria-label="Default select example">
-                  <option selected value="<%= product.category %>"><%= product.category %></option>
+                  <option selected value="<%= product.category._id %>"><%= product.category.categoryName%></option>
                   <% category.forEach((category, index) => { %>
-                    <% if(category.categoryName != product.category){  %>
+                    <% if(category.categoryName != product.category.categoryName){  %>
                         <option value="<%= category._id %>"><%= category.categoryName %></option>
                         <% } %>
                   <% }) %>
