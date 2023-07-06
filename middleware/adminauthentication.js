@@ -1,10 +1,14 @@
 const isLogin = (req,res,next)=>{
-    if(req.session.adminLogedIn){
-
-    }else{
-        res.redirect('/admin/adminLogin');
+    try {
+        if(req.session.adminLogedIn){
+            next()
+        }else{
+            res.redirect('/admin/adminLogin');
+        }
+        
+    } catch (error) {
+        console.log(error.message);
     }
-    next();
 }
 
 const isLogout = (req,res,next)=>{

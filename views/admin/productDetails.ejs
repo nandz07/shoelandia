@@ -30,9 +30,9 @@
                 <th>image</th>
                 <th>stock</th>
                 <th>status</th>
+                <th>action</th>
                 <th>Created on</th>
                 <th>updated on</th>
-                <th>action</th>
             </tr>
           </thead>
           <tbody>
@@ -94,14 +94,6 @@
                   ${month} ${year} ${hours}:${minutes}`; return formattedDate } %>
                   
                   <td>
-                    <%= getDate(row.createdOn) %>
-                  </td>
-
-                  <td>
-                    <%= getDate(row.updatedOn) %>
-                  </td>
-                  
-                  <td>
                     <div class="dropdown">
                       <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                         <i class="bx bx-dots-vertical-rounded"></i>
@@ -116,6 +108,15 @@
                       </div>
                     </div>
                   </td>
+
+                  <td>
+                    <%= getDate(row.createdOn) %>
+                  </td>
+
+                  <td>
+                    <%= getDate(row.updatedOn) %>
+                  </td>
+                  
                 </tr>
               <% }); %>
           </tbody>
@@ -129,9 +130,9 @@
               <th>image</th>
               <th>stock</th>
               <th>status</th>
+              <th>action</th>
               <th>Created on</th>
               <th>updated on</th>
-              <th>action</th>
             </tr>
           </tfoot>
         </table>

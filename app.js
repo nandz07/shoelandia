@@ -5,20 +5,19 @@ const path=require('path')
 const session=require("express-session")
 // const {v4:uuidv4}=require("uuid")
 const nocache = require('nocache');
-const mongoose=require('mongoose')
+require('./config/databaseConnect')
 const morgan=require('morgan')
+const userRout=require('./routes/userRoutes')
+const adminRout=require('./routes/adminRoutes')
 
 const PORT=process.env.PORT||4000
 
-// database connection
-mongoose.connect(process.env.DB_URI, { useNewUrlParser: true });
-const db=mongoose.connection
-db.on('error',(err)=>{
-    console.log(err);
-})
-db.on('open',function(){
-    console.log('connected...!');
-})
+app.use(session({
+    secret:process.env.SESSION,
+    saveUninitialized: true,
+    cookie: { maxAge: 6000000 },
+    resave: false
+}))
 
 // middleware
 app.use(express.urlencoded({extended:false}))
@@ -30,25 +29,16 @@ app.use(nocache())
 app.use('/static',express.static(path.join(__dirname,'public')))
 app.use('/assets',express.static(path.join(__dirname,'public/assets')))
 
-app.use(express.static('public/users'));
 app.use(express.static('public/admin'));
-
-
+app.use(express.static('public/users'));
 
 // set template engine
 app.set('view engine','ejs')
 
-// app.get('/',(req,res)=>{
-//     res.render('users/index')
-//     // res.send('hai')
-// })
-
-
 // routes prefix
-app.use("/",require('./routes/userRoutes'))
-app.use("/admin",require('./routes/adminRoutes'))
+app.use("/",userRout)
+app.use("/admin",adminRout)
 
 app.listen(PORT,()=>{
     console.log(`server started at http://localhost:${PORT}`);
-   // http://localhost:3000/
 })

@@ -2,13 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
-const session = require('express-session');
 
-router.use(session({
-    secret:process.env.SESSION,
-    saveUninitialized: true,
-    resave: false
-}))
 
 // // Route: GET /users/                
 router.get('/', userController.homeGet);
