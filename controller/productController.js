@@ -11,7 +11,7 @@ const productDetailsAdminGet = async (req, res) => {
 }
 const addProductAdminGet = async (req, res) => {
     try {
-        let categoryDb = await CategoryModel.find().exec()
+        let categoryDb = await CategoryModel.find({status:true}).exec()
         res.render('admin/addProduct', {
             category: categoryDb,
             message: '',admin:req.session.admin
@@ -53,7 +53,7 @@ const editProductDetailsAdminGet = async (req, res) => {
     try {
         const productId = req.params.id
         const productData = await ProductModel.findOne({ _id: productId })
-        let categoryDb = await CategoryModel.find().exec()
+        let categoryDb = await CategoryModel.find({status:true}).exec()
         res.render('admin/editProduct', { product: productData, category: categoryDb ,admin:req.session.admin})
     } catch (error) {
         console.log(error);

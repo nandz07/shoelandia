@@ -87,5 +87,7 @@ router.post('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
 router.post('/addProductSize', sizeController.addSizeAdminPost);
 router.post('/editProductSize/:id', sizeController.editProductSizeAdminPost);
-
+router.use((req, res, next) => {
+    res.status(404).send('404');
+  });
 module.exports = router

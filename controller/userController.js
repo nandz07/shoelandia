@@ -24,7 +24,6 @@ function generateOTP() {
   let otp 
 const creatOtp=async(name,email)=>{
      otp=generateOTP()
-    console.log(otp);
     const transporter = nodemailer.createTransport({
         host:'smtp.gmail.com',
         port:587,
@@ -67,8 +66,7 @@ const creatOtp=async(name,email)=>{
 // --------------------------------------
 const homeGet=async (req,res)=>{
     try {
-        const productDb = await ProductModel.find({ status: true }).exec();
-        console.log(productDb);
+        const productDb = await ProductModel.find({ status: true },).sort({createdOn:-1}).exec();
         res.render('users/index',{ product: productDb, message: '' ,user:req.session.user})
     } catch (error) {
         console.log(error);
@@ -77,7 +75,6 @@ const homeGet=async (req,res)=>{
 
 const productDetailsGetUser=async(req,res)=>{
     try {
-        console.log('hai');
         let id=req.params.id
         const productDb= await ProductModel.findOne({_id:id})
         if(productDb){
@@ -103,17 +100,19 @@ const userLoginGet=async (req,res)=>{
 const userLoginPost=async (req,res)=>{
     try {
         let email=req.body.email
-        console.log(email);
         let password=req.body.password
         let userDb=await userModel.findOne({email:email})
-        console.log(userDb);
         if(userDb){
         if(userDb.is_verified){
             const passwordMatch = await bcrypt.compare(password,userDb.password)
             if(passwordMatch){
+                if(userDb.is_blocked){
+                    res.render('users/userLogin',{message:' This website has been blocked for you',user:req.session.user})
+                }else{
                 req.session.user = userDb.name
                 req.session.userLogedIn = true
                 res.redirect('/')
+                }
             }else{
                 res.render('users/userLogin',{message:' Password is incorrect',user:req.session.user})
             }
@@ -138,7 +137,6 @@ const userSignUpGet=async (req,res)=>{
 }
 const userSignupPost=async (req,res)=>{
     try {
-        console.log('hai');
         let name=req.body.name
         let email=req.body.email
         const spassword = await securePassword(req.body.password);
@@ -170,7 +168,6 @@ const userSignupPost=async (req,res)=>{
 const otpVerificationGet=async (req,res)=>{
     try {
         const email = req.query.email;
-        console.log(email);
         res.render('users/otpVerification',{message:'',email:email,user:req.session.user})
     } catch (error) {
         console.log(error);
@@ -178,7 +175,6 @@ const otpVerificationGet=async (req,res)=>{
 }
 const otpVerificationPost=async (req,res)=>{
     try {
-        console.log('otpVerificationPost');
         let userOtp=''
         userOtp+=req.body.digit1
         userOtp+=req.body.digit2
@@ -186,15 +182,12 @@ const otpVerificationPost=async (req,res)=>{
         userOtp+=req.body.digit4
         let email=req.body.email
         let otpDb=await otpModel.findOne({ email: email })
-        console.log(otpDb.otp+" is ");
-        console.log(otpDb);
         if(userOtp == otpDb.otp){
             let id=otpDb._id
             await userModel.updateOne({email:email},{$set:{is_verified:true}})
             await otpModel.findByIdAndRemove(id)
             res.render('users/userLogin',{message:'your email has been verified sucessfully',user:req.session.user})
         }else{
-            console.log(otp);
             res.render('users/otpVerification',{message:'invalid otp',email:email,user:req.session.user})
         }
 
