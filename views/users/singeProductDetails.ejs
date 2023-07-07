@@ -51,20 +51,20 @@
                                     <% } %>
                         </a></li>
                     </ul>
-                    <p><%= product.description%></p>
+                    <p>&nbsp&nbsp&nbsp&nbsp<%= product.description%> <br>&nbsp&nbsp&nbsp&nbsp<%= product.category.categoryDescription %></p>
                     <div class="product_count">
                         <label for="qty">Quantity:</label>
-                        <input type="text" name="qty" id="sst" maxlength="12" value="1" title="Quantity:"
+                        <input type="text" name="qty" id="sst" maxlength="12" value="1" min="1" title="Quantity:"
                             class="input-text qty">
                         <button
                             onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
                             class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
                         <button
-                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 0 ) result.value--;return false;"
+                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;"
                             class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
                     </div>
                     <div class="card_area d-flex align-items-center">
-                        <a class="primary-btn" href="#">Add to Cart</a>
+                        <a class="primary-btn" id="addToCart" href="/addToCart/<%= product._id%>">Add to Cart</a>
                         <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
                     </div>
                 </div>
@@ -73,5 +73,7 @@
     </div>
 </div>
 <!--================End Single Product Area =================-->
+
+
 
 <%-include('../partials/userPartials/userFooter')-%>

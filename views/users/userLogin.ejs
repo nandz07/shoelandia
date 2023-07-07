@@ -1,27 +1,20 @@
 
 <%-include('../partials/userPartials/userHeader')-%>
+
+
 <!--================Login Box Area =================-->
 <section class="login_box_area section_gap mt-5">
     <div class="container">
         <div class="row">
-            <div class="col-lg-6">
-                <div class="login_box_img">
-                    <img class="img-fluid" src="/myImg/login.jpg" alt="" >
-                    <div class="hover">
-                        <h4>New to our website?</h4>
-                        <p>Unlock Endless Possibilities: Enter Sholandia, Create Your Account Today!</p>
-                        <a class="primary-btn" href="/userSignUp">Create an Account</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="login_form_inner">
-                    <h3>Log in to enter</h3>
+            <div class="col-lg-3"></div>
+            <div class="col-lg-6  ">
+                <div class="login_form_inner border border-warning rounded">
+                    <h3>Login </h3>
                     <% if(message){%>
                         <p><%= message %></p>
                    <% } %>
-                    <form class="row login_form" action="userLoginPost" method="post" id="contactForm"
-                        novalidate="novalidate">
+                    <form class="row login_form" action="login" method="post" id="contactForm"
+                        novalidate="novalidate" class="">
                         <div class="col-md-12 form-group">
                             <input type="email" class="form-control" id="email" name="email" placeholder="Email"
                                 onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
@@ -36,9 +29,16 @@
                         <div class="col-md-12 form-group">
                             <button type="submit" value="submit" class="primary-btn">Log In</button>
                         </div>
+                        <div class="hover mb-3">
+                            <h4>New to our website?</h4>
+                            <p>Unlock Endless Possibilities: Enter Sholandia, Create Your Account Today!</p>
+                            <a href="/userSignUp">Create an Account</a>
+                        </div>
                     </form>
                 </div>
             </div>
+            <div class="col-lg-3"></div>
+            
         </div>
     </div>
 </section>

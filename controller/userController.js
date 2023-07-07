@@ -4,7 +4,6 @@ const OtpModel = require('../models/otpModel');
 const nodemailer=require('nodemailer')
 const bcrypt = require('bcrypt');
 const otpModel = require('../models/otpModel');
-const userModel = require('../models/userModel');
 
 
 const securePassword = async (password)=>{
@@ -106,7 +105,7 @@ const userLoginPost=async (req,res)=>{
     try {
         let email=req.body.email
         let password=req.body.password
-        let userDb=await userModel.findOne({email:email})
+        let userDb=await UserModel.findOne({email:email})
         if(userDb){
         if(userDb.is_verified){
             const passwordMatch = await bcrypt.compare(password,userDb.password)
@@ -189,7 +188,7 @@ const otpVerificationPost=async (req,res)=>{
         let otpDb=await otpModel.findOne({ email: email })
         if(userOtp == otpDb.otp){
             let id=otpDb._id
-            await userModel.updateOne({email:email},{$set:{is_verified:true}})
+            await UserModel.updateOne({email:email},{$set:{is_verified:true}})
             await otpModel.findByIdAndRemove(id)
             res.render('users/userLogin',{message:'your email has been verified sucessfully',user:req.session.user})
         }else{
