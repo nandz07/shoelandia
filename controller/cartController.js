@@ -10,6 +10,8 @@ const CartModel = require('../models/cartModel');
 const addTocartPost = async (req, res) => {
     try {
         const productId = req.query.id
+        console.log(productId);
+        console.log(req.body.productId);
         if (req.session.userLogedIn) {
             const userId=req.session.userId
             const cartData = await CartModel.findOne({ user_id: userId })
@@ -28,10 +30,10 @@ const addTocartPost = async (req, res) => {
                     const exist = cartData.products.filter((value) => value.product_id.toString() == productId)
                     if (exist.length !== 0) {
                         await CartModel.findOneAndUpdate({ user_id: userId, "products.product_id": productId }, { $inc: { "products.$.quantity": 1 } })
-                        res.redirect('/')
+                        res.status(200).json({ success: true, message: 'Product added to cart' });
                     } else {
                         await CartModel.updateOne({ user_id: userId }, { $push: { products: { product_id: productId, quantity: 1, price: productData.price, totalPrice: productData.price } } })
-                        res.redirect('/')
+                        res.status(200).json({ success: true, message: 'Product added to cart' });
                     }
 
                 } else {
@@ -40,7 +42,7 @@ const addTocartPost = async (req, res) => {
                         user_id: userId
                     })
                     await cartSave.save()
-                    res.redirect('/')
+                    res.status(200).json({ success: true, message: 'Product added to cart' });
                 }
 
             } else {
@@ -65,10 +67,10 @@ const addTocartPost = async (req, res) => {
                     const exist = cartData.products.filter((value) => value.product_id.toString() == productId)
                     if (exist.length !== 0) {
                         await CartModel.findOneAndUpdate({ session_id: session_id, "products.product_id": productId }, { $inc: { "products.$.quantity": 1 } })
-                        res.redirect('/')
+                        res.status(200).json({ success: true, message: 'Product added to cart' });
                     } else {
                         await CartModel.updateOne({ session_id: session_id }, { $push: { products: { product_id: productId, quantity: 1, price: productData.price, totalPrice: productData.price } } })
-                        res.redirect('/')
+                        res.status(200).json({ success: true, message: 'Product added to cart' });
                     }
 
                 } else {
@@ -77,7 +79,7 @@ const addTocartPost = async (req, res) => {
                         session_id: session_id
                     })
                     await cartSave.save()
-                    res.redirect('/')
+                    res.status(200).json({ success: true, message: 'Product added to cart' });
                 }
 
             } else {
