@@ -143,7 +143,7 @@ const userLoginPost = async (req, res) => {
                                     }
                                 })
                             } else {
-                                await CartModel.updateOne({ session_id: req.sessionID }, { $set: { session_id: '', user_id: req.session.userId } })
+                                await CartModel.updateOne({ session_id: req.sessionID }, { $set: {user_id: req.session.userId }, $unset: { session_id: req.sessionID} })
                             }
                             await CartModel.deleteOne({ session_id: req.sessionID })
                         }
