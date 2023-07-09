@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
 const cartController = require('../controller/cartController');
+const userIsOrNot = require('../middleware/userIsOrNot');
 
 
 // // Route: GET /users/                
@@ -13,7 +14,7 @@ router.get('/userSignUp', userController.userSignUpGet);
 router.get('/otpVerificationGet', userController.otpVerificationGet);
 router.get('/userSignUpGet', userController.userSignUpGet);
 router.get('/userLogout', userController.userLogoutGet);
-router.get('/addToCart/:id', cartController.addTocartPost);
+router.get('/addToCart', cartController.addTocartPost);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);

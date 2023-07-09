@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId
+const { ObjectId } = require('mongodb');
 const addProductSchema = new mongoose.Schema({
     productName: {
         type: String,
