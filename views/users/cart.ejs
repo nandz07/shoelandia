@@ -1,0 +1,134 @@
+<%-include('../partials/userPartials/userHeader')-%>
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Shopping Cart</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="category.html">Cart</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Cart Area =================-->
+    <section class="cart_area">
+        <div class="container">
+            <div class="cart_inner">
+                <div class="table-responsive">
+                    <%if(cartData) {
+                         if(cartData.products.length) { %>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% cartData.products.forEach((product, index) => { %>
+
+                            <tr>
+                                <td>
+                                    <div class="media">
+                                        <div class="d-flex">
+                                            <img src="/productImages/<%=product.product_id.image[0] %>" alt="" width="100px">
+                                        </div>
+                                        <div class="media-body">
+                                            <h6> <%= product.product_id.productName%> </h6>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h5>₹ <%= product.price%></h5>
+                                </td>
+                                <td>
+                                    <div class="product_count d-flex">
+                                        <a class="btn font-weight-bold" onclick="plus('<%= product.product_id._id %>')">+</a>
+                                        <input type="text" id="quantity<%= product.product_id._id %>" readonly value="<%= product.quantity%>">
+                                        <a class="btn font-weight-bold" onclick="minus('<%= product.product_id._id  %>')">-</a>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h5 id="totalPrice<%= product.product_id._id %>"><%= product.totalPrice%></h5>
+                                </td>
+                                <td>
+                                    <a class="btn btn-danger text-white font-weight-bold" onclick="minus('<%= product.product_id._id  %>')">Remove</a>
+                                </td>
+                            </tr>
+                            <%})%>
+                         
+                            
+                            <tr class="bottom_button">
+                                <td>
+                                    
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h5>Total Products </h5>
+                                </td>
+                                <td>
+                                    <h5 id="totalQuantity"><%= totalQuantity%></h5>
+                                </td>
+                                <td>
+                                    <h5>Subtotal</h5>
+                                </td>
+                                <td>
+                                    <h5 id="subTotalPrice"><%= subTotalPrice%></h5>
+                                </td>
+                            </tr>
+                            <tr class="out_button_area">
+                                <td>
+                                    <a class="gray_btn" href="#">Continue Shopping</a>
+                                    
+                                </td>
+                                <td>
+
+                                </td>
+                                <td>
+                                    
+                                </td>
+                                <td>
+                                    <div class="checkout_btn_inner d-flex align-items-center justify-content-end">
+                                        
+                                        <a class="primary-btn" href="#">Proceed to checkout</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <% }else{%>
+                            <h1 class="text-center text-secondary mt-5">
+                                No Products in your cart
+                            </h1>
+                        <%}
+                    }else{%>
+                        <h1 class="text-center text-secondary mt-5">
+                                No Products in your cart
+                            </h1>
+                            <%}%>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Cart Area =================-->
+
+    <%-include('../partials/userPartials/userFooter')-%>

@@ -52,18 +52,6 @@
                         </a></li>
                     </ul>
                     <p>&nbsp&nbsp&nbsp&nbsp<%= product.description%> <br>&nbsp&nbsp&nbsp&nbsp<%= product.category.categoryDescription %></p>
-                    <!-- <div class="product_count">
-                        <label for="qty">Quantity:</label>
-                        <input type="text" name="qty" id="sst" maxlength="12" value="1" min="1" title="Quantity:"
-                            class="input-text qty">
-                        <button
-                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst )) result.value++;return false;"
-                            class="increase items-count" type="button"><i class="lnr lnr-chevron-up"></i></button>
-                        <button
-                            onclick="var result = document.getElementById('sst'); var sst = result.value; if( !isNaN( sst ) &amp;&amp; sst > 1 ) result.value--;return false;"
-                            class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
-                    </div> -->
-                    <!-- href="/addToCart?id=<-%= product._id%>" -->
                     <div class="card_area d-flex align-items-center">
                         <a class="primary-btn text-white" id="addToCart" onclick="addToCart('<%= product._id %>')" >Add to Cart</a>
                         <a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
@@ -75,20 +63,7 @@
 </div>
 <!--================End Single Product Area =================-->
 
-<script>
-    function addToCart(id){
-        axios.get('/addToCart?id='+id, { productId: id })
-            .then(function (response) {
-                // Handle the response from the server
-                console.log(response);
-                // You can perform additional actions based on the response, such as showing a success message or updating the cart icon.
-            })
-            .catch(function (error) {
-                // Handle any errors that occur during the request
-                console.error(error);
-            });
-    }
-</script>
+
 
 
 <%-include('../partials/userPartials/userFooter')-%>

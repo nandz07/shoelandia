@@ -102,13 +102,89 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="/js/userValidation.js"></script>
 <!--  -->
 <script>
-    $(function(){
+    $(function(e){
+        e.preventDefault();
     $(".xzoom, .xzoom-gallery").xzoom({
         zoomwidth:400,
         tint:"#333",
         xoffset:15
     })
 })
+</script>
+<script>
+    function addToCart(id){
+        event.preventDefault();
+        axios.get('/addToCart?id='+id, { productId: id })
+            .then(function (response) {
+                console.log(response);
+                if(response.data.success){
+                    let cartSpan=document.getElementById('cartSpan')
+                    cartSpan.removeAttribute("hidden");
+                    cartSpan.innerHTML=parseInt(cartSpan.innerHTML)+1
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+    function plus(id){
+        // alert(id)
+        event.preventDefault();
+        axios.post('/incrementQty?id='+id, { productId: id ,i:1})
+            .then(function (response) {
+                // console.log(response);
+                if(response.data.success){
+                    let cartSpan=document.getElementById('cartSpan')
+                    cartSpan.removeAttribute("hidden");
+                    cartSpan.innerHTML=parseInt(cartSpan.innerHTML)+1
+
+                    let quantityField=document.getElementById('quantity'+id)
+                    console.log(quantityField.value);
+                    quantityField.value=parseInt(quantityField.value)+1
+
+                    let totalPrice=document.getElementById('totalPrice'+id)
+                    totalPrice.innerHTML=parseInt(totalPrice.innerHTML)+response.data.priceOfOne
+
+                    let totalQuantity=document.getElementById('totalQuantity')
+                    totalQuantity.innerHTML=parseInt(totalQuantity.innerHTML)+1
+
+                    let subTotalPrice=document.getElementById('subTotalPrice')
+                    subTotalPrice.innerHTML=parseInt(subTotalPrice.innerHTML)+response.data.priceOfOne
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
+    function minus(id){
+        // alert(id)
+        event.preventDefault();
+        axios.post('/incrementQty?id='+id, { productId: id ,i:-1})
+            .then(function (response) {
+                // console.log(response);
+                if(response.data.success){
+                    let cartSpan=document.getElementById('cartSpan')
+                    cartSpan.removeAttribute("hidden");
+                    cartSpan.innerHTML=parseInt(cartSpan.innerHTML)-1
+
+                    let quantityField=document.getElementById('quantity'+id)
+                    console.log(quantityField.value);
+                    quantityField.value=parseInt(quantityField.value)-1
+
+                    let totalPrice=document.getElementById('totalPrice'+id)
+                    totalPrice.innerHTML=parseInt(totalPrice.innerHTML)-response.data.priceOfOne
+
+                    let totalQuantity=document.getElementById('totalQuantity')
+                    totalQuantity.innerHTML=parseInt(totalQuantity.innerHTML)-1
+
+                    let subTotalPrice=document.getElementById('subTotalPrice')
+                    subTotalPrice.innerHTML=parseInt(subTotalPrice.innerHTML)-response.data.priceOfOne
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
 </script>
 <!-- <script>
     $(document).ready(function() {
