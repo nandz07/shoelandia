@@ -21,8 +21,8 @@
         <div class="container">
             <div class="cart_inner">
                 <div class="table-responsive">
-                    <%if(cartData) {
-                         if(cartData.products.length) { %>
+                    <%if(cartData) {%>
+                       <%  if(cartData.products.length) { %>
                     <table class="table">
                         <thead>
                             <tr>
@@ -97,7 +97,7 @@
                             </tr>
                             <tr class="out_button_area">
                                 <td>
-                                    <a class="gray_btn" href="#">Continue Shopping</a>
+                                    <a class="gray_btn" href="/#a">Continue Shopping</a>
                                     
                                 </td>
                                 <td>
@@ -109,7 +109,7 @@
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center justify-content-end">
                                         
-                                        <a class="primary-btn" href="#">Proceed to checkout</a>
+                                        <a class="primary-btn" href="/checkout">Proceed to checkout</a>
                                     </div>
                                 </td>
                             </tr>
@@ -119,8 +119,8 @@
                             <h1 class="text-center text-secondary mt-5">
                                 No Products in your cart
                             </h1>
-                        <%}
-                    }else{%>
+                        <%}%>
+                    <%}else{%>
                         <h1 class="text-center text-secondary mt-5">
                                 No Products in your cart
                             </h1>
