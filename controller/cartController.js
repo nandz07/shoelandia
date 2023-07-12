@@ -189,7 +189,9 @@ const incrementQty = async (req, res, next) => {
                             if (exist[0].quantity > 1) {
                                 await CartModel.findOneAndUpdate({ user_id: userId, "products.product_id": productId }, { $inc: { "products.$.quantity": -1, "products.$.totalPrice": -productData.price }, $set: { updatedOn: Date.now() } })
                                 let priceOfOne = productData.price
-                                res.status(200).json({ success: true, message: 'Product added to cart', priceOfOne });
+                                res.status(200).json({ success: true, message: 'Product reduced to cart', priceOfOne });
+                            }else{
+                                res.status(200).json({ success: false, message: 'min 1 product' });
                             }
                         }
 
@@ -215,6 +217,8 @@ const incrementQty = async (req, res, next) => {
                             await CartModel.findOneAndUpdate({ session_id: session_id, "products.product_id": productId }, { $inc: { "products.$.quantity": -1, "products.$.totalPrice": -productData.price }, $set: { updatedOn: Date.now() } })
                             let priceOfOne = productData.price
                             res.status(200).json({ success: true, message: 'Product added to cart', priceOfOne });
+                        }else{
+                            res.status(200).json({ success: false, message: 'min 1 product' });
                         }
                     }
                 } else if (productData.stockQuantity == 0) {
