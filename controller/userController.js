@@ -146,10 +146,10 @@ const userLoginPost = async (req, res) => {
                                 isSessionCart.products.filter(async(sessionValue) => {
                                     const exist = userCartData.products.filter((value) => value.product_id.toString() == sessionValue.product_id)
                                     if (exist.length !== 0) {
-                                        await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": 1 } })
+                                        await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity , "products.$.totalPrice": sessionValue.totalPrice } })
                                         // res.redirect('/')
                                     } else {
-                                        await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: 1, price: sessionValue.price, totalPrice: sessionValue.price } } })
+                                        await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
                                         // res.redirect('/')
                                     }
                                 })

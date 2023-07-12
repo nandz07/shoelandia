@@ -61,7 +61,7 @@
                                     <h5 id="totalPrice<%= product.product_id._id %>"><%= product.totalPrice%></h5>
                                 </td>
                                 <td>
-                                    <a class="btn btn-danger text-white font-weight-bold" onclick="minus('<%= product.product_id._id  %>')">Remove</a>
+                                    <a class="btn btn-danger text-white font-weight-bold" href="/removeCart?id=<%= product.product_id._id  %>">Remove</a>
                                 </td>
                             </tr>
                             <%})%>

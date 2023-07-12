@@ -229,8 +229,33 @@ const incrementQty = async (req, res, next) => {
         console.log(error);
     }
 }
+const removeCart =async(req,res)=>{
+    try {
+        const user =req.session.userLogedIn;
+        const proId = req.query.id;
+        const userId = req.session.userId
+        console.log(userId);
+        if(user){
+            const productData = await CartModel.findOne({user_id:userId})
+            if(productData){
+                const product = productData.products.find((p) => p.product_id.toString() === proId) 
+                await CartModel.updateOne({ user_id: userId, "products.product_id": proId },   { $pull: { products: { product_id: proId } } }   ).then((data)=>{
+                    res.redirect('/cart')
+                })
+
+            }
+
+        }else{
+            res.redirect('/')
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+}
 module.exports = {
     addTocartPost,
     userCartGet,
-    incrementQty
+    incrementQty,
+    removeCart
 }
