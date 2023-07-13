@@ -1,0 +1,87 @@
+
+<%-include('../partials/userPartials/userHeader')-%>
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Checkout</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="single-product.html">Checkout</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Checkout Area =================-->
+    <section class="checkout_area section_gap">
+        <div class="container">
+            
+            
+            <div class="billing_details">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h3>Billing Details</h3>
+                        <form class="row contact_form" action="#" method="post" novalidate="novalidate">
+                            <div class="col-md-6 form-group p_star">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control" id="name" name="name" value="<%= userData.name %>" disabled>
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <label for="phone">Phone</label>
+                                <input type="text" class="form-control" id="phone" name="phone" value="<%= userData.mobile %>" disabled>
+                            </div>
+                            <div class="col-md-6 form-group p_star">
+                                <label for="email">Email</label>
+                                <input type="text" class="form-control" id="email" name="email" value="<%= userData.email %>" disabled>
+                            </div>
+                            
+                        </form>
+                        <a class="primary-btn" href="/addAdress">+ Add address</a>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="order_box">
+                            <h2>Your Order</h2>
+                            <ul class="list">
+                                <li><a href="#">Product <span>Total</span></a></li>
+                                <% cartData.products.forEach((product, index) => { %>
+                                    <li><a href="#"><%=product.product_id.productName %> X <%= product.quantity%><span class="middle"></span> <span class="last"><%= product.totalPrice%></span></a></li>
+                                    <% }) %>
+                                
+                            </ul>
+                            <ul class="list list_2">
+                                <li><a href="#">Subtotal <span><%= subTotalPrice%></span></a></li>
+                                <!-- <li><a href="#">Shipping <span>Flat rate: $50.00</span></a></li> -->
+                                <li><a href="#">Total <span><%= subTotalPrice%></span></a></li>
+                            </ul>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option5" name="selector" checked>
+                                    <label for="f-option5">Cash on Delivery</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>Make your payment as COD </p>
+                            </div>
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option6" name="selector" disabled>
+                                    <label for="f-option6">Razorpay </label>
+                                    <img src="img/product/card.jpg" alt="">
+                                    <div class="check"></div>
+                                </div>
+                                <p>Pay via Razorpay; you can pay with your credit card if you don’t have a Razorpay
+                                    account.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Checkout Area =================-->
+
+<%-include('../partials/userPartials/userFooter')-%>

@@ -185,18 +185,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 console.error(error);
             });
     }
-</script>
-<!-- <script>
-    $(document).ready(function() {
-  $('#addToCart').click(function(event) {
-    event.preventDefault(); 
+    // -------------- place order -------------
 
-    alert('Item added to cart!');
-    
-    
-  });
-});
-</script> -->
+    function placeOrder(){
+        const selectedRadioButton = document.querySelector('input[name="address"]:checked');
+        const selectedValue = selectedRadioButton.value;
+        alert(selectedValue);
+        const selectedPaymentButton = document.querySelector('input[name="selector"]:checked');
+        const selectedPayment = selectedPaymentButton.value;
+        alert(selectedPayment);
+
+    }
+</script>
 </body>
 
 </html>

@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt');
 const otpModel = require('../models/otpModel');
 const CartModel = require('../models/cartModel');
-const UpdateCartModel = require('../models/updateCartModel');
+// const UpdateCartModel = require('../models/updateCartModel');
 
 
 const securePassword = async (password) => {

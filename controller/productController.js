@@ -1,5 +1,4 @@
 const CategoryModel = require('../models/categoryModel');
-const SizeModel = require('../models/sizeModel');
 const ProductModel = require('../models/productModel');
 const productDetailsAdminGet = async (req, res) => {
     try {

@@ -1,0 +1,89 @@
+
+<%-include('../partials/userPartials/userHeader')-%>
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Checkout</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="single-product.html">Checkout</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+    <!--================Checkout Area =================-->
+    <section class="checkout_area section_gap">
+        <div class="container">
+            
+            
+            <div class="billing_details">
+                <div class="row">
+                    <div class="col-lg-8">
+                        
+                        <div class="order_box">
+                            <% addressDb.addresses.forEach((address, index) => { %>
+                                <div class="payment_item">
+                                    <div class="radion_btn">
+                                        <% if(index ==0 ){ %>
+                                        <input type="radio" id="address'<%=address._id%>'" value="<%=address._id%>" name="address" checked>
+                                        <% }else{%>
+                                        <input type="radio" id="address'<%=address._id%>'" value="<%=address._id%>" name="address">
+                                       <% } %>
+                                        <label for="address'<%=address._id%>'">Address <%=index+1 %></label>
+                                        <div class="check"></div>
+                                    </div>
+                                        <p><%= address.userName %>,<%= address.address %>,<%= address.city %>,<%= address.state %>,<%= address.pincode %> <br>contact :<%= address.mobile %> </p>
+                                </div>
+                                    <% }) %>
+                        </div>
+                                <a class="mt-5" href="/addAdress">+ Add address</a>
+                            </div>
+                            
+                    <div class="col-lg-4">
+                        <div class="order_box">
+                            <h2>Your Order</h2>
+                            <ul class="list">
+                                <li><a href="#">Product <span>Total</span></a></li>
+                                <% cartData.products.forEach((product, index) => { %>
+                                    <li><a href="#"><%=product.product_id.productName %> X <%= product.quantity%><span class="middle"></span> <span class="last"><%= product.totalPrice%></span></a></li>
+                                    <% }) %>
+                                
+                            </ul>
+                            <ul class="list list_2">
+                                <li><a href="#">Subtotal <span><%= subTotalPrice%></span></a></li>
+                                <li><a href="#">Total <span><%= subTotalPrice%></span></a></li>
+                            </ul>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option5" name="selector" value="COD" checked>
+                                    <label for="f-option5">Cash on Delivery</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>Make your payment as COD </p>
+                            </div>
+                            <div class="payment_item active">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option6" name="selector" value="online" disabled>
+                                    <label for="f-option6">online payment </label>
+                                    <img src="img/product/card.jpg" alt="">
+                                    <div class="check"></div>
+                                </div>
+                                <p>Pay via Razorpay; you can pay with your credit card if you don’t have a Razorpay
+                                    account.</p>
+                            </div>
+                            <a class="primary-btn text-white" onclick="placeOrder()" >Place order</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================End Checkout Area =================-->
+
+<%-include('../partials/userPartials/userFooter')-%>

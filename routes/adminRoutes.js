@@ -2,10 +2,8 @@ const express = require('express')
 const router = express.Router()
 const adminController = require('../controller/adminController')
 const productController = require('../controller/productController')
-const colorController = require('../controller/colorController')
 const brandController = require('../controller/brandsController')
 const categoryController = require('../controller/categoryController')
-const sizeController = require('../controller/sizeController')
 const userController = require('../controller/userDetailscontroller')
 const auth = require('../middleware/adminauthentication');
 const upload=require('../config/multiFileUpload')
@@ -28,22 +26,16 @@ router.get('/unlistProduct/:id',auth.isLogin, productController.unlistProductDet
 router.get('/listProduct/:id',auth.isLogin, productController.listProductDetailsAdminGet);
 
 
-router.get('/productColor', auth.isLogin,colorController.productColorAdminGet);
-router.get('/addColor',auth.isLogin, colorController.addColorAdminGet);
-router.get('/productBrand', auth.isLogin,brandController.productBrandAdminGet);
-router.get('/addBrand',auth.isLogin, brandController.addBrandAdminGet);
+
+
+
 router.get('/productCategory', auth.isLogin,categoryController.productCategoryAdminGet);
 router.get('/editCategory/:id', auth.isLogin,categoryController.editCategoryAdminGet);
 router.get('/deleteCategory', auth.isLogin,categoryController.deleteCategoryAdminGet);
 router.get('/unlistCategory/:id', auth.isLogin,categoryController.unlistCategoryAdminGet);
 router.get('/listCategory/:id',auth.isLogin, categoryController.listCategoryAdminGet);
 
-router.get('/productSize',auth.isLogin, sizeController.productSizeAdminGet);
-router.get('/addProductSize', auth.isLogin,sizeController.addSizeAdminGet);
-router.get('/editProductSize/:id', auth.isLogin,sizeController.editProductSizeAdminGet);
-router.get('/listSize/:id',auth.isLogin, sizeController.listSizeAdminGet);
-router.get('/unlistSize/:id', auth.isLogin,sizeController.unlistSizeAdminGet);
-// router.get('/deleteProductSize', sizeController.deleteCategoryAdminGet);
+
 
 
 // post
@@ -52,13 +44,11 @@ router.post('/adminLoginPost', adminController.adminLoginPost);
 router.post('/addProduct',upload.array('image',10), productController.addProductAdminPost);
 router.post('/editproductPost/:id',upload.array('image',10), productController.editProductDetailsAdminPost);
 
-router.post('/addColor', colorController.addColorAdminPost);
 router.post('/addCategory', categoryController.addCategoryAdminPost);
 router.post('/editCategoryPost/:id', categoryController.editCategoryAdminPost);
 router.post('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
-router.post('/addProductSize', sizeController.addSizeAdminPost);
-router.post('/editProductSize/:id', sizeController.editProductSizeAdminPost);
+
 router.use((req, res, next) => {
     res.status(404).send('404');
   });
