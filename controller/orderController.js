@@ -100,25 +100,12 @@ const addAdress = async (req, res) => {
         console.log(error);
     }
 }
-const checkoutPost = async (req, res) => {
+const cartPost = async (req, res) => {
     try {
-        if (req.session.userLogedIn) {
-            let userId = req.session.userId
-            const userData = await UserModel.findOne({ _id: userId })
-                const addressDb = await AddressModel.find({ user_id: userId.toString() })
-                console.log(userData);
-                
-                    res.render('users/addAdress', {
-                        user: req.session.user,
-                        count: req.cartCount,
-                        addressDb,
-                        userData
-                    })
-                
-        } else {
-            const redirectUrl = '/login?message=' + encodeURIComponent('Need to login for purchase');
-            res.redirect(redirectUrl);
-        }
+       let  { addressId ,selectedPayment}=req.body
+       console.log(addressId);
+       console.log(selectedPayment);
+       
     } catch (error) {
         console.log(error);
     }
@@ -128,5 +115,5 @@ module.exports = {
     checkoutLoad,
     addAdress,
     addAdressPost,
-    checkoutPost
+    cartPost
 }

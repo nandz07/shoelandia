@@ -124,6 +124,57 @@ const userLoginGet = async (req, res) => {
         console.log(error);
     }
 }
+// const userLoginPost = async (req, res) => {
+//     try {
+//         let email = req.body.email
+//         let password = req.body.password
+//         let userDb = await UserModel.findOne({ email: email })
+//         if (userDb) {
+//             if (userDb.is_verified) {
+//                 const passwordMatch = await bcrypt.compare(password, userDb.password)
+//                 if (passwordMatch) {
+//                     if (userDb.is_blocked) {
+//                         res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user,count:req.cartCount })
+//                     } else {
+//                         req.session.user = userDb.name
+//                         req.session.userId = userDb._id
+//                         req.session.userLogedIn = true
+//                         const isSessionCart = await CartModel.findOne({ session_id: req.sessionID })
+//                         if (isSessionCart) {
+//                             const userCartData = await CartModel.findOne({ user_id: req.session.userId })
+//                             if (userCartData) {
+//                                 isSessionCart.products.filter(async(sessionValue) => {
+//                                     const exist = userCartData.products.filter((value) => value.product_id.toString() == sessionValue.product_id)
+//                                     if (exist.length !== 0) {
+//                                         await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity , "products.$.totalPrice": sessionValue.totalPrice } })
+//                                         // res.redirect('/')
+//                                     } else {
+//                                         await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
+//                                         // res.redirect('/')
+//                                     }
+//                                 })
+//                             } else {
+//                                 await CartModel.updateOne({ session_id: req.sessionID }, { $set: {user_id: req.session.userId }, $unset: { session_id: req.sessionID} })
+//                             }
+//                             await CartModel.deleteOne({ session_id: req.sessionID })
+//                         }
+//                         res.redirect('/')
+//                     }
+//                 } else {
+//                     res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user ,count:req.cartCount})
+//                 }
+//             } else {
+//                 const redirectUrl = '/otpVerificationGet?email=' + encodeURIComponent(email);
+//                 res.redirect(redirectUrl);
+//             }
+//         } else {
+//             res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user ,count:req.cartCount})
+//         }
+//         // res.render('users/userLogin',{message:''})
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 const userLoginPost = async (req, res) => {
     try {
         let email = req.body.email
@@ -134,7 +185,7 @@ const userLoginPost = async (req, res) => {
                 const passwordMatch = await bcrypt.compare(password, userDb.password)
                 if (passwordMatch) {
                     if (userDb.is_blocked) {
-                        res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user,count:req.cartCount })
+                        res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount })
                     } else {
                         req.session.user = userDb.name
                         req.session.userId = userDb._id
@@ -143,32 +194,38 @@ const userLoginPost = async (req, res) => {
                         if (isSessionCart) {
                             const userCartData = await CartModel.findOne({ user_id: req.session.userId })
                             if (userCartData) {
-                                isSessionCart.products.filter(async(sessionValue) => {
+                                isSessionCart.products.filter(async (sessionValue) => {
+                                    let productData = await ProductModel.findOne({ _id: sessionValue.product_id })
                                     const exist = userCartData.products.filter((value) => value.product_id.toString() == sessionValue.product_id)
-                                    if (exist.length !== 0) {
-                                        await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity , "products.$.totalPrice": sessionValue.totalPrice } })
-                                        // res.redirect('/')
-                                    } else {
-                                        await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
-                                        // res.redirect('/')
-                                    }
+                                    console.log(exist);
+                                        if (exist.length !== 0) {
+                                            if (exist[0].quantity + sessionValue.quantity < productData.stockQuantity) {
+                                                await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity, "products.$.totalPrice": sessionValue.totalPrice } })
+                                                // res.redirect('/')
+                                            }else{
+                                                await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $set: { "products.$.quantity": productData.stockQuantity, "products.$.totalPrice": sessionValue.price * productData.stockQuantity } })
+                                            }
+                                        } else {
+                                            await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
+                                            // res.redirect('/')
+                                        }
                                 })
                             } else {
-                                await CartModel.updateOne({ session_id: req.sessionID }, { $set: {user_id: req.session.userId }, $unset: { session_id: req.sessionID} })
+                                await CartModel.updateOne({ session_id: req.sessionID }, { $set: { user_id: req.session.userId }, $unset: { session_id: req.sessionID } })
                             }
                             await CartModel.deleteOne({ session_id: req.sessionID })
                         }
                         res.redirect('/')
                     }
                 } else {
-                    res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user ,count:req.cartCount})
+                    res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user, count: req.cartCount })
                 }
             } else {
                 const redirectUrl = '/otpVerificationGet?email=' + encodeURIComponent(email);
                 res.redirect(redirectUrl);
             }
         } else {
-            res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user ,count:req.cartCount})
+            res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user, count: req.cartCount })
         }
         // res.render('users/userLogin',{message:''})
     } catch (error) {

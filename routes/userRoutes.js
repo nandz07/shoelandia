@@ -25,9 +25,9 @@ router.post('/userSignupPost', userController.userSignupPost);
 router.post('/login', userController.userLoginPost);
 router.post('/otpVerificationPost', userController.otpVerificationPost);
 router.post('/incrementQty', cartController.incrementQty);
-router.get('/removeCart', cartController.removeCart);
+router.post('/removeCart', cartController.removeCart);
 router.post('/addAddress',midData.midData, orderController.addAdressPost);
-router.post('/checkoutPost',midData.midData, orderController.checkoutPost);
+router.post('/checkoutPost',midData.midData, orderController.cartPost);
 
 
 
