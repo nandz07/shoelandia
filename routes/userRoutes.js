@@ -5,6 +5,8 @@ const userController = require('../controller/userController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const midData = require('../middleware/midData');
+const auth = require('../middleware/userAuth')
+
 
 
 // // Route: GET /users/                
@@ -19,6 +21,7 @@ router.get('/addToCart', cartController.addTocartPost);
 router.get('/Cart',midData.midData, cartController.userCartGet);
 router.get('/checkout',midData.midData, orderController.checkoutLoad);
 router.get('/addAdress',midData.midData, orderController.addAdress);
+router.get('/editAddress',auth.verify_user,midData.midData, orderController.editAddressGet);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);
@@ -27,7 +30,9 @@ router.post('/otpVerificationPost', userController.otpVerificationPost);
 router.post('/incrementQty', cartController.incrementQty);
 router.post('/removeCart', cartController.removeCart);
 router.post('/addAddress',midData.midData, orderController.addAdressPost);
-router.post('/checkoutPost',midData.midData, orderController.cartPost);
+router.post('/checkoutPost',midData.midData, orderController.checkoutPost);
+router.post('/updateAddress',auth.verify_user,midData.midData, orderController.editAddressPost);
+router.post('/deleteAddress',auth.verify_user,midData.midData, orderController.deleteAddress);
 
 
 

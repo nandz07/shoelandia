@@ -248,6 +248,45 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             });
 
     }
+    // ----- remove address ----------
+    function removeAddress(id){
+        event.preventDefault();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger m-3'
+            },
+            buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+            }).then((result) => {
+            if (result.isConfirmed) {
+                axios.post('/deleteAddress?id='+id)
+                .then((response)=>{
+                    location.reload();
+                }).catch(error => {
+                console.log(error);
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                'Cancelled',
+                'Your imaginary file is safe :)',
+                'error'
+                )
+            }
+        })
+    }
 </script>
 </body>
 

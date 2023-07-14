@@ -39,10 +39,15 @@
                                         <div class="check"></div>
                                     </div>
                                         <p><%= address.userName %>,<%= address.address %>,<%= address.city %>,<%= address.state %>,<%= address.pincode %> <br>contact :<%= address.mobile %> </p>
+                                        <a class="mt-5 text-dark" href="/editAddress?id=<%=address._id%>"><span class="lnr lnr-pencil"></span> Edit</a>
+                                        <% if(addressDb.addresses.length>1) {%>
+                                        <a class="mt-5 text-dark ml-3" href="" onclick="removeAddress('<%=address._id%>')"><span class="lnr lnr-trash"></span> remove</a>
+                                        <% } %>
+
                                 </div>
-                                    <% }) %>
+                            <% }) %>
                         </div>
-                                <a class="mt-5" href="/addAdress">+ Add address</a>
+                                <a class="mt-3 text-danger btn  border-warning" href="/addAdress"><span class="lnr lnr-file-add"></span> Add address</a>
                             </div>
                             
                     <div class="col-lg-4">
