@@ -111,6 +111,14 @@ const userCartGet = async (req, res) => {
         const user = req.session.userLogedIn;
         const userId = req.session.userId;
         if (user) {
+            const oldCartData = await CartModel.findOne({ user_id: userId }).populate('products.product_id');
+            console.log(oldCartData);
+            oldCartData.products.forEach( async (element) => {
+                if(element.quantity>element.product_id.stockQuantity){
+                    console.log(element.quantity+'-------'+element.product_id.stockQuantity);
+                    await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": element.product_id }, { $set: { "products.$.quantity": element.product_id.stockQuantity, "products.$.totalPrice": element.price * element.product_id.stockQuantity } })
+                }
+            });
             const cartData = await CartModel.findOne({ user_id: userId }).populate('products.product_id');
             if (cartData) {
                 const carts = await CartModel.findOne({ user_id: userId });

@@ -2,7 +2,11 @@ const ProductModel = require('../models/productModel');
 const UserModel = require('../models/userModel');
 const CartModel = require('../models/cartModel');
 const AddressModel = require('../models/addressModel');
+const OrderModel = require('../models/orderModel');
 var mongoose = require('mongoose');
+const ejs = require('ejs');
+const path = require('path')
+
 
 const checkoutLoad = async (req, res) => {
     try {
@@ -154,14 +158,160 @@ const deleteAddress = async (req, res) => {
 }
 const checkoutPost = async (req, res) => {
     try {
+
         let { addressId, selectedPayment } = req.body
+        let userId = req.session.userId
         console.log(addressId);
         console.log(selectedPayment);
+        const cartData = await CartModel.findOne({ user_id: req.session.userId }).populate('products.product_id');
+
+        const outOfStock = cartData.products.reduce((result, p) => {
+            if (p.quantity <= p.product_id.stockQuantity) {
+                console.log('-------------------------');
+                console.log(p);
+                console.log('-------------------------');
+                result.filtered.push(p);
+            } else {
+                result.unfiltered.push(p);
+            }
+            return result;
+        }, { filtered: [], unfiltered: [] });
+
+        const filteredData = outOfStock.filtered;
+        const unfilteredData = outOfStock.unfiltered;
+        if (unfilteredData.length != 0) {
+            res.status(200).json({ success: false, message: 'out of quantity', data: unfilteredData, redirectUrl: '/cart' })
+        } else {
+            if (cartData) {
+                const cartOrders = cartData.products;
+                let subTotalPrice = cartData ? cartData.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
+                const totalQuantity = cartData ? cartData.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
+                //find order date and deliverDate
+                var days = 7;
+                var newDate = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+                var recentDate = new Date();
+                var deliveredDate = newDate;
+                if (req.body.subTotalPrice) {
+                    subTotalPrice = req.body.subTotalPrice;
+                }
+
+                // create orders in database
+                if (cartOrders) {
+                    const orderSave = new OrderModel({
+                        products: cartData.products,
+                        user_id: userId,
+                        address_id: req.body.flexRadioDefault,
+                        quantity: totalQuantity,
+                        totalPrice: subTotalPrice,
+                        orderDate: recentDate,
+                        deliveryDate: deliveredDate,
+                        paymentMethod: req.body.selector,
+                        orderStatus: '',
+                        userStatus: '',
+                        paymentStatus: 'pending',
+                        status: 'pending',
+                    })
+                    await orderSave.save().then(async (response) => {
+                        if (selectedPayment == 'COD') {
+                            const orderId = response._id;
+                            await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { status: 'success', orderstatus: 'confirm', paymentStatus: 'pending' } }).then(() => {
+                            }).then((status) => {
+                                
+                            }).then(async () => {
+                                for (let i = 0; i < cartOrders.length; i++) {
+                                    const productId = cartOrders[i].product_id;
+                                    const productQty = cartOrders[i].quantity;
+                                    console.log(" -------------productQty----------------");
+                                    console.log(productQty);
+                                    console.log(productId);
+                                    console.log(" -------------productQty----------------");
+                                    const productActQty = await ProductModel.findOne({ _id: productId });
+                                    console.log(" ------------ productActQty -----------------");
+                                    console.log(productActQty);
+                                    console.log(productActQty+" ----------productActQty-------------------");
+
+                                    if (productActQty.stockQuantity >= 1 || productActQty.status) {
+                                            console.log(productQty);
+                                        const updateQty = productActQty.stockQuantity - productQty
+                                        await ProductModel.updateOne({ _id: productId }, { $set: { stockQuantity: updateQty } }).then(p => { }).then(async () => {
+                                            if (updateQty === 0) {
+                                                await ProductModel.updateOne({ _id: productId }, { $set: { status: false } })
+                                            } else {
+                                                // await ProductModel.updateOne({ _id: productId }, { $set: { status: 'Available' } })
+                                            }
+                                        })
+                                    }
+                                }
+                            }).then(async () => {
+                                if (req.body.CouponName) {
+
+                                    const couponData = await Coupon.updateOne({ name: req.body.CouponName }, { $set: { status: 'false' } });
+                                }
+                            })
+                        }
+                    })
+                    await CartModel.deleteOne({ user_id: userId });
+                    res.status(200).json({ success: true, redirectUrl: '/' });
+                }
+            }
+        }
+
+        //   res.status(200).json({ success: true, redirectUrl: '/' });
 
     } catch (error) {
         console.log(error);
     }
 }
+// const checkoutPost = async (req, res) => {
+//     try {
+//         // res.status(200).json({ success: true, message: 'address removed' });
+//         res.status(200).json({ success: true, redirectUrl: '/' });
+//         // const renderedHTML = await ejs.renderFile('/cart', { /* EJS data */ });
+//     //     const cartHTML = await ejs.renderFile(path.join(__dirname, 'views', 'cart.ejs'), { /* EJS data */ });
+//     // res.status(200).json({ success: true, html: cartHTML  });
+//         let { addressId, selectedPayment } = req.body
+//         console.log(addressId);
+//         console.log(selectedPayment);
+//         const cartData = await CartModel.findOne({ user_id: req.session.userId }).populate('products.product_id');
+
+//         const outOfStock = cartData.products.reduce((result, p) => {
+//             if (p.quantity <= p.product_id.stockQuantity) {
+//                 console.log('-------------------------');
+//                 console.log(p);
+//                 console.log('-------------------------');
+//               result.filtered.push(p);
+//             } else {
+//               result.unfiltered.push(p);
+//             }
+//             return result;
+//           }, { filtered: [], unfiltered: [] });
+
+//           const filteredData = outOfStock.filtered;
+//           const unfilteredData = outOfStock.unfiltered;
+//           console.log("filteredData--------------------");
+//           console.log(filteredData);
+//           console.log("filteredData--------------------");
+//           console.log("-----------unfilteredData--------------------");
+//           console.log(unfilteredData);
+//           console.log("-----------unfilteredData--------------------");
+//         // const outofStock = cartData.products.filter(p => p.quantity <= p.product_id.stockQuantity);
+
+//         // console.log("-----------unfilteredData--------------------");
+//         // //   console.log(cartData.products[0].quantity);
+//         //   console.log(outofStock);
+//         //   console.log("-----------unfilteredData--------------------");
+
+
+
+//         // console.log(cartData);
+//         // let products=new Array
+//         // cartData
+
+// // res.redirect('/')
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 module.exports = {
     checkoutLoad,
     addAdress,

@@ -51,11 +51,15 @@
                                     <h5>₹ <%= product.price%></h5>
                                 </td>
                                 <td>
+                                    <% if(product.product_id.stockQuantity==0) {%>
+                                        <span class="text-danger">out of stock</span>
+                                        <% }else{ %>
                                     <div class="product_count d-flex">
                                         <a class="btn font-weight-bold" onclick="plus('<%= product.product_id._id %>')">+</a>
                                         <input type="text" id="quantity<%= product.product_id._id %>" readonly value="<%= product.quantity%>">
                                         <a class="btn font-weight-bold" onclick="minus('<%= product.product_id._id  %>')">-</a>
                                     </div>
+                                    <% } %>
                                 </td>
                                 <td>
                                     <h5 id="totalPrice<%= product.product_id._id %>"><%= product.totalPrice%></h5>

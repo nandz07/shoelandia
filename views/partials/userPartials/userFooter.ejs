@@ -241,7 +241,31 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
         axios.post('/checkoutPost', { addressId: selectedValue ,selectedPayment:selectedPayment})
             .then(response => {
-                // Handle the response
+                if(response.data.success){
+                    Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Order has been placed successfully',
+                    showConfirmButton: false,
+                    timer: 1500
+                    }).then(()=>{
+                        window.location.href = response.data.redirectUrl;
+                    })
+                    
+                }else{
+                    let prd=''
+                    response.data.data.forEach(element => {
+                        prd+=element.product_id.productName+','
+                    })
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: `${prd} product is out of quantity`,
+                    footer: `<a href="${response.data.redirectUrl}">Change quantity?</a>`
+                    })
+                }
+
+                // document.getElementById('checkoutContainer').innerHTML = response.data.html;
             })
             .catch(error => {
                 // Handle the error
