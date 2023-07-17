@@ -22,6 +22,7 @@ router.get('/Cart',midData.midData, cartController.userCartGet);
 router.get('/checkout',midData.midData, orderController.checkoutLoad);
 router.get('/addAdress',midData.midData, orderController.addAdress);
 router.get('/editAddress',auth.verify_user,midData.midData, orderController.editAddressGet);
+router.get('/myOrder',auth.verify_user,midData.midData, orderController.myOrders);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);
@@ -33,6 +34,7 @@ router.post('/addAddress',midData.midData, orderController.addAdressPost);
 router.post('/checkoutPost',midData.midData, orderController.checkoutPost);
 router.post('/updateAddress',auth.verify_user,midData.midData, orderController.editAddressPost);
 router.post('/deleteAddress',auth.verify_user,midData.midData, orderController.deleteAddress);
+router.post('/cancelOrder',auth.verify_user,midData.midData, orderController.cancelOrder);
 
 
 

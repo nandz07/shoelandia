@@ -22,11 +22,11 @@ const orderSchema = new mongoose.Schema({
         products: [productSchema],
         user_id: {
             type: ObjectId,
-            ref: 'User'
+            ref: 'user'
         },
         address_id: {
             type: ObjectId,
-            ref: 'Address'
+            ref: 'address'
         },
         quantity: {
             type: Number,

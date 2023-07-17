@@ -27,7 +27,7 @@
                     <div class="col-lg-8">
                         
                         <div class="order_box">
-                            <% addressDb.addresses.forEach((address, index) => { %>
+                            <% addressDb.forEach((address, index) => { %>
                                 <div class="payment_item">
                                     <div class="radion_btn">
                                         <% if(index ==0 ){ %>
@@ -40,7 +40,7 @@
                                     </div>
                                         <p><%= address.userName %>,<%= address.address %>,<%= address.city %>,<%= address.state %>,<%= address.pincode %> <br>contact :<%= address.mobile %> </p>
                                         <a class="mt-5 text-dark" href="/editAddress?id=<%=address._id%>"><span class="lnr lnr-pencil"></span> Edit</a>
-                                        <% if(addressDb.addresses.length>1) {%>
+                                        <% if(addressDb.length>1) {%>
                                         <a class="mt-5 text-dark ml-3" href="" onclick="removeAddress('<%=address._id%>')"><span class="lnr lnr-trash"></span> remove</a>
                                         <% } %>
 

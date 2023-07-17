@@ -242,13 +242,28 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         axios.post('/checkoutPost', { addressId: selectedValue ,selectedPayment:selectedPayment})
             .then(response => {
                 if(response.data.success){
+                    let product=''
+                    response.data.orderData.products.forEach(element => {
+                        product+=  `<li>
+                                ${element.product_id.productName} X ${element.quantity} - ${element.totalPrice}
+                            </li>`
+                            })
                     Swal.fire({
                     position: 'center',
                     icon: 'success',
                     title: 'Order has been placed successfully',
-                    showConfirmButton: false,
-                    timer: 1500
-                    }).then(()=>{
+                    // html:`<p>${addressData.address}</p>`
+                    html:`<ul>
+                            <li>
+                                deivery Address:${response.data.addressData.address},${response.data.addressData.city},
+                                ${response.data.addressData.state},${response.data.addressData.pincode}
+                            </li>
+                            <br>
+                            ${product}
+                        </ul>`
+                    // showConfirmButton: false,
+                    // timer: 1500
+                    }).then((result)=>{
                         window.location.href = response.data.redirectUrl;
                     })
                     
@@ -295,6 +310,47 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             if (result.isConfirmed) {
                 axios.post('/deleteAddress?id='+id)
                 .then((response)=>{
+                    location.reload();
+                }).catch(error => {
+                console.log(error);
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                'Cancelled',
+                'Your imaginary file is safe :)',
+                'error'
+                )
+            }
+        })
+    }
+    // ----- cancel order
+    function cancel(id){
+        
+        event.preventDefault();
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger m-3'
+            },
+            buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+            }).then((result) => {
+            if (result.isConfirmed) {
+                axios.post('/cancelOrder?id='+id)
+                .then((response)=>{
+                    // console.log(response.data);
                     location.reload();
                 }).catch(error => {
                 console.log(error);

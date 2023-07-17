@@ -1,0 +1,146 @@
+<%-include('../partials/userPartials/userHeader')-%>
+
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>My Orders</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="#section_gap">My Orders</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+    <section class="section_gap"id="section_gap">
+        <div class="container">
+            <div class="row mb-6" >
+                <% if(data.orderData !='') {%>
+                    <% data.orderData.forEach((element,index) => {%>
+                    <div class="col-md-6 order_box">
+                        <div class="card mb-3">
+                            <div class="row g-0">
+                                <div class="col-md">
+                                    <div class="card-body">
+                                        <!-- <h5 class="card-title">Card title</h5> -->
+                                        <!-- <p class="card-text"> -->
+                                            <ul class="list">
+                                                <!-- <li><a href="#">Product <span>Total</span></a></li>
+                                                    <% element.products.forEach((product, index) => { %>
+                                                        <li><a href="#"><%=product.product_id.productName %> X <%= product.quantity%><span class="middle"></span> <span class="last"><%= product.totalPrice%></span></a></li>
+                                                        <% }) %> -->
+                                                        <li>Total Price : <%=element.totalPrice %></li>
+                                                        <li>Delivery Address : <%=element.address_id.address %>,
+                                                            <%=element.address_id.city %>,<%=element.address_id.state %>,
+                                                            <%=element.address_id.pincode %></li>
+                                                            <% if(element.orderstatus != 'canceled') {%>
+                                                            <li>Order Status : <span class="text-success font-weight-bold"> <%= element.orderstatus %> </span></li>
+                                                            <% }else{ %>
+                                                                <li>Order Status : <span class="text-danger font-weight-bold"> <%= element.orderstatus %> </span></li>
+                                                            <% } %>
+                                                            <li class="text-success">ordered on : <%= getDate(element.orderDate) %></li>
+                                                            <li>Delivery on : <%= getDate(element.deliveryDate) %></li>
+                                                            <li><button type="button" class="btn mt-2 bg-success text-white" data-toggle="modal" data-target="#exLargeModal<%=index %>"> view more</button><span class="middle"></span> 
+                                                                <% if(element.orderstatus != 'canceled') {%>
+                                                                    <span class="last"><button class="btn mt-2 bg-danger text-white" onclick="cancel('<%= element._id %>')"> cancel</button></span>
+                                                               <% } %>
+                                                            </li>
+
+                                            </ul>
+                                        <!-- </p> -->
+                                        <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+                                            const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+                                            const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day}
+                                            ${month} ${year} `; return formattedDate } %>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <%}); %>
+                    <% }else{%>
+                        <h1 class="text-center text-secondary mt-5">
+                            No Ordered data !
+                          </h1>
+                   <% } %>
+                </div>
+            
+        </div>
+        <!-- Modal description -->
+        <% if(data.orderData !='') {%>
+    <% data.orderData .forEach((row, index) => { %>
+        
+          <div class="modal fade bd-example-modal-lg" id="exLargeModal<%=index %>" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="table-responsive">
+                <table class="table" id="myTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Total</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    
+               <% row.products.forEach((product,index) => { %>
+                    <tr>
+                        <td>
+                            <div class="media">
+                                <div class="d-flex">
+                                    <img src="/productImages/<%=product.product_id.image[0] %>" alt="" width="100px">
+                                </div>
+                                <div class="media-body mt-5 ml-2">
+                                    <h6> <%= product.product_id.productName%> </h6>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="media-body mt-5 ml-2">
+                                <h5>₹ <%= product.price%></h5>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="media-body mt-5 ml-2">
+                                <h5><%= product.quantity%></h5>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="media-body mt-5 ml-2">
+                                <h5>₹ <%= product.totalPrice%></h5>
+                            </div>
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+               <%}); %>
+               <tr>
+                <td>
+                    <h5>Total Products </h5>
+                </td>
+                <td>
+                    <h5 id="totalQuantity"><%= row.quantity%></h5>
+                </td>
+                <td>
+                    <h5>Subtotal</h5>
+                </td>
+                <td>
+                    <h5 id="subTotalPrice">₹ <%= row.totalPrice%></h5>
+                </td>
+            </tr>
+               </table>
+            </div>
+              </div>
+            </div>
+          </div>
+    <% }); %>
+    <% }; %>
+    </section>
+    <%-include('../partials/userPartials/userFooter')-%>
