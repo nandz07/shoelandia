@@ -43,8 +43,8 @@
                                                             <% } %>
                                                             <li class="text-success">ordered on : <%= getDate(element.orderDate) %></li>
                                                             <li>Delivery on : <%= getDate(element.deliveryDate) %></li>
-                                                            <li><button type="button" class="btn mt-2 bg-success text-white" data-toggle="modal" data-target="#exLargeModal<%=index %>"> view more</button><span class="middle"></span> 
-                                                                <% if(element.orderstatus != 'canceled') {%>
+                                                            <li><button type="button" class="btn mt-2 bg-info text-white" data-toggle="modal" data-target="#exLargeModal<%=index %>"> view more</button><span class="middle"></span> 
+                                                                <% if(element.orderstatus != 'canceled' && element.orderstatus != 'delivered') {%>
                                                                     <span class="last"><button class="btn mt-2 bg-danger text-white" onclick="cancel('<%= element._id %>')"> cancel</button></span>
                                                                <% } %>
                                                             </li>

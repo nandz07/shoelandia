@@ -5,6 +5,8 @@ const productController = require('../controller/productController')
 const brandController = require('../controller/brandsController')
 const categoryController = require('../controller/categoryController')
 const userController = require('../controller/userDetailscontroller')
+const orderController = require('../controller/orderController');
+
 const auth = require('../middleware/adminauthentication');
 const upload=require('../config/multiFileUpload')
 
@@ -34,6 +36,11 @@ router.get('/editCategory/:id', auth.isLogin,categoryController.editCategoryAdmi
 router.get('/deleteCategory', auth.isLogin,categoryController.deleteCategoryAdminGet);
 router.get('/unlistCategory/:id', auth.isLogin,categoryController.unlistCategoryAdminGet);
 router.get('/listCategory/:id',auth.isLogin, categoryController.listCategoryAdminGet);
+
+router.get('/OrderDetails',auth.isLogin, orderController.loadOrdersAdmin);
+router.get('/shipping',auth.isLogin, orderController.shippingAdmin);
+router.get('/delivered',auth.isLogin, orderController.deliveryAdmin);
+
 
 
 

@@ -1,0 +1,215 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+<% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+  const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+  const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day}
+  ${month} ${year} `; return formattedDate } %>
+  <% if(message){%>
+    <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+      <%= message %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    <% } %>
+
+      <!-- Bootstrap Table with Header - Footer -->
+      <div class="card">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h5 class="mb-0">Product Details</h5>
+          <small class="text-muted float-end"><a type="button" href="/admin/addProduct" class="btn btn-primary">
+              Add
+            </a></small>
+        </div>
+
+        <div class="table-responsive text-nowrap container table">
+          <% if (orderData !='' ) { %>
+            <table class="table table-border-bottom-1 table-hover" id="categoryTable">
+              <thead>
+                <tr>
+                  <th>order ID</th>
+                  <th>status</th>
+                  <th>user name</th>
+                  <th>more</th>
+                  <th>orderd </th>
+                  <th>delivery</th>
+                  <th>payment</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% orderData.forEach((row, index)=> { %>
+                  <tr>
+                    <td>
+                      <%= row._id%>
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <% if(row.orderstatus=='confirm' ){%>
+                          <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <%= row.orderstatus %>
+                          </button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="shipping?id=<%= row._id %>">shipping</a></li>
+                            <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
+                          </ul>
+                          <% } else if(row.orderstatus=='canceled' ){%>
+                            <button class="btn btn-danger btn-sm " type="button" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                              <%= row.orderstatus %>
+                            </button>
+                          <% } else if(row.orderstatus=='shipping' ){%>
+                            <button class="btn btn-warning btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                              <%= row.orderstatus %>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
+                            </ul>
+                          <% } else if(row.orderstatus=='delivered' ){%>
+                            <button class="btn btn-success btn-sm " type="button" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                              <%= row.orderstatus %>
+                            </button>
+                            <% }  %>
+                      </div>
+                    </td>
+                    <td>
+                      <%= row.address_id.userName%>
+                    </td>
+                    <td>
+                      <a href="#" data-bs-toggle="modal" data-bs-target="#exLargeModal<%= index %>"
+                        data-mydata="<%= row.productName %>">more</a>
+                    </td>
+                    <td>
+                      <%= getDate(row.orderDate) %>
+                    </td>
+                    <td>
+                      <%= getDate(row.deliveryDate) %>
+                    </td>
+                    <td>
+
+                      <%= row.paymentStatus%>
+                    </td>
+                  </tr>
+                  <% }); %>
+              </tbody>
+              <tfoot class="table-border-bottom-0">
+                <tr>
+                  <th>order ID</th>
+                  <th>status</th>
+                  <th>user name</th>
+                  <th>more</th>
+                  <th>orderd </th>
+                  <th>delivery</th>
+                  <th>payment</th>
+                </tr>
+              </tfoot>
+            </table>
+            <% } else { %>
+              <h1 class="text-center text-secondary mt-5">
+                No Product Size found in the database
+              </h1>
+              <% } %>
+        </div>
+        <% if (orderData !='' ) { %>
+          <% orderData.forEach((row,index)=> {%>
+            <!-- Extra Large Modal -->
+            <div class="modal fade" id="exLargeModal<%= index %>" tabindex="-1" aria-hidden="true">
+              <div class="modal-dialog modal-xl" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel4">order details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    
+                      <div class="table-responsive">
+                        <table class="table" id="myTable">
+                          <thead>
+                            <tr>
+                              <th scope="col">Product</th>
+                              <th scope="col">Price</th>
+                              <th scope="col">Quantity</th>
+                              <th scope="col">Total</th>
+                              <th scope="col"></th>
+                            </tr>
+                          </thead>
+
+                          <% row.products.forEach((product,index)=> { %>
+                            <tr>
+                              <td>
+                                <div class="media d-flex">
+                                  <div class="m-3">
+                                    <img src="/productImages/<%=product.product_id.image[0] %>" alt="" width="100px">
+                                  </div>
+                                  <div class="media-body mt-5 ml-2">
+                                    <h6 class="m-3">
+                                      <%= product.product_id.productName%>
+                                    </h6>
+                                  </div>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="media-body mt-5 ml-2">
+                                  <h5>₹ <%= product.price%>
+                                  </h5>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="media-body mt-5 ml-2">
+                                  <h5>
+                                    <%= product.quantity%>
+                                  </h5>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="media-body mt-5 ml-2">
+                                  <h5>₹ <%= product.totalPrice%>
+                                  </h5>
+                                </div>
+                              </td>
+                              <td>
+
+                              </td>
+                            </tr>
+                            <%}); %>
+                              <tr>
+                                <td>
+                                  <h5>Total Products </h5>
+                                </td>
+                                <td>
+                                  <h5 id="totalQuantity">
+                                    <%= row.quantity%>
+                                  </h5>
+                                </td>
+                                <td>
+                                  <h5>Subtotal</h5>
+                                </td>
+                                <td>
+                                  <h5 id="subTotalPrice">₹ <%= row.totalPrice%>
+                                  </h5>
+                                </td>
+                              </tr>
+                        </table>
+                      </div>
+                      <div class="card-body">
+                        Ordered by : <%= row.address_id.userName%> <br>
+                        Delivery Address : <%= row.address_id.address %>,<%= row.address_id.city %>,<%= row.address_id.state %>
+                        <%= row.address_id.pincode %> <br>
+                        Contact number: <%= row.address_id.mobile %>
+                      </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                      Close
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <% }); %>
+              <% } %>
+      </div>
+
+      </div>
+
+      <%-include('../partials/adminPartials/adminFooter')-%>

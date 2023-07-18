@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 const ejs = require('ejs');
 const path = require('path');
 const { log } = require('console');
+const orderModel = require('../models/orderModel');
 
 
 const checkoutLoad = async (req, res) => {
@@ -267,7 +268,6 @@ const myOrders = async (req, res) => {
     try {
         let userId = req.session.userId
         const orderData = await OrderModel.find({ user_id: userId }).sort({ orderDate: -1 }).populate('products.product_id').populate('address_id');
-        console.log(orderData);
         data = {
             user: req.session.user,
             count: req.cartCount,
@@ -283,6 +283,14 @@ const cancelOrder =async (req,res)=>{
     try {
         let id=req.query.id
         console.log(id);
+        orderDetails= await orderModel.find({_id:id})
+        orderDetails[0].products.forEach(async (element) => {
+            let orderedQnty=element.quantity
+            let a=await ProductModel.findByIdAndUpdate(element.product_id,{$inc:{stockQuantity:orderedQnty}})
+            console.log("===========================");
+            console.log(a);
+            console.log("===========================");
+        });
         const orderUpdate = await OrderModel.findByIdAndUpdate(id, {
             orderstatus:'canceled'
         })
@@ -296,7 +304,41 @@ const cancelOrder =async (req,res)=>{
 // -------------------------------- admin ------------------
 const loadOrdersAdmin = async (req, res) => {
     try {
-
+        const orderData = await OrderModel.find().sort({ orderDate: -1 }).populate('products.product_id').populate('address_id');
+        console.log(orderData);
+        data = {
+            
+        }
+        res.render('admin/OrderDetails', {orderData,
+            message:''})
+    } catch (error) {
+        console.log(error);
+    }
+}
+const shippingAdmin = async (req, res) => {
+    try {
+        const orderData = await OrderModel.findByIdAndUpdate({_id:req.query.id},{$set:{orderstatus:'shipping'}})
+        console.log(orderData);
+        data = {
+            
+        }
+        res.redirect('/admin/OrderDetails')
+        // res.render('admin/OrderDetails', {orderData,
+        //     message:''})
+    } catch (error) {
+        console.log(error);
+    }
+}
+const deliveryAdmin = async (req, res) => {
+    try {
+        const orderData = await OrderModel.findByIdAndUpdate({_id:req.query.id},{$set:{orderstatus:'delivered',paymentStatus:'success'}})
+        console.log(orderData);
+        data = {
+            
+        }
+        res.redirect('/admin/OrderDetails')
+        // res.render('admin/OrderDetails', {orderData,
+        //     message:''})
     } catch (error) {
         console.log(error);
     }
@@ -311,5 +353,7 @@ module.exports = {
     deleteAddress,
     loadOrdersAdmin,
     myOrders,
-    cancelOrder
+    cancelOrder,
+    shippingAdmin,
+    deliveryAdmin
 }
