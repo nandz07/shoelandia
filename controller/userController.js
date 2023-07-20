@@ -62,7 +62,14 @@ const creatOtp = async (name, email) => {
         email: email,
         otp: otp
     })
-    let saveOtp = await otpToSave.save();
+    let exist=await otpModel.findOne({email:email})
+        if(exist){
+            await otpModel.updateOne({email:email},{$set:{otp:otp}})
+        }else{
+            let saveOtp = await otpToSave.save();
+        }
+    
+    
 }
 // --------------------------------------
 const homeGet = async (req, res) => {
@@ -277,6 +284,20 @@ const otpVerificationGet = async (req, res) => {
         console.log(error);
     }
 }
+const resendOtpGet = async (req, res) => {
+    try {
+        const email = req.query.email;
+        let exist=await otpModel.findOne({email:email})
+        const name=await UserModel.findOne({email:email}).name
+        if(exist){
+            creatOtp(name, email)
+            res.render('users/otpVerification', { message: 'OTP has been resend', email: email, user: req.session.user,count:req.cartCount })
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 const otpVerificationPost = async (req, res) => {
     try {
         let userOtp = ''
@@ -322,5 +343,6 @@ module.exports = {
     userSignupPost,
     otpVerificationPost,
     otpVerificationGet,
-    userLogoutGet
+    userLogoutGet,
+    resendOtpGet
 }

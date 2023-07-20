@@ -18,6 +18,11 @@
           <input type="text" class="form-control otp-input" id="digit4" name="digit4" maxlength="1" required>
           <input type="hidden" name="email" value="<%= email %>">
         </div>
+        <div class="mb-3 d-flex">
+            <a href="/resendOtp?email=<%= email %>" id="reSend" hidden>Resend OTP ?</a>
+            <p href="/resendOtp?email=<%= email %>" id="reSendp" >Resend OTP ?</p>
+            <span class="ml-3 mt-0 m-b-0" id="timer" class="align-items-center">10</span>
+        </div>
         <!-- <a href="" id="refreshLink">resend otp ?</a> -->
         <button type="submit" class="btn btn-primary btn-block">Verify</button>
       </form>
@@ -29,6 +34,36 @@
   document.getElementById('refreshLink').addEventListener('click', function(e) {
     e.preventDefault(); 
     location.reload(); 
+  });
+</script>
+<script>
+  // Get all the OTP input fields
+  const otpInputs = document.querySelectorAll('.otp-input');
+
+  // Add event listeners to each input field
+  otpInputs.forEach((input, index) => {
+    input.addEventListener('input', (event) => {
+      const currentInput = event.target;
+
+      // Move the cursor to the next input field if a character is entered
+      if (currentInput.value.length === 1) {
+        const nextInput = otpInputs[index + 1];
+        if (nextInput) {
+          nextInput.focus();
+        }
+      }
+    });
+
+    // Move to the previous input field if the user deletes the content
+    input.addEventListener('keydown', (event) => {
+      const currentInput = event.target;
+      if (event.key === 'Backspace' && currentInput.value.length === 0) {
+        const previousInput = otpInputs[index - 1];
+        if (previousInput) {
+          previousInput.focus();
+        }
+      }
+    });
   });
 </script>
 <%-include('../partials/userPartials/userFooter')-%>

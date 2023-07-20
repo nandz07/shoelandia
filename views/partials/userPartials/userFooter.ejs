@@ -368,6 +368,37 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         })
     }
 </script>
+
+<!-- ----otp -->
+
+<script>
+    // Function to start the timer
+    function startTimer() {
+        let seconds = 10;
+        const timerElement = document.getElementById('timer');
+
+        function updateTimer() {
+            timerElement.innerText = '00:0'+seconds;
+            seconds--;
+
+            if (seconds < 0) {
+                clearInterval(timerInterval);
+                document.getElementById('reSend').removeAttribute('hidden')
+                document.getElementById('reSendp').setAttribute('hidden',true)
+                document.getElementById('timer').setAttribute('hidden',true)
+                // timerElement.innerText = '<a href="/resendOtp?email=">Resend OTP ?</a>';
+            }
+        }
+
+        updateTimer(); // Initial update
+
+        // Update the timer every second
+        const timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    // Start the timer when the page loads
+    window.onload = startTimer;
+</script>
 </body>
 
 </html>

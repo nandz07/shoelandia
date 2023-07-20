@@ -36,8 +36,8 @@ app.use(express.static('public/users'));
 app.set('view engine','ejs')
 
 // routes prefix
-app.use("/",userRout)
 app.use("/admin",adminRout)
+app.use("/",userRout)
 
 app.listen(PORT,()=>{
     console.log(`server started at http://localhost:${PORT}`);

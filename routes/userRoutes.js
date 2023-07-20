@@ -23,6 +23,7 @@ router.get('/checkout',midData.midData, orderController.checkoutLoad);
 router.get('/addAdress',midData.midData, orderController.addAdress);
 router.get('/editAddress',auth.verify_user,midData.midData, orderController.editAddressGet);
 router.get('/myOrder',auth.verify_user,midData.midData, orderController.myOrders);
+router.get('/resendOtp',midData.midData, userController.resendOtpGet);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);
