@@ -38,7 +38,9 @@ router.post('/deleteAddress',auth.verify_user,midData.midData, orderController.d
 router.post('/cancelOrder',auth.verify_user,midData.midData, orderController.cancelOrder);
 
 
-
+router.use((req, res, next) => {
+    res.status(404).render('users/404')
+  });
 module.exports = router;
 
 

@@ -57,6 +57,6 @@ router.post('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
 
 router.use((req, res, next) => {
-    res.status(404).send('404');
+    res.status(404).render('admin/404')
   });
 module.exports = router
