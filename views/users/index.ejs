@@ -186,9 +186,15 @@
 					<% product.forEach((row, index)=> { %>
 					<div class="col-lg-3 col-md-6">
 						<div class="single-product">
-							<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
+							<div>
+								<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
+							</div>
+							
 							<div class="product-details">
-								<h6><%=row.productName %></h6>
+								<div class="d-flex">
+									<h6><%=row.productName %></h6>
+									
+								</div>
 								<div class="price">
 									<h6>₹ <%=row.price %></h6>
 								</div>
@@ -199,8 +205,19 @@
 										<span class="ti-bag"></span>
 										<p class="hover-text" id="addToCart"  >add to bag</p>
 									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
+									<a href="" class="social-info" onclick="addToWishlist('<%= row._id %>')">
+										<% if(!user){%>
+											<span class="lnr lnr-heart addWish<%= row._id %>"></span>
+										<%} else{%>
+											<% if(row.wishlist){%>
+												<span class="lnr lnr-heart bg-danger addWish<%= row._id %>"></span>
+												<%} else{%>
+													<span class="lnr lnr-heart addWish<%= row._id %>"></span>
+												<%} %>
+											
+										<% } %>
+											
+										
 										<p class="hover-text">Wishlist</p>
 									</a>
 									<a href="/productDetailsUser/<%= row._id %>" class="social-info">
@@ -231,34 +248,52 @@
 				<div class="row">
 					<!-- single product -->
 					<% product.forEach((row, index)=> { %>
-					<div class="col-lg-3 col-md-6">
-						<div class="single-product">
-							<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
-							<div class="product-details">
-								<h6><%=row.productName %></h6>
-								<div class="price">
-									<h6>₹ <%=row.price %></h6>
+						<div class="col-lg-3 col-md-6">
+							<div class="single-product">
+								<div>
+									<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
 								</div>
-								<div class="prd-bottom">
-
-									<a href="" class="social-info" onclick="addToCart('<%= row._id %>')">
-										<span class="ti-bag"></span>
-										<p class="hover-text" id="addToCart" onclick="addToCart('<%= row._id %>')" >add to bag</p>
-									</a>
-									<a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a>
-									<a href="/productDetailsUser/<%= row._id %>" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a>
+								
+								<div class="product-details">
+									<div class="d-flex">
+										<h6><%=row.productName %></h6>
+										
+									</div>
+									<div class="price">
+										<h6>₹ <%=row.price %></h6>
+									</div>
+									<div class="prd-bottom">
+	
+										<a href="" class="social-info" onclick="addToCart('<%= row._id %>')">
+	
+											<span class="ti-bag"></span>
+											<p class="hover-text" id="addToCart"  >add to bag</p>
+										</a>
+										<a href="" class="social-info" onclick="addToWishlist('<%= row._id %>')">
+											<% if(!user){%>
+												<span class="lnr lnr-heart addWish<%= row._id %>"></span>
+											<%} else{%>
+												<% if(row.wishlist){%>
+													<span class="lnr lnr-heart bg-danger addWish<%= row._id %>"></span>
+													<%} else{%>
+														<span class="lnr lnr-heart addWish<%= row._id %>"></span>
+													<%} %>
+												
+											<% } %>
+												
+											
+											<p class="hover-text">Wishlist</p>
+										</a>
+										<a href="/productDetailsUser/<%= row._id %>" class="social-info">
+											<span class="lnr lnr-move"></span>
+											<p class="hover-text">view more</p>
+										</a>
+									</div>
 								</div>
 							</div>
 						</div>
-					</div>
-
-					<% } )%>
+	
+						<% } )%>
 					
 				</div>
 			</div>

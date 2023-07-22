@@ -98,6 +98,9 @@
 							<% if(user){ %>
 							<li class="nav-item "><a class="nav-link" href="/myOrder">My Orders</a></li>
 							<% } %>
+							<% if(user){ %>
+								<li class="nav-item "><a class="nav-link" href="/wishlist"><span class="lnr lnr-heart font-weight-bold text-danger"></span></a></li>
+							<% } %>
 							<li class="nav-item "><a class="nav-link" href="/cart"><span class="ti-bag">&nbsp<span id="cartSpan" class="text-danger font-weight-bold"><%=count %>
 							</span></span></a></li>
 

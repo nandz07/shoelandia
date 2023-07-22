@@ -1,0 +1,90 @@
+<%-include('../partials/userPartials/userHeader')-%>
+    <!-- Start Banner Area -->
+    <section class="banner-area organic-breadcrumb">
+        <div class="container">
+            <div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+                <div class="col-first">
+                    <h1>Wishlist</h1>
+                    <nav class="d-flex align-items-center">
+                        <a href="/">Home<span class="lnr lnr-arrow-right"></span></a>
+                        <a href="#section_gap">Wishlist</a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Banner Area -->
+
+
+    <!-- start product Area -->
+    <section class="section_gap">
+        <!-- single product slide -->
+        <div class="container">
+            <div class="row">
+                <!-- single product -->
+                <% if(wishList ){%>
+                    <% if(wishList.products.length !=0){ %>
+                        <% wishList.products.forEach((row, index)=> { %>
+                        <div class="col-lg-3 col-md-6 removeWish<%= row.product_id._id %>">
+                            <div class="single-product">
+                                <div>
+                                    <img class="img-fluid" src="/productImages/<%= row.product_id.image[0] %>" alt=""
+                                        height="100px">
+                                </div>
+
+                                <div class="product-details">
+                                    <div class="d-flex">
+                                        <h6>
+                                            <%=row.product_id.productName %>
+                                        </h6>
+
+                                    </div>
+                                    <div class="price">
+                                        <h6>₹ <%=row.product_id.price %>
+                                        </h6>
+                                    </div>
+                                    <div class="prd-bottom">
+
+                                        <a href="" class="social-info" onclick="addToCart('<%= row.product_id._id %>')">
+
+                                            <span class="ti-bag"></span>
+                                            <p class="hover-text" id="addToCart">add to bag</p>
+                                        </a>
+                                        <a href="" class="social-info"
+                                            onclick="removeFromWishlist('<%= row.product_id._id %>')">
+                                            <span
+                                                class="lnr lnr-heart bg-danger addWish<%= row.product_id._id %>"></span>
+
+
+                                            <p class="hover-text">Wishlist</p>
+                                        </a>
+                                        <a href="/productDetailsUser/<%= row._id %>" class="social-info">
+                                            <span class="lnr lnr-move"></span>
+                                            <p class="hover-text">view more</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <% } )%>
+                            <%} else{%>
+                                <h1 class="text-center text-secondary mt-5">
+                                    No Product in your Wishlist
+                                </h1>
+                                <% } %>
+                                    <% } else{%>
+                                        <h1 class="text-center text-secondary mt-5">
+                                            No Product in your Wishlist
+                                        </h1>
+                                        <% } %>
+
+
+            </div>
+        </div>
+    </section>
+    <!-- end product Area -->
+
+
+
+    <%-include('../partials/userPartials/userFooter')-%>

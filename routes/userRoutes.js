@@ -4,6 +4,7 @@ const router = express.Router();
 const userController = require('../controller/userController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
+const wishlistController = require('../controller/wishlistController');
 const midData = require('../middleware/midData');
 const auth = require('../middleware/userAuth')
 
@@ -24,6 +25,7 @@ router.get('/addAdress',midData.midData, orderController.addAdress);
 router.get('/editAddress',auth.verify_user,midData.midData, orderController.editAddressGet);
 router.get('/myOrder',auth.verify_user,midData.midData, orderController.myOrders);
 router.get('/resendOtp',midData.midData, userController.resendOtpGet);
+router.get('/wishlist',auth.verify_user,midData.midData, wishlistController.wishlistGet);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);
@@ -36,6 +38,7 @@ router.post('/checkoutPost',midData.midData, orderController.checkoutPost);
 router.post('/updateAddress',auth.verify_user,midData.midData, orderController.editAddressPost);
 router.post('/deleteAddress',auth.verify_user,midData.midData, orderController.deleteAddress);
 router.post('/cancelOrder',auth.verify_user,midData.midData, orderController.cancelOrder);
+router.post('/addToWishlistPost',auth.verify_user,midData.midData, wishlistController.addToWishlistPost)
 
 
 router.use((req, res, next) => {

@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer')
 const bcrypt = require('bcrypt');
 const otpModel = require('../models/otpModel');
 const CartModel = require('../models/cartModel');
+const wishlistModel = require('../models/wishlistModel');
 // const UpdateCartModel = require('../models/updateCartModel');
 
 
@@ -62,36 +63,53 @@ const creatOtp = async (name, email) => {
         email: email,
         otp: otp
     })
-    let exist=await otpModel.findOne({email:email})
-        if(exist){
-            await otpModel.updateOne({email:email},{$set:{otp:otp}})
-        }else{
-            let saveOtp = await otpToSave.save();
-        }
-    
-    
+    let exist = await otpModel.findOne({ email: email })
+    if (exist) {
+        await otpModel.updateOne({ email: email }, { $set: { otp: otp } })
+    } else {
+        let saveOtp = await otpToSave.save();
+    }
+
+
 }
 // --------------------------------------
 const homeGet = async (req, res) => {
     try {
-        let SessionCart=await CartModel.find({})
-        SessionCart.forEach(async(element)=> {
-            if(element.session_id){
-                console.log(Date.now()-element.updatedOn);
-                let diff=Date.now()-element.updatedOn
-                if(diff>(5*60*1000)){
+        let SessionCart = await CartModel.find({})
+        SessionCart.forEach(async (element) => {
+            if (element.session_id) {
+                console.log(Date.now() - element.updatedOn);
+                let diff = Date.now() - element.updatedOn
+                if (diff > (5 * 60 * 1000)) {
                     await CartModel.deleteOne({ session_id: element.session_id })
                 }
             }
         });
         // console.log(SessionCart);
         const productDb = await ProductModel.find({ status: true },).populate("category").sort({ createdOn: -1 }).exec();
+        let wishList = []
+        if (req.session.userLogedIn) {
+            wishList = await wishlistModel.find({ user_id: req.session.userId })
+            if (wishList.length !=0) {
+                wishList[0].products.forEach(wishList => {
+                    productDb.forEach(productDb => {
+                        if (wishList.product_id.toString() == productDb._id.toString()) {
+                            productDb.wishlist = true
+                        }
+                    });
+                });
+            }
+        } else {
+            wishList = []
+        }
+        // console.log(productDb);
         res.render('users/index', {
             product: productDb,
             message: '',
             user: req.session.user,
             sessionId: req.sessionID,
-            count:req.cartCount
+            count: req.cartCount,
+            wishList
         })
     } catch (error) {
         console.log(error);
@@ -107,7 +125,7 @@ const productDetailsGetUser = async (req, res) => {
         const productDb = await ProductModel.findOne({ _id: productId.toString() }).populate("category").exec()
         console.log(productDb);
         if (productDb) {
-            res.render('users/singeProductDetails', { product: productDb, user: req.session.user ,count:req.cartCount})
+            res.render('users/singeProductDetails', { product: productDb, user: req.session.user, count: req.cartCount })
         }
     } catch (error) {
         console.log(error.message);
@@ -123,7 +141,7 @@ const userLoginGet = async (req, res) => {
             message = ''
         }
         if (!user) {
-            res.render('users/userLogin', { user: req.session.user ,count:req.cartCount})
+            res.render('users/userLogin', { user: req.session.user, count: req.cartCount })
         } else {
             res.redirect('/')
         }
@@ -205,17 +223,17 @@ const userLoginPost = async (req, res) => {
                                     let productData = await ProductModel.findOne({ _id: sessionValue.product_id })
                                     const exist = userCartData.products.filter((value) => value.product_id.toString() == sessionValue.product_id)
                                     console.log(exist);
-                                        if (exist.length !== 0) {
-                                            if (exist[0].quantity + sessionValue.quantity < productData.stockQuantity) {
-                                                await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity, "products.$.totalPrice": sessionValue.totalPrice } })
-                                                // res.redirect('/')
-                                            }else{
-                                                await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $set: { "products.$.quantity": productData.stockQuantity, "products.$.totalPrice": sessionValue.price * productData.stockQuantity } })
-                                            }
-                                        } else {
-                                            await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
+                                    if (exist.length !== 0) {
+                                        if (exist[0].quantity + sessionValue.quantity < productData.stockQuantity) {
+                                            await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity, "products.$.totalPrice": sessionValue.totalPrice } })
                                             // res.redirect('/')
+                                        } else {
+                                            await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $set: { "products.$.quantity": productData.stockQuantity, "products.$.totalPrice": sessionValue.price * productData.stockQuantity } })
                                         }
+                                    } else {
+                                        await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
+                                        // res.redirect('/')
+                                    }
                                 })
                             } else {
                                 await CartModel.updateOne({ session_id: req.sessionID }, { $set: { user_id: req.session.userId }, $unset: { session_id: req.sessionID } })
@@ -241,7 +259,7 @@ const userLoginPost = async (req, res) => {
 }
 const userSignUpGet = async (req, res) => {
     try {
-        res.render('users/userSignUp', { message: 'Please enter an active email', user: req.session.user ,count:req.cartCount})
+        res.render('users/userSignUp', { message: 'Please enter an active email', user: req.session.user, count: req.cartCount })
     } catch (error) {
         console.log(error);
     }
@@ -253,7 +271,7 @@ const userSignupPost = async (req, res) => {
         const spassword = await securePassword(req.body.password);
         const isUser = await UserModel.findOne({ email: email })
         if (isUser) {
-            return res.render('users/userSignUp', { message: 'this email is already taken', user: req.session.user ,count:req.cartCount})
+            return res.render('users/userSignUp', { message: 'this email is already taken', user: req.session.user, count: req.cartCount })
         } else {
             const user = new UserModel({
                 name: req.body.name,
@@ -279,7 +297,7 @@ const userSignupPost = async (req, res) => {
 const otpVerificationGet = async (req, res) => {
     try {
         const email = req.query.email;
-        res.render('users/otpVerification', { message: '', email: email, user: req.session.user,count:req.cartCount })
+        res.render('users/otpVerification', { message: '', email: email, user: req.session.user, count: req.cartCount })
     } catch (error) {
         console.log(error);
     }
@@ -287,11 +305,11 @@ const otpVerificationGet = async (req, res) => {
 const resendOtpGet = async (req, res) => {
     try {
         const email = req.query.email;
-        let exist=await otpModel.findOne({email:email})
-        const name=await UserModel.findOne({email:email}).name
-        if(exist){
+        let exist = await otpModel.findOne({ email: email })
+        const name = await UserModel.findOne({ email: email }).name
+        if (exist) {
             creatOtp(name, email)
-            res.render('users/otpVerification', { message: 'OTP has been resend', email: email, user: req.session.user,count:req.cartCount })
+            res.render('users/otpVerification', { message: 'OTP has been resend', email: email, user: req.session.user, count: req.cartCount })
         }
     } catch (error) {
         console.log(error);
@@ -311,9 +329,9 @@ const otpVerificationPost = async (req, res) => {
             let id = otpDb._id
             await UserModel.updateOne({ email: email }, { $set: { is_verified: true } })
             await otpModel.findByIdAndRemove(id)
-            res.render('users/userLogin', { message: 'your email has been verified sucessfully', user: req.session.user ,count:req.cartCount})
+            res.render('users/userLogin', { message: 'your email has been verified sucessfully', user: req.session.user, count: req.cartCount })
         } else {
-            res.render('users/otpVerification', { message: 'invalid otp', email: email, user: req.session.user ,count:req.cartCount})
+            res.render('users/otpVerification', { message: 'invalid otp', email: email, user: req.session.user, count: req.cartCount })
         }
 
     } catch (error) {
