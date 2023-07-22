@@ -414,6 +414,32 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
                 console.error(error);
             });
     }
+    // --------- forgotPasswordEmail
+    function forgotPasswordEmail(id){
+        event.preventDefault();
+        const email=document.getElementById('emailForgotPassword').value
+        // alert(email)
+        console.log(email)
+        axios.post('/forgotPasswordEmail', { email:email})
+            .then(function (response) {
+                console.log(response);
+                if(response.data.success){
+                    
+                    const messageElement = document.getElementById('message');
+                    messageElement.innerText = response.data.message;
+                   const closeButton = document.getElementById('closeModalBtn');
+                    closeButton.click();
+                }else{
+                    const messageElement = document.getElementById('message');
+                    messageElement.innerText = response.data.message;
+                    const closeButton = document.getElementById('closeModalBtn');
+                    closeButton.click();
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
 </script>
 
 

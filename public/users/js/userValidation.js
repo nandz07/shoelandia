@@ -68,5 +68,42 @@ $(document).ready(function () {
     //   axios.post(form.action, new FormData(form))
     // }
   });
+  $('#contactForm').validate({
+    rules: {
+        email: {
+            required: true,
+            email: true
+        },
+        password: {
+            required: true,
+            minlength: 6 // Change this value to set the minimum password length
+        }
+    },
+    messages: {
+        email: {
+            required: 'Please enter your email address',
+            email: 'Please enter a valid email address'
+        },
+        password: {
+            required: 'Please enter your password',
+            minlength: 'Password must be at least {0} characters long' // The {0} placeholder will be replaced with the minlength value
+        }
+    },
+   
+});
+  $("#emailForgotPasswordForm").validate({
+    rules: {
+      emailForgotPassword: {
+        required: true,
+        email: true
+      },
+    },
+    messages: {
+      emailForgotPassword: {
+        required: 'Please enter your email ',
+            email: 'Please enter a valid email address'
+      },
+    },
+  });
 });
 

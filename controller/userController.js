@@ -8,7 +8,36 @@ const CartModel = require('../models/cartModel');
 const wishlistModel = require('../models/wishlistModel');
 // const UpdateCartModel = require('../models/updateCartModel');
 
-
+const sendEmailChangePassword =async(userId, email)=>{
+    try {
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            requireTLS: true,
+            auth: {
+                user: 'nandakumart07@gmail.com',
+                pass: process.env.PASS
+            }
+        })
+        const options = {
+            from: 'nandakumart07@gmail.com',
+        to: email,
+        subject: 'Change password',
+        html:`please click here to change password http://localhost:3000/changePassword?id=${userId}`
+        }
+        transporter.sendMail(options, function (error, info) {
+            if (error) {
+                console.log(error);
+            } else {
+                console.log(otp);
+                console.log("email has been send to :-", info.response);
+            }
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
 const securePassword = async (password) => {
     try {
         const passwordHash = await bcrypt.hash(password, 10);
@@ -141,7 +170,8 @@ const userLoginGet = async (req, res) => {
             message = ''
         }
         if (!user) {
-            res.render('users/userLogin', { user: req.session.user, count: req.cartCount })
+            const userId=''
+            res.render('users/userLogin', { user: req.session.user, count: req.cartCount,userId })
         } else {
             res.redirect('/')
         }
@@ -149,57 +179,6 @@ const userLoginGet = async (req, res) => {
         console.log(error);
     }
 }
-// const userLoginPost = async (req, res) => {
-//     try {
-//         let email = req.body.email
-//         let password = req.body.password
-//         let userDb = await UserModel.findOne({ email: email })
-//         if (userDb) {
-//             if (userDb.is_verified) {
-//                 const passwordMatch = await bcrypt.compare(password, userDb.password)
-//                 if (passwordMatch) {
-//                     if (userDb.is_blocked) {
-//                         res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user,count:req.cartCount })
-//                     } else {
-//                         req.session.user = userDb.name
-//                         req.session.userId = userDb._id
-//                         req.session.userLogedIn = true
-//                         const isSessionCart = await CartModel.findOne({ session_id: req.sessionID })
-//                         if (isSessionCart) {
-//                             const userCartData = await CartModel.findOne({ user_id: req.session.userId })
-//                             if (userCartData) {
-//                                 isSessionCart.products.filter(async(sessionValue) => {
-//                                     const exist = userCartData.products.filter((value) => value.product_id.toString() == sessionValue.product_id)
-//                                     if (exist.length !== 0) {
-//                                         await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity , "products.$.totalPrice": sessionValue.totalPrice } })
-//                                         // res.redirect('/')
-//                                     } else {
-//                                         await CartModel.updateOne({ user_id: req.session.userId }, { $push: { products: { product_id: sessionValue.product_id, quantity: sessionValue.quantity, price: sessionValue.price, totalPrice: sessionValue.totalPrice } } })
-//                                         // res.redirect('/')
-//                                     }
-//                                 })
-//                             } else {
-//                                 await CartModel.updateOne({ session_id: req.sessionID }, { $set: {user_id: req.session.userId }, $unset: { session_id: req.sessionID} })
-//                             }
-//                             await CartModel.deleteOne({ session_id: req.sessionID })
-//                         }
-//                         res.redirect('/')
-//                     }
-//                 } else {
-//                     res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user ,count:req.cartCount})
-//                 }
-//             } else {
-//                 const redirectUrl = '/otpVerificationGet?email=' + encodeURIComponent(email);
-//                 res.redirect(redirectUrl);
-//             }
-//         } else {
-//             res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user ,count:req.cartCount})
-//         }
-//         // res.render('users/userLogin',{message:''})
-//     } catch (error) {
-//         console.log(error);
-//     }
-// }
 const userLoginPost = async (req, res) => {
     try {
         let email = req.body.email
@@ -210,7 +189,8 @@ const userLoginPost = async (req, res) => {
                 const passwordMatch = await bcrypt.compare(password, userDb.password)
                 if (passwordMatch) {
                     if (userDb.is_blocked) {
-                        res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount })
+                        const userId=userDb._id
+                        res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount,userId})
                     } else {
                         req.session.user = userDb.name
                         req.session.userId = userDb._id
@@ -243,13 +223,15 @@ const userLoginPost = async (req, res) => {
                         res.redirect('/')
                     }
                 } else {
-                    res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user, count: req.cartCount })
+                    const userId=userDb._id
+                    res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user, count: req.cartCount,userId })
                 }
             } else {
                 const redirectUrl = '/otpVerificationGet?email=' + encodeURIComponent(email);
                 res.redirect(redirectUrl);
             }
         } else {
+            const userId=userDb._id
             res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user, count: req.cartCount })
         }
         // res.render('users/userLogin',{message:''})
@@ -315,6 +297,83 @@ const resendOtpGet = async (req, res) => {
         console.log(error);
     }
 }
+const forgotPasswordEmail = async (req, res) => {
+    try {
+        const email = req.body.email;
+        console.log(email);
+        let user=await UserModel.findOne({email:email})
+        const id=user._id
+        // console.log(user.is_blocked);
+        // console.log(user);
+        if(user!= null){
+            if(user.is_blocked){
+                console.log('blocked');
+                res.status(200).json({ success: false, message: 'User is blocked' })
+
+            }else{
+                req.session.changePasswordId=id
+                await sendEmailChangePassword(id,email)
+                res.status(200).json({ success: true, message: 'Please check your email'})
+
+                console.log('unblocked');
+                // res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount,userId})
+            }
+        }else{
+            res.status(200).json({ success: false, message: 'User is not found'})
+            
+            console.log('empty');
+        }
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+const changePasswordGet = async (req, res) => {
+    try {
+        const id = req.query.id;
+        console.log(id);
+        const user=await UserModel.findOne({_id:id})
+        console.log(user);
+        if(id==user._id){
+            res.render('users/changePassword',{
+            message: '',
+            count: req.cartCount,
+            email:user.email,
+            id:id,
+            user:''
+            })
+        }else{
+            res.redirect('404')
+        }
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+const changePasswordPost = async (req, res) => {
+    try {
+        const id = req.query.id;
+        const spassword = await securePassword(req.body.password);
+        console.log(id);
+        const user=await UserModel.findOne({_id:id})
+        
+        console.log(user);
+        if(id==user._id){
+            await UserModel.findByIdAndUpdate(id,{
+                password:spassword
+            })
+            res.redirect('/login')
+        }else{
+            res.redirect('404')
+        }
+        
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
 const otpVerificationPost = async (req, res) => {
     try {
@@ -329,7 +388,8 @@ const otpVerificationPost = async (req, res) => {
             let id = otpDb._id
             await UserModel.updateOne({ email: email }, { $set: { is_verified: true } })
             await otpModel.findByIdAndRemove(id)
-            res.render('users/userLogin', { message: 'your email has been verified sucessfully', user: req.session.user, count: req.cartCount })
+            const userId=''
+            res.render('users/userLogin', { message: 'your email has been verified sucessfully', user: req.session.user, count: req.cartCount,userId})
         } else {
             res.render('users/otpVerification', { message: 'invalid otp', email: email, user: req.session.user, count: req.cartCount })
         }
@@ -362,5 +422,8 @@ module.exports = {
     otpVerificationPost,
     otpVerificationGet,
     userLogoutGet,
-    resendOtpGet
+    resendOtpGet,
+    forgotPasswordEmail,
+    changePasswordGet,
+    changePasswordPost
 }

@@ -26,10 +26,12 @@ router.get('/editAddress',auth.verify_user,midData.midData, orderController.edit
 router.get('/myOrder',auth.verify_user,midData.midData, orderController.myOrders);
 router.get('/resendOtp',midData.midData, userController.resendOtpGet);
 router.get('/wishlist',auth.verify_user,midData.midData, wishlistController.wishlistGet);
+router.get('/changePassword',midData.midData, userController.changePasswordGet);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);
 router.post('/login', userController.userLoginPost);
+router.post('/forgotPasswordEmail', userController.forgotPasswordEmail);
 router.post('/otpVerificationPost', userController.otpVerificationPost);
 router.post('/incrementQty', cartController.incrementQty);
 router.post('/removeCart', cartController.removeCart);
@@ -39,6 +41,8 @@ router.post('/updateAddress',auth.verify_user,midData.midData, orderController.e
 router.post('/deleteAddress',auth.verify_user,midData.midData, orderController.deleteAddress);
 router.post('/cancelOrder',auth.verify_user,midData.midData, orderController.cancelOrder);
 router.post('/addToWishlistPost',auth.verify_user,midData.midData, wishlistController.addToWishlistPost)
+router.post('/changePassword',midData.midData, userController.changePasswordPost);
+
 
 
 router.use((req, res, next) => {
