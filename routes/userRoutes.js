@@ -5,6 +5,7 @@ const userController = require('../controller/userController');
 const cartController = require('../controller/cartController');
 const orderController = require('../controller/orderController');
 const wishlistController = require('../controller/wishlistController');
+const shopController = require('../controller/shopController');
 const midData = require('../middleware/midData');
 const auth = require('../middleware/userAuth')
 
@@ -27,6 +28,7 @@ router.get('/myOrder',auth.verify_user,midData.midData, orderController.myOrders
 router.get('/resendOtp',midData.midData, userController.resendOtpGet);
 router.get('/wishlist',auth.verify_user,midData.midData, wishlistController.wishlistGet);
 router.get('/changePassword',midData.midData, userController.changePasswordGet);
+router.get('/shop',midData.midData, shopController.shopGet);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);

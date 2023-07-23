@@ -1,0 +1,149 @@
+<%-include('../partials/userPartials/userHeader')-%>
+
+
+
+	<!-- Start Banner Area -->
+	<section class="banner-area organic-breadcrumb">
+		<div class="container">
+			<div class="breadcrumb-banner d-flex flex-wrap align-items-center justify-content-end">
+				<div class="col-first">
+					<h1>Shop Category page</h1>
+					<nav class="d-flex align-items-center">
+						<a href="index.html">Home<span class="lnr lnr-arrow-right"></span></a>
+						<a href="#">Shop<span class="lnr lnr-arrow-right"></span></a>
+						<a href="category.html">Fashon Category</a>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- End Banner Area -->
+	<div class="container">
+		<div class="row">
+			<div class="col-xl-3 col-lg-4 col-md-5">
+				<div class="sidebar-categories">
+                    <input type="text" placeholder="Search.." class="form-control mb-2 mt-2">
+					<a href="" onclick="filterSelection('all')"><div class="head mb-1">All Products</div></a>
+					<div class="head">Categories</div>
+					<ul class="main-categories">
+						<% category.forEach((element) => {%>
+                            <li class="main-nav-list child"><a href="" onclick="filterSelection('<%= element.categoryName %>')"><%= element.categoryName %></a></li>
+                            <%}); %>
+						
+					</ul>
+				</div>
+				<div class="sidebar-filter mt-50">
+					<div class="top-filter-head">Price </div>
+
+					<div class="common-filter">
+						
+						<div class="price-range-area">
+							<div id="price-range"></div>
+							<div class="value-wrapper d-flex">
+								<ul class="price">
+                                    <li class="main-nav-list child"><a href="#" onclick="filterPriceRange(0, 500)">0 - 500</a></li>
+                                    <li class="main-nav-list child"><a href="#" onclick="filterPriceRange(500, 1000)">500 - 1000</a></li>
+                                    <li class="main-nav-list child"><a href="#" onclick="filterPriceRange(1000, 1500)">1000 - 1500</a></li>
+                                    <li class="main-nav-list child"><a href="#" onclick="filterPriceRange(1500, 2000)">1500 - 2000</a></li>
+                                </ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-9 col-lg-8 col-md-7">
+
+				<!-- Start Best Seller -->
+				<section class="lattest-product-area pb-40 category-list">
+					<div class="row">
+						<!-- single product -->
+						<% product.forEach((row, index)=> { %>
+                            <div class="col-lg-4 filterDiv <%= row.category.categoryName %>">
+                                <div class="single-product">
+                                    <div>
+                                        <img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
+                                    </div>
+                                    
+                                    <div class="product-details">
+                                        <div class="d-flex">
+                                            <h6><%=row.productName %></h6>
+                                            
+                                        </div>
+                                        <div class="price">
+                                            <h6>₹ <%=row.price %></h6>
+                                        </div>
+                                        <div class="prd-bottom">
+        
+                                            <a href="" class="social-info" onclick="addToCart('<%= row._id %>')">
+        
+                                                <span class="ti-bag"></span>
+                                                <p class="hover-text" id="addToCart"  >add to bag</p>
+                                            </a>
+                                            <a href="" class="social-info" onclick="addToWishlist('<%= row._id %>')">
+                                                <% if(!user){%>
+                                                    <span class="lnr lnr-heart addWish<%= row._id %>"></span>
+                                                <%} else{%>
+                                                    <% if(row.wishlist){%>
+                                                        <span class="lnr lnr-heart bg-danger addWish<%= row._id %>"></span>
+                                                        <%} else{%>
+                                                            <span class="lnr lnr-heart addWish<%= row._id %>"></span>
+                                                        <%} %>
+                                                    
+                                                <% } %>
+                                                    
+                                                
+                                                <p class="hover-text">Wishlist</p>
+                                            </a>
+                                            <a href="/productDetailsUser/<%= row._id %>" class="social-info">
+                                                <span class="lnr lnr-move"></span>
+                                                <p class="hover-text">view more</p>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+        
+                            <% } )%>
+					</div>
+				</section>
+				<!-- End Best Seller -->
+				
+			</div>
+		</div>
+	</div>
+
+	<script>
+
+const priceRange = [0, 2000]; // Default range
+        filterSelection("all")
+        function filterSelection(c) {
+            event.preventDefault();
+            var x, i;
+            x = document.getElementsByClassName("filterDiv");
+            if (c == "all") c = "";
+            for (i = 0; i < x.length; i++) {
+                RemoveClass(x[i], "show");
+                if (x[i].className.indexOf(c) > -1 && checkPriceRange(x[i])) AddClass(x[i], "show");
+            }
+        }
+        function AddClass(element, name) {
+            element.hidden = false;
+        }
+
+        function RemoveClass(element, name) {
+        element.setAttribute('hidden', 'true');
+        }
+
+        function checkPriceRange(element) {
+        const productPrice = parseFloat(element.querySelector('.price h6').innerText.slice(2)); // Extracting the price without '₹'
+        return productPrice >= priceRange[0] && productPrice <= priceRange[1];
+    }
+    function filterPriceRange(min, max) {
+        priceRange[0] = min;
+        priceRange[1] = max;
+        filterSelection(""); // Clear existing category filter and apply the new price range filter
+    }
+
+    </script>
+
+    <%-include('../partials/userPartials/userFooter')-%>

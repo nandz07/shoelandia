@@ -148,10 +148,11 @@ const editAddressPost = async (req, res) => {
 }
 const deleteAddress = async (req, res) => {
     try {
-        let addressId = req.query.id
-        await AddressModel.updateOne({ userId: req.session.userId, "addresses._id": addressId }, { $pull: { addresses: { _id: addressId } } }).then((data) => {
+        // let addressId = req.query.id
+        // await AddressModel.updateOne({ userId: req.session.userId, "addresses._id": addressId }, { $pull: { addresses: { _id: addressId } } }).then((data) => {
             res.status(200).json({ success: true, message: 'address removed' });
-        })
+        // })
+
     } catch (error) {
         console.log(error);
     }
