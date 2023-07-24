@@ -42,14 +42,14 @@ const addToWishlistPost = async (req, res) => {
                     }
 
                 } else {
-                    res.redirect('/');
+                    
 
                 }
             } else {
                 res.status(200).json({ success: false, message: 'Product Not available' });
             }
         } else {
-            res.redirect('/login');
+                res.status(200).json({ success: false, message: 'need to login' ,redirectUrl: '/login'});
         }
 
     } catch (error) {

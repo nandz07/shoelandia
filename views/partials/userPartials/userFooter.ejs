@@ -383,11 +383,13 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         $('.addWish'+id).toggleClass("bg-danger");
         axios.post('/addToWishlistPost?id='+id, { productId: id })
             .then(function (response) {
-                console.log(response);
+                console.log(response.data);
                 if(response.data.success){
                     // let cartSpan=document.getElementById('cartSpan')
                     // cartSpan.removeAttribute("hidden");
                     // cartSpan.innerHTML=parseInt(cartSpan.innerHTML)+1
+                }else{
+                    window.location.href = '/login?message=need to login first';
                 }
             })
             .catch(function (error) {
