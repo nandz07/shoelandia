@@ -43,7 +43,11 @@ input[type="radio"]:checked {
 		<div class="row">
 			<div class="col-xl-3 col-lg-4 col-md-5">
 				<div class="sidebar-categories">
-                    <input type="text" id="myInput" placeholder="Search.." class="form-control mb-2 mt-2" onkeyup="searchFunction()" list="productList">
+                    <% if(search){%>
+                        <input type="text" id="myInput" placeholder="Search.." class="form-control mb-2 mt-2" value="<%= search %>" onkeyup="searchFunction()" list="productList">
+                        <% }else{%>
+                            <input type="text" id="myInput" placeholder="Search.." class="form-control mb-2 mt-2" value="<%= search %>" onkeyup="searchFunction()" list="productList">
+                        <%} %>
 					<a href="" onclick="filterSelection()"><div class="head mb-1">All Products</div></a>
 					<div class="head">Categories</div>
 					<ul class="main-categories mt-3">
@@ -277,6 +281,11 @@ input[type="radio"]:checked {
                 }
             }
         }
+        let ser=document.getElementById('myInput')
+        console.log(ser);
+        if(ser.value!=''){
+        searchFunction()
+}
     </script>
 
     <%-include('../partials/userPartials/userFooter')-%>

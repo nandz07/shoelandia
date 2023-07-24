@@ -13,6 +13,13 @@ const wishlistModel = require('../models/wishlistModel');
 // --------------------------------------
 const shopGet = async (req, res) => {
     try {
+        let search =req.query.search
+        console.log(search)
+        if(search){
+            search=search
+        }else{
+            search=null
+        }
         const category=await CategoryModel.find({status:true})
         const productDb = await ProductModel.find({ status: true },).populate("category").sort({ createdOn: -1 }).exec();
         let wishList = []
@@ -34,7 +41,7 @@ const shopGet = async (req, res) => {
             product: productDb,
             message: '',
             user: req.session.user,
-           
+           search,
             count: req.cartCount,
             category
             
