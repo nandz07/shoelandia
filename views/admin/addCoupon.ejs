@@ -1,0 +1,73 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+
+<% if(message){
+    %>
+    <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+    <%= message %>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  
+    <%
+  } %>
+
+<div class="col-xxl">
+    <div class="card mb-4">
+      <div class="card-header d-flex align-items-center justify-content-between">
+        <h5 class="mb-0">Add Coupon</h5>
+        <small class="text-muted float-end">Enter new coupon</small>
+      </div>
+      <div class="card-body">
+        <form action="/admin/addCoupon" method="POST" id="couponForm"  >
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="code">Coupon Code</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="code" id="code" placeholder="Enter coupon code" required/>
+              </div>
+              <label class="col-sm-2 col-form-label" for="discountType">Discount Type</label>
+              <div class="col-sm-4">
+                <select class="form-select" id="discountType" name="discountType" aria-label="Default select example">
+                    <option selected value="">Select a discount type</option>
+                    <option value="percentage">Percentage</option>
+                    <option value="fixedAmount">Fixed Amount</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="discountAmount">Discount Amount</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" name="discountAmount" id="discountAmount" value="" placeholder="0" min="0"/>
+              </div>
+                <label class="col-sm-2 col-form-label" for="minCartAmount">Min Cart Amount</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" name="minCartAmount" id="minCartAmount" value="" placeholder="0" min="0"/>
+              </div>
+            </div>
+            <div class="row mb-3">
+                <label class="col-sm-2 col-form-label" for="maxDiscountAmount">Max Discount Amount</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" name="maxDiscountAmount" id="maxDiscountAmount" value="" placeholder="0" min="0"/>
+              </div>
+                <label class="col-sm-2 col-form-label" for="maxUsers">Max Users</label>
+              <div class="col-sm-4">
+                <input type="number" class="form-control" name="maxUsers" id="maxUsers" value="" placeholder="0" min="0"/>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label class="col-sm-2 col-form-label" for="expiryDate">Expiry Date</label>
+              <div class="col-sm-4">
+                <input type="date" class="form-control" name="expiryDate" value="" id="expiryDate" placeholder="0" min="0"/>
+              </div>
+            </div>
+            
+            <div class="row justify-content-end">
+              <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </form>
+          
+      </div>
+    </div>
+  </div>
+
+<%-include('../partials/adminPartials/adminFooter')-%>

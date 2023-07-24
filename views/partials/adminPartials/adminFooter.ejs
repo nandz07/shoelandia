@@ -88,6 +88,85 @@
 <script src="/static/js/productSizeValidation.js"></script>
 <script src="/static/js/productValidation.js"></script>
 
+<script>
+  $(document).ready(function () {
+    
+    $("#couponForm").validate({
+      rules: {
+        code: {
+          required: true,
+        },
+        discountType: {
+          required: true,
+        },
+        discountAmount: {
+          required: true,
+          min: 0,
+          maxPercentageAmount: true,
+        },
+        maxCartAmount: {
+          required: true,
+          min: 0,
+        },
+        maxDiscountAmount: {
+          required: true,
+          min: 0,
+        },
+        maxUsers: {
+          required: true,
+          min: 0,
+        },
+        expiryDate: {
+          required: true,
+        },
+      },
+      messages: {
+        code: {
+          required: "Please enter a coupon code.",
+        },
+        discountType: {
+          required: "Please select a discount type.",
+        },
+        discountAmount: {
+          required: "Please enter a discount amount.",
+          min: "Discount amount must be at least 0.",
+        },
+        maxCartAmount: {
+          required: "Please enter a maximum cart amount.",
+          min: "Maximum cart amount must be at least 0.",
+        },
+        maxDiscountAmount: {
+          required: "Please enter a maximum discount amount.",
+          min: "Maximum discount amount must be at least 0.",
+        },
+        maxUsers: {
+          required: "Please enter a maximum number of users.",
+          min: "Maximum number of users must be at least 0.",
+        },
+        expiryDate: {
+          required: "Please enter an expiry date.",
+        },
+      },
+    });
+
+   
+    $.validator.addMethod(
+      "maxPercentageAmount",
+      function (value, element) {
+       
+        var discountType = $("#discountType").val();
+
+        
+        if (discountType === "percentage" && parseFloat(value) > 100) {
+          return false; 
+        }
+        return true;
+      },
+      "Discount amount cannot be greater than 100 for Percentage discount type."
+    );
+  });
+</script>
+
 
 
 

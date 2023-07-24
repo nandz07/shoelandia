@@ -1,0 +1,153 @@
+<%-include('../partials/adminPartials/adminHeader')-%>
+<% if(message){%>
+  <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+  <%= message %>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+  <%
+} %>
+
+  <!-- Bootstrap Table with Header - Footer -->
+  <div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+      <h5 class="mb-0">coupon Details</h5>
+      <small class="text-muted float-end"><a type="button" href="/admin/addcoupon" class="btn btn-primary">
+          Add
+      </a></small>
+    </div>
+
+    <div class="table-responsive text-nowrap container table">
+      <% if (coupon !='' ) { %>
+        <table class="table table-border-bottom-1 table-hover" id="categoryTable">
+          <thead>
+            <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Dis Type</th>
+                <th>dis amount</th>
+                <th>mincart amount</th>
+                <th>maxdis amount</th>
+                <th>user</th>
+                <th>maxuser</th>
+                <th>status</th>
+                <th>expiry Date</th>
+                <th>created on</th>
+                <th>updated on</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% coupon.forEach((row, index)=> { %>
+              <tr >
+                <td>
+                  <%= index + 1 %>
+                </td>
+                <td><i class="fab fa-angular fa-lg text-danger me-3"></i>
+                  <strong>
+                    <%= row.code %>
+                  </strong>
+                </td>
+                <td>
+                    <%= row.discountType %>
+                </td>
+                <td>
+                    <%= row.discountAmount %>
+                </td>
+                <td>
+                    <%= row.minCartAmount %>
+                </td>
+                <td>
+                    <%= row.maxDiscountAmount %>
+                </td>
+                <td>
+                    <%= row.maxUsers %>
+                </td>
+                <td>
+                    <%= row.maxUsers %>
+                </td>
+                <td>
+                    <% if(row.status) {%>
+                      <a class="badge bg-label-success me-1" href="/admin/unlistcoupon/<%= row._id %>"><i
+                          class='bx bx-list-plus'></i>
+                        listed</a>
+                      <% }else{%>
+                        <a class="badge bg-label-danger me-1" href="/admin/listcoupon/<%= row._id %>"><i
+                            class='bx bx-list-minus'></i>
+                          unlisted</a>
+                        <% } %>
+                </td>
+                <td>
+                    <%= getDate(row.expiryDate) %>
+                </td>
+                
+
+                <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+                  const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+                  const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day}
+                  ${month} ${year} `; return formattedDate } %>
+                  
+
+                  <td>
+                    <%= getDate(row.createdOn) %>
+                  </td>
+
+                  <td>
+                    <%= getDate(row.updatedOn) %>
+                  </td>
+                  
+                </tr>
+              <% }); %>
+          </tbody>
+          <tfoot class="table-border-bottom-0">
+            <tr>
+                <th>ID</th>
+                <th>Code</th>
+                <th>Dis Type</th>
+                <th>dis amount</th>
+                <th>mincart amount</th>
+                <th>maxdis amount</th>
+                <th>user</th>
+                <th>maxuser</th>
+                <th>status</th>
+                <th>expiry Date</th>
+                <th>created on</th>
+                <th>updated on</th>
+            </tr>
+          </tfoot>
+        </table>
+        <% } else { %>
+          <h1 class="text-center text-secondary mt-5">
+            No coupon Size found in the database
+          </h1>
+          <% } %>
+    </div>
+    
+  </div>
+  <!-- Modal description -->
+  <% if (coupon !='' ) { %>
+<% coupon.forEach((row, index) => { %>
+    <div class="modal fade" id="modalScrollable<%= index %>" tabindex="-1" aria-hidden="true" style="white-space: normal;">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalScrollableTitle"><%= row.couponName %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalData" style="word-wrap: break-word;">
+                        <%= row.description %>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+<% }); %>
+<% }; %>
+    </div>
+
+  <%-include('../partials/adminPartials/adminFooter')-%>

@@ -6,6 +6,7 @@ const brandController = require('../controller/brandsController')
 const categoryController = require('../controller/categoryController')
 const userController = require('../controller/userDetailscontroller')
 const orderController = require('../controller/orderController');
+const couponController = require('../controller/couponController');
 
 const auth = require('../middleware/adminauthentication');
 const upload=require('../config/multiFileUpload')
@@ -41,6 +42,8 @@ router.get('/OrderDetails',auth.isLogin, orderController.loadOrdersAdmin);
 router.get('/shipping',auth.isLogin, orderController.shippingAdmin);
 router.get('/delivered',auth.isLogin, orderController.deliveryAdmin);
 
+router.get('/coupon', auth.isLogin,couponController.couponGet);
+router.get('/addCoupon', auth.isLogin,couponController.addCouponGet);
 
 
 
@@ -55,6 +58,7 @@ router.post('/addCategory', categoryController.addCategoryAdminPost);
 router.post('/editCategoryPost/:id', categoryController.editCategoryAdminPost);
 router.post('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
+router.post('/addCoupon', auth.isLogin,couponController.addCouponPost);
 
 router.use((req, res, next) => {
     res.status(404).render('admin/404')
