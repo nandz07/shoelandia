@@ -31,6 +31,12 @@ const orderSchema = new mongoose.Schema({
         quantity: {
             type: Number,
         },
+        subTotalPrice: {
+            type: Number,
+        },
+        discountPrice: {
+            type: Number,
+        },
         totalPrice: {
             type: Number,
         },

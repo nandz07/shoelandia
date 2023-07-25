@@ -1,4 +1,13 @@
 const mongoose = require('mongoose');
+const { ObjectId } = require('mongodb');
+
+
+const userSchema=new mongoose.Schema({
+    user_id:{
+        type:ObjectId,
+        ref:'user'
+    }
+})
 const couponSchema = new mongoose.Schema({
     code:{
         type:String,
@@ -17,11 +26,7 @@ const couponSchema = new mongoose.Schema({
     maxDiscountAmount:{
         type:Number
     },
-    user:{
-        type:Array,
-        ref:"user",
-        default:[]
-    },
+    user:[userSchema],
     maxUsers:{
         type:Number
     },

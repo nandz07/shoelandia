@@ -24,8 +24,12 @@
                 <div class="check_title">
                     <h2>Have a coupon? </h2>
                 </div>
-                <input type="text" placeholder="Enter coupon code">
-                <a class="tp_btn" href="" onclick="applyCoupon()">Apply Coupon</a>
+                <div class="mb-3">
+
+                    <input type="text" id="couponCode" name="couponCode" placeholder="Enter coupon code"  onkeyup="isCode()">
+                    <span class="ml-5 text-danger" id="couponMessage" hidden></span>
+                </div>
+                <a class="tp_btn" href="" id="couponBtn" onclick="applyCoupon()" style="pointer-events: none;">Apply Coupon</a>
             </div>
             
             
@@ -68,8 +72,9 @@
                                 
                             </ul>
                             <ul class="list list_2">
-                                <li><a href="#">Subtotal <span><%= subTotalPrice%></span></a></li>
-                                <li><a href="#">Total <span><%= subTotalPrice%></span></a></li>
+                                <li><a href="#">Subtotal <span id="subTotalPrice"><%= subTotalPrice%></span></a></li>
+                                <li><a href="#">discount Price <span id="discountPrice">0</span></a></li>
+                                <li><a href="#">Total <span id="totalPrice"><%= subTotalPrice%></span></a></li>
                             </ul>
                             <div class="payment_item">
                                 <div class="radion_btn">

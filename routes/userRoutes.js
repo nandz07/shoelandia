@@ -37,13 +37,14 @@ router.post('/forgotPasswordEmail', userController.forgotPasswordEmail);
 router.post('/otpVerificationPost', userController.otpVerificationPost);
 router.post('/incrementQty', cartController.incrementQty);
 router.post('/removeCart', cartController.removeCart);
-router.post('/addAddress',midData.midData, orderController.addAdressPost);
-router.post('/checkoutPost',midData.midData, orderController.checkoutPost);
+router.post('/addAddress',auth.verify_user,midData.midData, orderController.addAdressPost);
+router.post('/checkoutPost',auth.verify_user,midData.midData, orderController.checkoutPost);
 router.post('/updateAddress',auth.verify_user,midData.midData, orderController.editAddressPost);
 router.post('/deleteAddress',auth.verify_user,midData.midData, orderController.deleteAddress);
 router.post('/cancelOrder',auth.verify_user,midData.midData, orderController.cancelOrder);
 router.post('/addToWishlistPost',auth.verify_user,midData.midData, wishlistController.addToWishlistPost)
 router.post('/changePassword',midData.midData, userController.changePasswordPost);
+router.post('/applyCoupon', auth.verify_user,orderController.applyCouponPost);
 
 
 

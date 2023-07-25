@@ -248,8 +248,20 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         const selectedValue = selectedRadioButton.value;
         const selectedPaymentButton = document.querySelector('input[name="selector"]:checked');
         const selectedPayment = selectedPaymentButton.value;
+        const subTotalPrice = document.getElementById('subTotalPrice').innerText
+        const discountPrice = document.getElementById('discountPrice').innerText
+        const totalamount = document.getElementById('totalPrice').innerText
+        // const discountamount = document.getElementById('discountPrice').innerText
+        let code=''
+        alert(subTotalPrice)
+        alert(totalamount)
+        if(parseInt(subTotalPrice) != parseInt(totalamount)){
+            code=document.getElementById('couponCode').value.trim()
+            alert("code")
+            alert(code)
+        }
 
-        axios.post('/checkoutPost', { addressId: selectedValue ,selectedPayment:selectedPayment})
+        axios.post('/checkoutPost', { addressId: selectedValue ,selectedPayment:selectedPayment,subTotalPrice,discountPrice,totalamount,code})
             .then(response => {
                 if(response.data.success){
                     let product=''
@@ -441,6 +453,51 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             .catch(function (error) {
                 console.error(error);
             });
+    }
+    // ----------- apply coupon
+    function applyCoupon() {
+        event.preventDefault()
+        let code=document.getElementById('couponCode').value
+        if(code!=''){
+            // alert('yes')
+            const totalPrice=document.getElementById('totalPrice').innerText
+        // alert(totalPrice)
+        axios.post('/applyCoupon', { code:code,totalPrice})
+        .then(function (response) {
+                console.log(response.data.success);
+                if(response.data.success){
+                    document.getElementById('totalPrice').innerText=response.data.updatedTotalPrice
+                    document.getElementById('discountPrice').innerText=response.data.discountAmount
+                    let btn = document.getElementById('couponBtn').style.pointerEvents  ='none'
+                    let element=document.getElementById('couponCode')
+                    element.setAttribute("readonly","true")
+                    let msg=document.getElementById('couponMessage')
+                    msg.removeAttribute("hidden");
+                    msg.innerHTML=response.data.message
+                }else{
+                    let element=document.getElementById('couponMessage')
+                    element.removeAttribute("hidden");
+                    element.innerHTML=response.data.message
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+        }else{
+            alert('no')
+        }
+        
+    }
+
+    function isCode(){
+        let element=document.getElementById('couponMessage')
+                    element.setAttribute("hidden","hidden");
+        let code=document.getElementById('couponCode').value.trim()
+        if(code!=''){
+            let btn = document.getElementById('couponBtn').style.pointerEvents  ='auto'
+        }else{
+            let btn = document.getElementById('couponBtn').style.pointerEvents  ='none'
+        }
     }
 </script>
 
