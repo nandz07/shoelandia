@@ -1,3 +1,4 @@
+require('dotenv').config()
 const ProductModel = require('../models/productModel');
 const UserModel = require('../models/userModel');
 const CartModel = require('../models/cartModel');
@@ -10,15 +11,16 @@ const ejs = require('ejs');
 const path = require('path');
 const { log } = require('console');
 const orderModel = require('../models/orderModel');
+const instance=require('../config/paymentGateway')
+
+const RAZORKEY=process.env.RAZORKEY
 
 
 const checkoutLoad = async (req, res) => {
     try {
         if (req.session.userLogedIn) {
             let userId = req.session.userId
-            console.log(req.session.userId);
             const userData = await UserModel.findOne({ _id: userId })
-            console.log(userData);
             const cartData = await CartModel.findOne({ user_id: userId }).populate('products.product_id');
             if (cartData) {
 
@@ -27,7 +29,6 @@ const checkoutLoad = async (req, res) => {
                 const totalQuantity = carts ? carts.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
 
                 const addressDb = await AddressModel.find({ userId: userId })
-                console.log(addressDb + ' db');
                 if (addressDb) {
                     res.render('users/checkOut', {
                         user: req.session.user,
@@ -92,7 +93,6 @@ const addAdress = async (req, res) => {
         if (req.session.userLogedIn) {
             let userId = req.session.userId
             const userData = await UserModel.findOne({ _id: userId })
-            console.log(userData);
 
             res.render('users/addAdress', {
                 user: req.session.user,
@@ -164,8 +164,6 @@ const checkoutPost = async (req, res) => {
 
         let { addressId, selectedPayment, subTotalPrice, discountPrice, totalamount, code } = req.body
         let userId = req.session.userId
-        console.log(discountPrice);
-        console.log(selectedPayment);
         const cartData = await CartModel.findOne({ user_id: req.session.userId }).populate('products.product_id');
 
         const outOfStock = cartData.products.reduce((result, p) => {
@@ -200,7 +198,6 @@ const checkoutPost = async (req, res) => {
 
                 // create orders in database
                 if (cartOrders) {
-                    console.log(req.body.addressId + "-------adressId");
                     const orderSave = new OrderModel({
                         products: cartData.products,
                         user_id: userId,
@@ -211,17 +208,17 @@ const checkoutPost = async (req, res) => {
                         totalPrice: total,
                         orderDate: recentDate,
                         deliveryDate: deliveredDate,
-                        paymentMethod: req.body.selector,
+                        paymentMethod: req.body.selectedPayment, 
                         orderStatus: '',
                         userStatus: '',
                         paymentStatus: 'pending',
-                        status: 'pending',
+                        status: selectedPayment === "COD" ? "placed" : "pending",
                     })
                     let saved = await orderSave.save().then(async (response) => {
                         var ss = response._id
                         if (selectedPayment == 'COD') {
                             const orderId = response._id;
-                            await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { status: 'success', orderstatus: 'confirm', paymentStatus: 'pending' } }).then(() => {
+                            await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { orderstatus: 'confirm', paymentStatus: 'pending' } }).then(() => {
                             }).then((status) => {
 
                             }).then(async () => {
@@ -231,7 +228,6 @@ const checkoutPost = async (req, res) => {
                                     const productActQty = await ProductModel.findOne({ _id: productId });
 
                                     if (productActQty.stockQuantity >= 1 || productActQty.status) {
-                                        console.log(productQty);
                                         const updateQty = productActQty.stockQuantity - productQty
                                         await ProductModel.updateOne({ _id: productId }, { $set: { stockQuantity: updateQty } }).then(p => { }).then(async () => {
                                             if (updateQty === 0) {
@@ -248,32 +244,76 @@ const checkoutPost = async (req, res) => {
                                     const couponData = await Coupon.updateOne({ name: req.body.CouponName }, { $set: { status: 'false' } });
                                 }
                             })
+                            const orderData = await OrderModel.findOne({ user_id: userId }).sort({ orderDate: -1 }).populate('products.product_id');
+                            const addressId = orderData.address_id;
+                            let address = await AddressModel.findOne(
+                                {
+                                    userId: req.session.userId,
+                                    _id: addressId
+                                }
+                            );
+                            await CartModel.deleteOne({ user_id: userId });
+                            res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
+                        
+                        }else if(selectedPayment == 'online'){
+                            const totalAmount = orderSave.totalPrice;
+                            var options = {
+                                amount: totalAmount*100,
+                                currency: "INR",
+                                receipt: ""+ss
+                            }
+                            instance.orders.create(options, function(err, order) {
+                                
+                                // res.status(200).json({ success: "online", redirectUrl: '/myOrder', orderSave, addressId:req.body.addressId,code,orderId:ss,order });
+                                res.status(200).json({ success: "online",order });
+                              });
                         }
                     })
                     // ------ coupon update
                     if (code != '') {
                         await CouponModel.updateOne({ code: code }, { $push: { user: { user_id: req.session.userId } }, $inc: { maxUsers: -1 } })
                     }
-                    // --------
-                    await CartModel.deleteOne({ user_id: userId });
-                    const orderData = await OrderModel.findOne({ user_id: userId }).sort({ orderDate: -1 }).populate('products.product_id');
-                    const addressId = orderData.address_id;
-                    console.log(addressId + '=========')
-
-                    let address = await AddressModel.findOne(
-                        {
-                            userId: req.session.userId,
-                            _id: addressId
-                        }
-                    );
-                    console.log(address)
-                    res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
                 }
             }
         }
 
         //   res.status(200).json({ success: true, redirectUrl: '/' });
 
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const verifyPayment = async (req, res) => {
+    try {
+        const totalPrice = req.body.amount2;
+        const total = req.body.amount;
+        const wal = totalPrice - total;
+        const details = req.body
+        console.log(details['payment[razorpay_payment_id]']);
+        const crypto = require('crypto');
+        let hmac = crypto.createHmac('sha256', RAZORKEY);
+        hmac.update(details['payment[razorpay_order_id]']+'|'+details['payment[razorpay_payment_id]']);
+        hmac = hmac.digest('hex');
+        if(hmac==details['payment[razorpay_signature]']){
+            await OrderModel.findByIdAndUpdate({_id:details['order[receipt]']},{$set:{orderstatus:"confirm",paymentStatus:"success"}});
+            // await UserModel.updateOne({_id:req.session.user_id},{$inc:{wallet:-wal}});
+            await OrderModel.findByIdAndUpdate({_id:details['order[receipt]']},{$set:{paymentId:details['payment[razorpay_order_id]']}});
+            await CartModel.deleteOne({userName:req.session.user_id});
+            const orderData = await OrderModel.findOne({ user_id: req.session.userId }).sort({ orderDate: -1 }).populate('products.product_id');
+                            const addressId = orderData.address_id;
+                            let address = await AddressModel.findOne(
+                                {
+                                    userId: req.session.userId,
+                                    _id: addressId
+                                }
+                            );
+            // res.json({success:true});
+            res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
+        }else{
+            await OrderModel.findByIdAndRemove({_id:details['order[receipt]']});
+            res.json({success:false});
+        }
     } catch (error) {
         console.log(error);
     }
@@ -296,14 +336,10 @@ const myOrders = async (req, res) => {
 const cancelOrder = async (req, res) => {
     try {
         let id = req.query.id
-        console.log(id);
         orderDetails = await orderModel.find({ _id: id })
         orderDetails[0].products.forEach(async (element) => {
             let orderedQnty = element.quantity
             let a = await ProductModel.findByIdAndUpdate(element.product_id, { $inc: { stockQuantity: orderedQnty } })
-            console.log("===========================");
-            console.log(a);
-            console.log("===========================");
         });
         const orderUpdate = await OrderModel.findByIdAndUpdate(id, {
             orderstatus: 'canceled'
@@ -319,7 +355,6 @@ const cancelOrder = async (req, res) => {
 const loadOrdersAdmin = async (req, res) => {
     try {
         const orderData = await OrderModel.find().sort({ orderDate: -1 }).populate('products.product_id').populate('address_id');
-        console.log(orderData);
         data = {
 
         }
@@ -334,7 +369,6 @@ const loadOrdersAdmin = async (req, res) => {
 const shippingAdmin = async (req, res) => {
     try {
         const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { orderstatus: 'shipping' } })
-        console.log(orderData);
         data = {
 
         }
@@ -348,7 +382,6 @@ const shippingAdmin = async (req, res) => {
 const deliveryAdmin = async (req, res) => {
     try {
         const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { orderstatus: 'delivered', paymentStatus: 'success' } })
-        console.log(orderData);
         data = {
 
         }
@@ -363,17 +396,11 @@ const deliveryAdmin = async (req, res) => {
 const applyCouponPost = async (req, res) => {
     try {
         let { code, totalPrice } = req.body
-        console.log(totalPrice)
-        console.log(code)
         const couponData = await CouponModel.findOne({ code: code }).populate('user')
 
         const exist = couponData.user.filter((value) => value.user_id.toString() == req.session.userId)
-        console.log("---------------exist--------------------------");
-        console.log(exist);
-        console.log("--------------------------exist");
         if (exist.length == 0) {
             if (couponData && couponData.status) {
-                console.log(couponData.minCartAmount);
                 if (couponData.minCartAmount < parseInt(totalPrice)) {
                     if (couponData.maxUsers > 0) {
                         if (couponData.expiryDate - Date.now() > 0) {
@@ -425,5 +452,6 @@ module.exports = {
     cancelOrder,
     shippingAdmin,
     deliveryAdmin,
-    applyCouponPost
+    applyCouponPost,
+    verifyPayment
 }

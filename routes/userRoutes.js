@@ -45,6 +45,7 @@ router.post('/cancelOrder',auth.verify_user,midData.midData, orderController.can
 router.post('/addToWishlistPost',auth.verify_user,midData.midData, wishlistController.addToWishlistPost)
 router.post('/changePassword',midData.midData, userController.changePasswordPost);
 router.post('/applyCoupon', auth.verify_user,orderController.applyCouponPost);
+router.post('/verify-payment', auth.verify_user,orderController.verifyPayment);
 
 
 

@@ -105,9 +105,15 @@
 							</span></span></a></li>
 
 								<% if(!user) {%>
-									<li class="nav-item"><a class="nav-link" href="/login">login</a></li>
+									<li class="nav-item"><a class="nav-link" href="/login"><span class="lnr lnr-user"></span>login</a></li>
 								<% }else{%>
-									<li class="nav-item"><a class="nav-link" href="/logout">logout</a></li>
+									<li class="nav-item submenu dropdown"><span class="lnr lnr-user"></span>
+										<a class="nav-link" href="/logout">Logout</a>
+										<ul class="dropdown-menu">
+											<li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+											<li class="nav-item"><a class="nav-link" href="">User Profile</a></li>
+										</ul>
+									</li>
 								<%} %>
 						</ul>
 						<ul class="nav navbar-nav navbar-right">
