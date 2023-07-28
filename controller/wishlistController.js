@@ -5,9 +5,7 @@ const WishlistModel = require('../models/wishlistModel');
 
 const addToWishlistPost = async (req, res) => {
     try {
-        console.log('hai');
         const productId = req.query.id
-        console.log(productId);
         if (req.session.userLogedIn) {
             const userId = req.session.userId
             const wishData = await WishlistModel.findOne({ user_id: userId })
@@ -17,18 +15,12 @@ const addToWishlistPost = async (req, res) => {
                     if (wishData) {
                         const exist = wishData.products.filter((value) => value.product_id.toString() == productId)
                         if (exist.length !== 0) {
-
                             await WishlistModel.updateOne({ user_id: userId, "products.product_id": productId }, { $pull: { products: { product_id: productId } } })
-
                             res.status(200).json({ success: true, message: 'Product removed from wishlist' });
-
                         } else {
                             await WishlistModel.updateOne({ user_id: userId }, { $push: { products: { product_id: productId } } })
-
                             res.status(200).json({ success: true, message: 'Product added to wishlist' });
                         }
-
-
                     } else {
                         const products = {
                             product_id: productId
@@ -40,16 +32,12 @@ const addToWishlistPost = async (req, res) => {
                         await wishlistSave.save()
                         res.status(200).json({ success: true, message: 'Product added to wishlist' });
                     }
-
-                } else {
-                    
-
                 }
             } else {
                 res.status(200).json({ success: false, message: 'Product Not available' });
             }
         } else {
-                res.status(200).json({ success: false, message: 'need to login' ,redirectUrl: '/login'});
+            res.status(200).json({ success: false, message: 'need to login', redirectUrl: '/login' });
         }
 
     } catch (error) {
@@ -59,14 +47,13 @@ const addToWishlistPost = async (req, res) => {
 const wishlistGet = async (req, res) => {
     try {
         const userId = req.session.userId
-        const wishList=await wishlistModel.findOne({user_id: userId}).populate("products.product_id")
-        console.log(wishList);
-        if(wishList){
-            wishList.products.forEach((row, index)=> { 
+        const wishList = await wishlistModel.findOne({ user_id: userId }).populate("products.product_id")
+        if (wishList) {
+            wishList.products.forEach((row, index) => {
 
             })
         }
-       
+
         res.render('users/wishlist', {
             message: '',
             user: req.session.user,

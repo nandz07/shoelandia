@@ -10,8 +10,6 @@ const addTocartPost = async (req, res) => {
             const cartData = await CartModel.findOne({ user_id: userId })
             const productData = await ProductModel.findOne({ _id: productId })
             if (productData.stockQuantity > 0) {
-
-
                 if (productData.status) {
                     const products = {
                         product_id: productId,
@@ -19,14 +17,11 @@ const addTocartPost = async (req, res) => {
                         price: productData.price,
                         totalPrice: productData.price
                     }
-
                     if (cartData) {
                         const exist = cartData.products.filter((value) => value.product_id.toString() == productId)
                         if (exist.length !== 0) {
                             if (exist[0].quantity < productData.stockQuantity) {
-
                                 await CartModel.findOneAndUpdate({ user_id: userId, "products.product_id": productId }, { $inc: { "products.$.quantity": 1, "products.$.totalPrice": productData.price }, $set: { updatedOn: Date.now() } })
-
                                 res.status(200).json({ success: true, message: 'Product added to cart' });
                             } else {
                                 res.status(200).json({ success: false, message: 'Reached the limit' });
@@ -36,8 +31,6 @@ const addTocartPost = async (req, res) => {
 
                             res.status(200).json({ success: true, message: 'Product added to cart' });
                         }
-
-
                     } else {
                         const cartSave = new CartModel({
                             products: [products],
@@ -46,10 +39,8 @@ const addTocartPost = async (req, res) => {
                         await cartSave.save()
                         res.status(200).json({ success: true, message: 'Product added to cart' });
                     }
-
                 } else {
                     res.redirect('/');
-
                 }
             } else {
                 res.status(200).json({ success: false, message: 'Product Not available' });
@@ -83,8 +74,6 @@ const addTocartPost = async (req, res) => {
 
                         res.status(200).json({ success: true, message: 'Product added to cart' });
                     }
-
-
                 } else {
                     const cartSave = new CartModel({
                         products: [products],
@@ -107,12 +96,10 @@ const addTocartPost = async (req, res) => {
 
 const userCartGet = async (req, res) => {
     try {
-
         const user = req.session.userLogedIn;
         const userId = req.session.userId;
         if (user) {
             const oldCartData = await CartModel.findOne({ user_id: userId }).populate('products.product_id');
-            console.log(oldCartData);
             if (oldCartData) {
                 oldCartData.products.forEach(async (element) => {
                     if (element.quantity > element.product_id.stockQuantity) {

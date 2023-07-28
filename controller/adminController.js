@@ -3,7 +3,6 @@ const bcrypt = require('bcrypt');
 
 const dashboardAdminGet = async (req, res) => {
     try {
-
         res.render('admin/dashBoard', { admin: req.session.admin })
     } catch (error) {
         console.log(error);
@@ -12,7 +11,6 @@ const dashboardAdminGet = async (req, res) => {
 
 const bannerAdminGet = async (req, res) => {
     try {
-
         res.render('admin/banner', { admin: req.session.admin })
     } catch (error) {
         console.log(error);
@@ -50,32 +48,31 @@ const adminLoginPost = async (req, res) => {
             } else {
                 res.render('admin/loginAdmin', { message: 'Admin can only login', admin: req.session.admin })
             }
-        }else{
+        } else {
             res.render('admin/loginAdmin', { message: 'invalid email or password ', admin: req.session.admin })
         }
-        } catch (error) {
-            console.log(error);
-        }
+    } catch (error) {
+        console.log(error);
     }
+}
 
 const adminLogoutGet = async (req, res) => {
-        try {
+    try {
+        req.session.admin = ''
+        req.session.adminLogedIn = false
+        res.redirect('/admin')
 
-            req.session.admin = ''
-            req.session.adminLogedIn = false
-            res.redirect('/admin')
-
-        } catch (error) {
-            console.log(error);
-        }
+    } catch (error) {
+        console.log(error);
     }
+}
 
 
 
-    module.exports = {
-        dashboardAdminGet,
-        bannerAdminGet,
-        adminLoginGet,
-        adminLoginPost,
-        adminLogoutGet
-    }
+module.exports = {
+    dashboardAdminGet,
+    bannerAdminGet,
+    adminLoginGet,
+    adminLoginPost,
+    adminLogoutGet
+}

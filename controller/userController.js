@@ -8,7 +8,7 @@ const CartModel = require('../models/cartModel');
 const wishlistModel = require('../models/wishlistModel');
 // const UpdateCartModel = require('../models/updateCartModel');
 
-const sendEmailChangePassword =async(userId, email)=>{
+const sendEmailChangePassword = async (userId, email) => {
     try {
         const transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
@@ -22,15 +22,15 @@ const sendEmailChangePassword =async(userId, email)=>{
         })
         const options = {
             from: 'nandakumart07@gmail.com',
-        to: email,
-        subject: 'Change password',
-        html:`please click here to change password http://localhost:3000/changePassword?id=${userId}`
+            to: email,
+            subject: 'Change password',
+            html: `please click here to change password http://localhost:3000/changePassword?id=${userId}`
         }
         transporter.sendMail(options, function (error, info) {
             if (error) {
                 console.log(error);
             } else {
-                console.log(otp);
+                console.log(`http://localhost:3000/changePassword?id=${userId}`);
                 console.log("email has been send to :-", info.response);
             }
         })
@@ -107,19 +107,17 @@ const homeGet = async (req, res) => {
         let SessionCart = await CartModel.find({})
         SessionCart.forEach(async (element) => {
             if (element.session_id) {
-                console.log(Date.now() - element.updatedOn);
                 let diff = Date.now() - element.updatedOn
                 if (diff > (5 * 60 * 1000)) {
                     await CartModel.deleteOne({ session_id: element.session_id })
                 }
             }
         });
-        // console.log(SessionCart);
         const productDb = await ProductModel.find({ status: true },).populate("category").sort({ createdOn: -1 }).exec();
         let wishList = []
         if (req.session.userLogedIn) {
             wishList = await wishlistModel.find({ user_id: req.session.userId })
-            if (wishList.length !=0) {
+            if (wishList.length != 0) {
                 wishList[0].products.forEach(wishList => {
                     productDb.forEach(productDb => {
                         if (wishList.product_id.toString() == productDb._id.toString()) {
@@ -131,7 +129,6 @@ const homeGet = async (req, res) => {
         } else {
             wishList = []
         }
-        // console.log(productDb);
         res.render('users/index', {
             product: productDb,
             message: '',
@@ -149,10 +146,7 @@ const productDetailsGetUser = async (req, res) => {
     try {
         let productId = req.params.id
         let a = "hai"
-        console.log(a);
-        console.log(productId);
         const productDb = await ProductModel.findOne({ _id: productId.toString() }).populate("category").exec()
-        console.log(productDb);
         if (productDb) {
             res.render('users/singeProductDetails', { product: productDb, user: req.session.user, count: req.cartCount })
         }
@@ -170,8 +164,8 @@ const userLoginGet = async (req, res) => {
             message = ''
         }
         if (!user) {
-            const userId=''
-            res.render('users/userLogin', { user: req.session.user, count: req.cartCount,userId })
+            const userId = ''
+            res.render('users/userLogin', { user: req.session.user, count: req.cartCount, userId })
         } else {
             res.redirect('/')
         }
@@ -189,8 +183,8 @@ const userLoginPost = async (req, res) => {
                 const passwordMatch = await bcrypt.compare(password, userDb.password)
                 if (passwordMatch) {
                     if (userDb.is_blocked) {
-                        const userId=userDb._id
-                        res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount,userId})
+                        const userId = userDb._id
+                        res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount, userId })
                     } else {
                         req.session.user = userDb.name
                         req.session.userId = userDb._id
@@ -202,7 +196,6 @@ const userLoginPost = async (req, res) => {
                                 isSessionCart.products.filter(async (sessionValue) => {
                                     let productData = await ProductModel.findOne({ _id: sessionValue.product_id })
                                     const exist = userCartData.products.filter((value) => value.product_id.toString() == sessionValue.product_id)
-                                    console.log(exist);
                                     if (exist.length !== 0) {
                                         if (exist[0].quantity + sessionValue.quantity < productData.stockQuantity) {
                                             await CartModel.findOneAndUpdate({ user_id: req.session.userId, "products.product_id": sessionValue.product_id }, { $inc: { "products.$.quantity": sessionValue.quantity, "products.$.totalPrice": sessionValue.totalPrice } })
@@ -223,15 +216,15 @@ const userLoginPost = async (req, res) => {
                         res.redirect('/')
                     }
                 } else {
-                    const userId=userDb._id
-                    res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user, count: req.cartCount,userId })
+                    const userId = userDb._id
+                    res.render('users/userLogin', { message: ' Password is incorrect', user: req.session.user, count: req.cartCount, userId })
                 }
             } else {
                 const redirectUrl = '/otpVerificationGet?email=' + encodeURIComponent(email);
                 res.redirect(redirectUrl);
             }
         } else {
-            const userId=userDb._id
+            const userId = userDb._id
             res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user, count: req.cartCount })
         }
         // res.render('users/userLogin',{message:''})
@@ -300,53 +293,43 @@ const resendOtpGet = async (req, res) => {
 const forgotPasswordEmail = async (req, res) => {
     try {
         const email = req.body.email;
-        console.log(email);
-        let user=await UserModel.findOne({email:email})
-        const id=user._id
-        // console.log(user.is_blocked);
-        // console.log(user);
-        if(user!= null){
-            if(user.is_blocked){
-                console.log('blocked');
+        let user = await UserModel.findOne({ email: email })
+        const id = user._id
+        if (user != null) {
+            if (user.is_blocked) {
                 res.status(200).json({ success: false, message: 'User is blocked' })
 
-            }else{
-                req.session.changePasswordId=id
-                await sendEmailChangePassword(id,email)
-                res.status(200).json({ success: true, message: 'Please check your email'})
-
-                console.log('unblocked');
+            } else {
+                req.session.changePasswordId = id
+                await sendEmailChangePassword(id, email)
+                res.status(200).json({ success: true, message: 'Please check your email' })
                 // res.render('users/userLogin', { message: ' This website has been blocked for you', user: req.session.user, count: req.cartCount,userId})
             }
-        }else{
-            res.status(200).json({ success: false, message: 'User is not found'})
-            
-            console.log('empty');
+        } else {
+            res.status(200).json({ success: false, message: 'User is not found' })
         }
-        
     } catch (error) {
         console.log(error);
     }
 }
+
 const changePasswordGet = async (req, res) => {
     try {
         const id = req.query.id;
         console.log(id);
-        const user=await UserModel.findOne({_id:id})
+        const user = await UserModel.findOne({ _id: id })
         console.log(user);
-        if(id==user._id){
-            res.render('users/changePassword',{
-            message: '',
-            count: req.cartCount,
-            email:user.email,
-            id:id,
-            user:''
+        if (id == user._id) {
+            res.render('users/changePassword', {
+                message: '',
+                count: req.cartCount,
+                email: user.email,
+                id: id,
+                user: ''
             })
-        }else{
+        } else {
             res.redirect('404')
         }
-        
-        
     } catch (error) {
         console.log(error);
     }
@@ -355,20 +338,17 @@ const changePasswordPost = async (req, res) => {
     try {
         const id = req.query.id;
         const spassword = await securePassword(req.body.password);
-        console.log(id);
-        const user=await UserModel.findOne({_id:id})
-        
-        console.log(user);
-        if(id==user._id){
-            await UserModel.findByIdAndUpdate(id,{
-                password:spassword
+        const user = await UserModel.findOne({ _id: id })
+        if (id == user._id) {
+            await UserModel.findByIdAndUpdate(id, {
+                password: spassword
             })
             res.redirect('/login')
-        }else{
+        } else {
             res.redirect('404')
         }
-        
-        
+
+
     } catch (error) {
         console.log(error);
     }
@@ -388,8 +368,8 @@ const otpVerificationPost = async (req, res) => {
             let id = otpDb._id
             await UserModel.updateOne({ email: email }, { $set: { is_verified: true } })
             await otpModel.findByIdAndRemove(id)
-            const userId=''
-            res.render('users/userLogin', { message: 'your email has been verified sucessfully', user: req.session.user, count: req.cartCount,userId})
+            const userId = ''
+            res.render('users/userLogin', { message: 'your email has been verified sucessfully', user: req.session.user, count: req.cartCount, userId })
         } else {
             res.render('users/otpVerification', { message: 'invalid otp', email: email, user: req.session.user, count: req.cartCount })
         }

@@ -13,19 +13,18 @@ const wishlistModel = require('../models/wishlistModel');
 // --------------------------------------
 const shopGet = async (req, res) => {
     try {
-        let search =req.query.search
-        console.log(search)
-        if(search){
-            search=search
-        }else{
-            search=null
+        let search = req.query.search
+        if (search) {
+            search = search
+        } else {
+            search = null
         }
-        const category=await CategoryModel.find({status:true})
+        const category = await CategoryModel.find({ status: true })
         const productDb = await ProductModel.find({ status: true },).populate("category").sort({ createdOn: -1 }).exec();
         let wishList = []
         if (req.session.userLogedIn) {
             wishList = await wishlistModel.find({ user_id: req.session.userId })
-            if (wishList.length !=0) {
+            if (wishList.length != 0) {
                 wishList[0].products.forEach(wishList => {
                     productDb.forEach(productDb => {
                         if (wishList.product_id.toString() == productDb._id.toString()) {
@@ -41,10 +40,9 @@ const shopGet = async (req, res) => {
             product: productDb,
             message: '',
             user: req.session.user,
-           search,
+            search,
             count: req.cartCount,
             category
-            
         })
     } catch (error) {
         console.log(error);
@@ -55,5 +53,5 @@ const shopGet = async (req, res) => {
 
 module.exports = {
     shopGet,
-    
+
 }

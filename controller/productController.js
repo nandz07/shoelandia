@@ -1,24 +1,27 @@
 const CategoryModel = require('../models/categoryModel');
 const ProductModel = require('../models/productModel');
+
 const productDetailsAdminGet = async (req, res) => {
     try {
         let productDb = await ProductModel.find().populate("category").exec()
-        res.render('admin/productDetails', { product: productDb, message: '',admin:req.session.admin })
+        res.render('admin/productDetails', { product: productDb, message: '', admin: req.session.admin })
     } catch (error) {
         console.log(error);
     }
 }
+
 const addProductAdminGet = async (req, res) => {
     try {
-        let categoryDb = await CategoryModel.find({status:true}).exec()
+        let categoryDb = await CategoryModel.find({ status: true }).exec()
         res.render('admin/addProduct', {
             category: categoryDb,
-            message: '',admin:req.session.admin
+            message: '', admin: req.session.admin
         })
     } catch (error) {
         console.log(error);
     }
 }
+
 const addProductAdminPost = async (req, res) => {
     try {
         const image = []
@@ -29,7 +32,7 @@ const addProductAdminPost = async (req, res) => {
             productName: req.body.productName,
             price: req.body.productPrice,
             image: image,
-            category: req.body.productCategory, 
+            category: req.body.productCategory,
             stockQuantity: req.body.productStock,
             status: req.body.status,
             description: req.body.productDescription,
@@ -40,25 +43,26 @@ const addProductAdminPost = async (req, res) => {
         const productData = await product.save();
         let categoryDb = await CategoryModel.find().exec()
         if (productData) {
-            res.render('admin/addProduct', { category: categoryDb, message: `Product ${req.body.productName} added successfully`, status: "success",admin:req.session.admin });
+            res.render('admin/addProduct', { category: categoryDb, message: `Product ${req.body.productName} added successfully`, status: "success", admin: req.session.admin });
         } else {
-            res.render('admin/addProduct', { message: "Failed adding product", status: "danger",admin:req.session.admin});
+            res.render('admin/addProduct', { message: "Failed adding product", status: "danger", admin: req.session.admin });
         }
     } catch (error) {
         console.log(error);
     }
 }
+
 const editProductDetailsAdminGet = async (req, res) => {
     try {
         const productId = req.params.id
-        console.log(productId);
         const productData = await ProductModel.findOne({ _id: productId }).populate("category").exec()
-        let categoryDb = await CategoryModel.find({status:true}).exec()
-        res.render('admin/editProduct', { product: productData, category: categoryDb ,admin:req.session.admin})
+        let categoryDb = await CategoryModel.find({ status: true }).exec()
+        res.render('admin/editProduct', { product: productData, category: categoryDb, admin: req.session.admin })
     } catch (error) {
         console.log(error);
     }
 }
+
 const editProductDetailsAdminPost = async (req, res) => {
     try {
         if (req.files.length > 0) {
@@ -86,16 +90,17 @@ const editProductDetailsAdminPost = async (req, res) => {
             updatedOn: Date.now()
         })
         let productDb = await ProductModel.find().populate("category").exec()
-                if (productUpdate) {
-            res.render('admin/productDetails', { product: productDb, message: 'product has been edited sucessfully', status: 'success',admin:req.session.admin})
+        if (productUpdate) {
+            res.render('admin/productDetails', { product: productDb, message: 'product has been edited sucessfully', status: 'success', admin: req.session.admin })
         } else {
-            res.render('admin/productDetails', { product: productDb, message: `product updation failed`, status: 'danger',admin:req.session.admin })
+            res.render('admin/productDetails', { product: productDb, message: `product updation failed`, status: 'danger', admin: req.session.admin })
         }
 
     } catch (error) {
         console.log(error);
     }
 }
+
 const unlistProductDetailsAdminGet = async (req, res) => {
     try {
         const id = req.params.id
@@ -105,14 +110,15 @@ const unlistProductDetailsAdminGet = async (req, res) => {
         }).exec();
         let productDb = await ProductModel.find().populate("category").exec()
         if (productUpList) {
-            res.render('admin/productDetails', { message: `unlisted sucessfully`, status: 'success', product: productDb ,admin:req.session.admin})
+            res.render('admin/productDetails', { message: `unlisted sucessfully`, status: 'success', product: productDb, admin: req.session.admin })
         } else {
-            res.render('admin/productDetails', { message: `failed to unlist`, status: 'danger', product: productDb ,admin:req.session.admin})
+            res.render('admin/productDetails', { message: `failed to unlist`, status: 'danger', product: productDb, admin: req.session.admin })
         }
     } catch (error) {
         console.log(error);
     }
 }
+
 const listProductDetailsAdminGet = async (req, res) => {
     try {
         const id = req.params.id
@@ -122,9 +128,9 @@ const listProductDetailsAdminGet = async (req, res) => {
         }).exec();
         let productDb = await ProductModel.find().populate("category").exec()
         if (productUpList) {
-            res.render('admin/productDetails', { message: `listed sucessfully`, status: 'success', product: productDb ,admin:req.session.admin})
+            res.render('admin/productDetails', { message: `listed sucessfully`, status: 'success', product: productDb, admin: req.session.admin })
         } else {
-            res.render('admin/productDetails', { message: `failed to unlisted`, status: 'danger', product: productDb ,admin:req.session.admin})
+            res.render('admin/productDetails', { message: `failed to unlisted`, status: 'danger', product: productDb, admin: req.session.admin })
         }
     } catch (error) {
         console.log(error);

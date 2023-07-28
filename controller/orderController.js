@@ -11,9 +11,9 @@ const ejs = require('ejs');
 const path = require('path');
 const { log } = require('console');
 const orderModel = require('../models/orderModel');
-const instance=require('../config/paymentGateway')
+const instance = require('../config/paymentGateway')
 
-const RAZORKEY=process.env.RAZORKEY
+const RAZORKEY = process.env.RAZORKEY
 
 
 const checkoutLoad = async (req, res) => {
@@ -23,11 +23,9 @@ const checkoutLoad = async (req, res) => {
             const userData = await UserModel.findOne({ _id: userId })
             const cartData = await CartModel.findOne({ user_id: userId }).populate('products.product_id');
             if (cartData) {
-
                 const carts = await CartModel.findOne({ user_id: userId });
                 const subTotalPrice = carts ? carts.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
                 const totalQuantity = carts ? carts.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
-
                 const addressDb = await AddressModel.find({ userId: userId })
                 if (addressDb) {
                     res.render('users/checkOut', {
@@ -60,7 +58,6 @@ const checkoutLoad = async (req, res) => {
 }
 const addAdressPost = async (req, res) => {
     try {
-
         const address = {
             userName: req.body.name,
             mobile: req.body.phone,
@@ -70,7 +67,6 @@ const addAdressPost = async (req, res) => {
             state: req.body.state,
             pincode: req.body.zip
         }
-
         const addressSave = new AddressModel({
             userId: req.session.userId,
             userName: req.body.name,
@@ -82,7 +78,6 @@ const addAdressPost = async (req, res) => {
             pincode: req.body.zip
         })
         await addressSave.save()
-
         res.redirect('/checkout')
     } catch (error) {
         console.log(error);
@@ -93,14 +88,12 @@ const addAdress = async (req, res) => {
         if (req.session.userLogedIn) {
             let userId = req.session.userId
             const userData = await UserModel.findOne({ _id: userId })
-
             res.render('users/addAdress', {
                 user: req.session.user,
                 count: req.cartCount,
                 addressDb,
                 userData
             })
-
         } else {
             const redirectUrl = '/login?message=' + encodeURIComponent('Need to login for purchase');
             res.redirect(redirectUrl);
@@ -113,7 +106,6 @@ const addAdress = async (req, res) => {
 const editAddressGet = async (req, res) => {
     try {
         let addressId = req.query.id
-
         let address = await AddressModel.findOne(
             { userId: req.session.userId }
         );
@@ -161,7 +153,6 @@ const deleteAddress = async (req, res) => {
 }
 const checkoutPost = async (req, res) => {
     try {
-
         let { addressId, selectedPayment, subTotalPrice, discountPrice, totalamount, code } = req.body
         let userId = req.session.userId
         const cartData = await CartModel.findOne({ user_id: req.session.userId }).populate('products.product_id');
@@ -174,7 +165,6 @@ const checkoutPost = async (req, res) => {
             }
             return result;
         }, { filtered: [], unfiltered: [] });
-
         const filteredData = outOfStock.filtered;
         const unfilteredData = outOfStock.unfiltered;
         if (unfilteredData.length != 0) {
@@ -195,7 +185,6 @@ const checkoutPost = async (req, res) => {
                 if (req.body.subTotalPrice) {
                     subTotalPrice = req.body.subTotalPrice;
                 }
-
                 // create orders in database
                 if (cartOrders) {
                     const orderSave = new OrderModel({
@@ -208,7 +197,7 @@ const checkoutPost = async (req, res) => {
                         totalPrice: total,
                         orderDate: recentDate,
                         deliveryDate: deliveredDate,
-                        paymentMethod: req.body.selectedPayment, 
+                        paymentMethod: req.body.selectedPayment,
                         orderStatus: '',
                         userStatus: '',
                         paymentStatus: 'pending',
@@ -254,19 +243,19 @@ const checkoutPost = async (req, res) => {
                             );
                             await CartModel.deleteOne({ user_id: userId });
                             res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
-                        
-                        }else if(selectedPayment == 'online'){
+
+                        } else if (selectedPayment == 'online') {
                             const totalAmount = orderSave.totalPrice;
                             var options = {
-                                amount: totalAmount*100,
+                                amount: totalAmount * 100,
                                 currency: "INR",
-                                receipt: ""+ss
+                                receipt: "" + ss
                             }
-                            instance.orders.create(options, function(err, order) {
-                                
+                            instance.orders.create(options, function (err, order) {
+
                                 // res.status(200).json({ success: "online", redirectUrl: '/myOrder', orderSave, addressId:req.body.addressId,code,orderId:ss,order });
-                                res.status(200).json({ success: "online",order });
-                              });
+                                res.status(200).json({ success: "online", order });
+                            });
                         }
                     })
                     // ------ coupon update
@@ -276,7 +265,6 @@ const checkoutPost = async (req, res) => {
                 }
             }
         }
-
         //   res.status(200).json({ success: true, redirectUrl: '/' });
 
     } catch (error) {
@@ -293,31 +281,32 @@ const verifyPayment = async (req, res) => {
         console.log(details['payment[razorpay_payment_id]']);
         const crypto = require('crypto');
         let hmac = crypto.createHmac('sha256', RAZORKEY);
-        hmac.update(details['payment[razorpay_order_id]']+'|'+details['payment[razorpay_payment_id]']);
+        hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);
         hmac = hmac.digest('hex');
-        if(hmac==details['payment[razorpay_signature]']){
-            await OrderModel.findByIdAndUpdate({_id:details['order[receipt]']},{$set:{orderstatus:"confirm",paymentStatus:"success"}});
+        if (hmac == details['payment[razorpay_signature]']) {
+            await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { orderstatus: "confirm", paymentStatus: "success" } });
             // await UserModel.updateOne({_id:req.session.user_id},{$inc:{wallet:-wal}});
-            await OrderModel.findByIdAndUpdate({_id:details['order[receipt]']},{$set:{paymentId:details['payment[razorpay_order_id]']}});
-            await CartModel.deleteOne({userName:req.session.user_id});
+            await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { paymentId: details['payment[razorpay_order_id]'] } });
+            await CartModel.deleteOne({ userName: req.session.user_id });
             const orderData = await OrderModel.findOne({ user_id: req.session.userId }).sort({ orderDate: -1 }).populate('products.product_id');
-                            const addressId = orderData.address_id;
-                            let address = await AddressModel.findOne(
-                                {
-                                    userId: req.session.userId,
-                                    _id: addressId
-                                }
-                            );
+            const addressId = orderData.address_id;
+            let address = await AddressModel.findOne(
+                {
+                    userId: req.session.userId,
+                    _id: addressId
+                }
+            );
             // res.json({success:true});
             res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
-        }else{
-            await OrderModel.findByIdAndRemove({_id:details['order[receipt]']});
-            res.json({success:false});
+        } else {
+            await OrderModel.findByIdAndRemove({ _id: details['order[receipt]'] });
+            res.json({ success: false });
         }
     } catch (error) {
         console.log(error);
     }
 }
+
 const myOrders = async (req, res) => {
     try {
         let userId = req.session.userId
@@ -333,6 +322,7 @@ const myOrders = async (req, res) => {
         console.log(error);
     }
 }
+
 const cancelOrder = async (req, res) => {
     try {
         let id = req.query.id

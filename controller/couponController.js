@@ -1,34 +1,30 @@
 const CouponModel = require('../models/couponModel');
 
-const couponGet= async(req,res)=>{
+const couponGet = async (req, res) => {
     try {
-        // res.send('hai')
-        const coupon=await CouponModel.find().exec()
-        res.render('admin/coupon',{coupon:coupon,message:'',admin:req.session.admin})
+        const coupon = await CouponModel.find().exec()
+        res.render('admin/coupon', { coupon: coupon, message: '', admin: req.session.admin })
     } catch (error) {
-        
+
     }
 }
-const addCouponGet= async(req,res)=>{
+
+const addCouponGet = async (req, res) => {
     try {
-        console.log(req.query.message);
-        console.log(req.query.message);
-        if(req.query.message){
-            
-            message=req.query.message
-        }else{
-            message=''
+        if (req.query.message) {
+            message = req.query.message
+        } else {
+            message = ''
         }
-        const coupon=await CouponModel.find().exec()
-        console.log(message);
-        res.render('admin/addCoupon',{coupon:coupon,message,admin:req.session.admin})
+        const coupon = await CouponModel.find().exec()
+        res.render('admin/addCoupon', { coupon: coupon, message, admin: req.session.admin })
     } catch (error) {
-        
+
     }
 }
-const addCouponPost= async(req,res)=>{
+
+const addCouponPost = async (req, res) => {
     try {
-        console.log('hai');
         const { code, discountType, discountAmount, minCartAmount, maxDiscountAmount, maxUsers, expiryDate } = req.body;
         const coupon = new CouponModel({
             code: code,
@@ -45,14 +41,11 @@ const addCouponPost= async(req,res)=>{
         const redirectUrl = '/admin/coupon?message=' + encodeURIComponent('coupon added successfully');
         res.redirect(redirectUrl);
     } catch (error) {
-        
+
     }
 }
 
- 
-
-  
-module.exports={
+module.exports = {
     couponGet,
     addCouponGet,
     addCouponPost
