@@ -41,6 +41,7 @@ router.get('/listCategory/:id',auth.isLogin, categoryController.listCategoryAdmi
 router.get('/OrderDetails',auth.isLogin, orderController.loadOrdersAdmin);
 router.get('/shipping',auth.isLogin, orderController.shippingAdmin);
 router.get('/delivered',auth.isLogin, orderController.deliveryAdmin);
+router.get('/confirm',auth.isLogin, orderController.confirmAdmin);
 
 router.get('/coupon', auth.isLogin,couponController.couponGet);
 router.get('/addCoupon', auth.isLogin,couponController.addCouponGet);

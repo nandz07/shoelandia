@@ -33,13 +33,13 @@
                                                         <li><a href="#"><%=product.product_id.productName %> X <%= product.quantity%><span class="middle"></span> <span class="last"><%= product.totalPrice%></span></a></li>
                                                         <% }) %> -->
                                                         <li>Total Price : <%=element.totalPrice %></li>
-                                                        <li>Delivery Address : <%=element.address_id.address %>,
-                                                            <%=element.address_id.city %>,<%=element.address_id.state %>,
-                                                            <%=element.address_id.pincode %></li>
-                                                            <% if(element.orderstatus != 'canceled') {%>
-                                                            <li>Order Status : <span class="text-success font-weight-bold"> <%= element.orderstatus %> </span></li>
+                                                        <li>Delivery Address : <%=element.deliveryAddress.address %>,
+                                                            <%=element.deliveryAddress.city %>,<%=element.deliveryAddress.state %>,
+                                                            <%=element.deliveryAddress.pincode %></li>
+                                                            <% if(element.status != 'canceled') {%>
+                                                            <li>Order Status : <span class="text-success font-weight-bold"> <%= element.status %> </span></li>
                                                             <% }else{ %>
-                                                                <li>Order Status : <span class="text-danger font-weight-bold"> <%= element.orderstatus %> </span></li>
+                                                                <li>Order Status : <span class="text-danger font-weight-bold"> <%= element.status %> </span></li>
                                                             <% } %>
                                                             <li class="text-success">ordered on : <%= getDate(element.orderDate) %></li>
                                                             <li>Delivery on : <%= getDate(element.deliveryDate) %></li>
@@ -144,7 +144,7 @@
                    
                 </td>
                 <td>
-                    <% if(row.orderstatus != 'canceled' && row.orderstatus != 'delivered') {%>
+                    <% if(row.status != 'canceled' && row.status != 'delivered') {%>
                         <span class="last"><a class="mt-2  text-danger" onclick="cancel('<%= row._id %>')"> cancel</a></span>
                         <% } %>
                 </td>

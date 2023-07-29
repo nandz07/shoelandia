@@ -26,7 +26,8 @@ const checkoutLoad = async (req, res) => {
                 const carts = await CartModel.findOne({ user_id: userId });
                 const subTotalPrice = carts ? carts.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
                 const totalQuantity = carts ? carts.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
-                const addressDb = await AddressModel.find({ userId: userId })
+                const addressDb = await AddressModel.findOne({ userId: userId }).populate('userId')
+                // console.log(addressDb.addresses);
                 if (addressDb) {
                     res.render('users/checkOut', {
                         user: req.session.user,
@@ -58,6 +59,7 @@ const checkoutLoad = async (req, res) => {
 }
 const addAdressPost = async (req, res) => {
     try {
+
         const address = {
             userName: req.body.name,
             mobile: req.body.phone,
@@ -67,17 +69,18 @@ const addAdressPost = async (req, res) => {
             state: req.body.state,
             pincode: req.body.zip
         }
-        const addressSave = new AddressModel({
-            userId: req.session.userId,
-            userName: req.body.name,
-            mobile: req.body.phone,
-            email: req.body.email,
-            address: req.body.address,
-            city: req.body.city,
-            state: req.body.state,
-            pincode: req.body.zip
-        })
-        await addressSave.save()
+        console.log(req.session.userId + "userId");
+        const addressData = await AddressModel.findOne({ userId: req.session.userId })
+
+        if (addressData) {
+            await AddressModel.findOneAndUpdate({ userId: req.session.userId }, { $push: { addresses: address } })
+        } else {
+            const addressSave = new AddressModel({
+                userId: req.session.userId,
+                addresses: [address]
+            })
+            await addressSave.save()
+        }
         res.redirect('/checkout')
     } catch (error) {
         console.log(error);
@@ -91,7 +94,6 @@ const addAdress = async (req, res) => {
             res.render('users/addAdress', {
                 user: req.session.user,
                 count: req.cartCount,
-                addressDb,
                 userData
             })
         } else {
@@ -106,13 +108,16 @@ const addAdress = async (req, res) => {
 const editAddressGet = async (req, res) => {
     try {
         let addressId = req.query.id
+
         let address = await AddressModel.findOne(
             { userId: req.session.userId }
         );
+        const exist = address.addresses.filter((value) => value._id.toString() == addressId)
+        console.log(exist[0]);
         data = {
             user: req.session.user,
             count: req.cartCount,
-            address: address
+            address: exist[0]
         }
         res.render('users/editAddress', data)
     } catch (error) {
@@ -122,17 +127,17 @@ const editAddressGet = async (req, res) => {
 const editAddressPost = async (req, res) => {
     try {
         let addressId = req.query.id
-        await AddressModel.findOneAndUpdate({ userId: req.session.userId, _id: addressId },
+        await AddressModel.findOneAndUpdate({ userId: req.session.userId, "addresses._id": addressId },
             {
                 $set:
                 {
-                    userName: req.body.name,
-                    mobile: req.body.phone,
-                    email: req.body.email,
-                    address: req.body.address,
-                    city: req.body.city,
-                    state: req.body.state,
-                    pincode: req.body.zip
+                    "addresses.$.userName": req.body.name,
+                    "addresses.$.mobile": req.body.phone,
+                    "addresses.$.email": req.body.email,
+                    "addresses.$.address": req.body.address,
+                    "addresses.$.city": req.body.city,
+                    "addresses.$.state": req.body.state,
+                    "addresses.$.pincode": req.body.zip
                 }
             })
         res.redirect('/checkout')
@@ -142,11 +147,10 @@ const editAddressPost = async (req, res) => {
 }
 const deleteAddress = async (req, res) => {
     try {
-        // let addressId = req.query.id
-        // await AddressModel.updateOne({ userId: req.session.userId, "addresses._id": addressId }, { $pull: { addresses: { _id: addressId } } }).then((data) => {
-        res.status(200).json({ success: true, message: 'address removed' });
-        // })
-
+        let addressId = req.query.id
+        await AddressModel.updateOne({ userId: req.session.userId, "addresses._id": addressId }, { $pull: { addresses: { _id: addressId } } }).then((data) => {
+            res.status(200).json({ success: true, message: 'address removed' });
+        })
     } catch (error) {
         console.log(error);
     }
@@ -171,6 +175,7 @@ const checkoutPost = async (req, res) => {
             res.status(200).json({ success: false, message: 'out of quantity', data: unfilteredData, redirectUrl: '/cart' })
         } else {
             if (cartData) {
+                const deliveryAddress=await AddressModel.findOne({userId:userId,'addresses._id':addressId})
                 const cartOrders = cartData.products;
                 // let subTotalPrice = cartData ? cartData.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
                 let subTotal = parseInt(subTotalPrice)
@@ -187,10 +192,21 @@ const checkoutPost = async (req, res) => {
                 }
                 // create orders in database
                 if (cartOrders) {
+                    // console.log(deliveryAddress);
+                    const exist = deliveryAddress.addresses.filter((value) => value._id.toString() == addressId)
+
                     const orderSave = new OrderModel({
                         products: cartData.products,
                         user_id: userId,
-                        address_id: req.body.addressId,
+                        deliveryAddress: {
+                            userName:exist[0].userName,
+                            mobile:exist[0].mobile,
+                            email:exist[0].email,
+                            address:exist[0].address,
+                            city:exist[0].city,
+                            state:exist[0].state,
+                            pincode:exist[0].pincode,
+                        },
                         quantity: totalQuantity,
                         subTotalPrice: subTotal,
                         discountPrice: discount,
@@ -198,7 +214,6 @@ const checkoutPost = async (req, res) => {
                         orderDate: recentDate,
                         deliveryDate: deliveredDate,
                         paymentMethod: req.body.selectedPayment,
-                        orderStatus: '',
                         userStatus: '',
                         paymentStatus: 'pending',
                         status: selectedPayment === "COD" ? "placed" : "pending",
@@ -207,7 +222,7 @@ const checkoutPost = async (req, res) => {
                         var ss = response._id
                         if (selectedPayment == 'COD') {
                             const orderId = response._id;
-                            await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { orderstatus: 'confirm', paymentStatus: 'pending' } }).then(() => {
+                            await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { status: 'confirm', paymentStatus: 'pending' } }).then(() => {
                             }).then((status) => {
 
                             }).then(async () => {
@@ -242,7 +257,7 @@ const checkoutPost = async (req, res) => {
                                 }
                             );
                             await CartModel.deleteOne({ user_id: userId });
-                            res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
+                            res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: exist[0] });
 
                         } else if (selectedPayment == 'online') {
                             const totalAmount = orderSave.totalPrice;
@@ -284,20 +299,11 @@ const verifyPayment = async (req, res) => {
         hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);
         hmac = hmac.digest('hex');
         if (hmac == details['payment[razorpay_signature]']) {
-            await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { orderstatus: "confirm", paymentStatus: "success" } });
-            // await UserModel.updateOne({_id:req.session.user_id},{$inc:{wallet:-wal}});
+            await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { status: "confirm", paymentStatus: "success" } });
             await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { paymentId: details['payment[razorpay_order_id]'] } });
             await CartModel.deleteOne({ userName: req.session.user_id });
             const orderData = await OrderModel.findOne({ user_id: req.session.userId }).sort({ orderDate: -1 }).populate('products.product_id');
-            const addressId = orderData.address_id;
-            let address = await AddressModel.findOne(
-                {
-                    userId: req.session.userId,
-                    _id: addressId
-                }
-            );
-            // res.json({success:true});
-            res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: address });
+            res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: orderData.deliveryAddress });
         } else {
             await OrderModel.findByIdAndRemove({ _id: details['order[receipt]'] });
             res.json({ success: false });
@@ -310,7 +316,7 @@ const verifyPayment = async (req, res) => {
 const myOrders = async (req, res) => {
     try {
         let userId = req.session.userId
-        const orderData = await OrderModel.find({ user_id: userId }).sort({ orderDate: -1 }).populate('products.product_id').populate('address_id');
+        const orderData = await OrderModel.find({ user_id: userId }).sort({ orderDate: -1 }).populate('products.product_id');
         data = {
             user: req.session.user,
             count: req.cartCount,
@@ -332,7 +338,7 @@ const cancelOrder = async (req, res) => {
             let a = await ProductModel.findByIdAndUpdate(element.product_id, { $inc: { stockQuantity: orderedQnty } })
         });
         const orderUpdate = await OrderModel.findByIdAndUpdate(id, {
-            orderstatus: 'canceled'
+            status: 'canceled'
         })
         if (orderUpdate) {
             res.status(200).json({ success: true, message: 'order canceled' });
@@ -344,40 +350,39 @@ const cancelOrder = async (req, res) => {
 // -------------------------------- admin ------------------
 const loadOrdersAdmin = async (req, res) => {
     try {
-        const orderData = await OrderModel.find().sort({ orderDate: -1 }).populate('products.product_id').populate('address_id');
-        data = {
-
-        }
+        const orderData = await OrderModel.find().sort({ orderDate: -1 }).populate('products.product_id');
         res.render('admin/OrderDetails', {
             orderData,
-            message: ''
+            message: '',
+            admin: req.session.admin
         })
+    } catch (error) {
+        console.log(error);
+    }
+}
+const confirmAdmin = async (req, res) => {
+    try {
+        const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { status: 'confirm' } })
+        res.redirect('/admin/OrderDetails')
     } catch (error) {
         console.log(error);
     }
 }
 const shippingAdmin = async (req, res) => {
     try {
-        const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { orderstatus: 'shipping' } })
-        data = {
-
-        }
+        const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { status: 'shipping' } })
         res.redirect('/admin/OrderDetails')
-        // res.render('admin/OrderDetails', {orderData,
-        //     message:''})
     } catch (error) {
         console.log(error);
     }
 }
 const deliveryAdmin = async (req, res) => {
     try {
-        const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { orderstatus: 'delivered', paymentStatus: 'success' } })
+        const orderData = await OrderModel.findByIdAndUpdate({ _id: req.query.id }, { $set: { status: 'delivered', paymentStatus: 'success' } })
         data = {
 
         }
         res.redirect('/admin/OrderDetails')
-        // res.render('admin/OrderDetails', {orderData,
-        //     message:''})
     } catch (error) {
         console.log(error);
     }
@@ -443,5 +448,6 @@ module.exports = {
     shippingAdmin,
     deliveryAdmin,
     applyCouponPost,
-    verifyPayment
+    verifyPayment,
+    confirmAdmin
 }

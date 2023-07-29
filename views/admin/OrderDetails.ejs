@@ -41,34 +41,42 @@
                     </td>
                     <td>
                       <div class="btn-group">
-                        <% if(row.orderstatus=='confirm' ){%>
+                        <% if(row.status=='confirm' ){%>
                           <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            <%= row.orderstatus %>
+                            <%= row.status %>
                           </button>
                           <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="shipping?id=<%= row._id %>">shipping</a></li>
                             <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
                           </ul>
-                          <% } else if(row.orderstatus=='canceled' ){%>
+                          <% } else if(row.status=='canceled' ){%>
                             <button class="btn btn-danger btn-sm " type="button" data-bs-toggle="dropdown"
                               aria-expanded="false">
-                              <%= row.orderstatus %>
+                              <%= row.status %>
                             </button>
-                          <% } else if(row.orderstatus=='shipping' ){%>
+                          <% } else if(row.status=='shipping' ){%>
                             <button class="btn btn-warning btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown"
                               aria-expanded="false">
-                              <%= row.orderstatus %>
+                              <%= row.status %>
                             </button>
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
                             </ul>
-                          <% } else if(row.orderstatus=='delivered' ){%>
+                          <% } else if(row.status=='delivered' ){%>
                             <button class="btn btn-success btn-sm " type="button" data-bs-toggle="dropdown"
                               aria-expanded="false">
-                              <%= row.orderstatus %>
+                              <%= row.status %>
                             </button>
-                            <% }  %>
+                            <% } if(row.status=='pending' ){%>
+                              <button class="btn btn-secondary btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown"
+                              aria-expanded="false">
+                              <%= row.status %>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="confirm?id=<%= row._id %>">confirm</a></li>
+                            </ul>
+                              <% }  %>
                       </div>
                     </td>
                     <td>
@@ -192,10 +200,13 @@
                         </table>
                       </div>
                       <div class="card-body">
-                        Ordered by : <%= row.address_id.userName%> <br>
-                        Delivery Address : <%= row.address_id.address %>,<%= row.address_id.city %>,<%= row.address_id.state %>
-                        <%= row.address_id.pincode %> <br>
-                        Contact number: <%= row.address_id.mobile %>
+                        Ordered by : <%= row.deliveryAddress.userName%> <br>
+                        Delivery Address : <%= row.deliveryAddress.address %>,<%= row.deliveryAddress.city %>,<%= row.deliveryAddress.state %>
+                        <%= row.deliveryAddress.pincode %> <br>
+                        Contact number: <%= row.deliveryAddress.mobile %> <br>
+                        <% if(row.paymentMethod=='online'){%>
+                          payment ID: <%=row.paymentId %>
+                       <% } %>
                       </div>
                   </div>
                   <div class="modal-footer">

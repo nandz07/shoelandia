@@ -24,9 +24,28 @@ const orderSchema = new mongoose.Schema({
             type: ObjectId,
             ref: 'user'
         },
-        address_id: {
-            type: ObjectId,
-            ref: 'address'
+        deliveryAddress: {
+            userName:{
+                type:String
+            },
+            mobile:{
+                type:Number
+            },
+            email:{
+                type:String
+            },
+            address:{
+                type:String
+            },
+            city:{
+                type:String
+            },
+            state:{
+                type:String
+            },
+            pincode:{
+                type:Number
+            }
         },
         quantity: {
             type: Number,
@@ -52,10 +71,10 @@ const orderSchema = new mongoose.Schema({
         paymentStatus: {
             type: String,
         },
-        orderstatus:{
+        status:{
             type:String,
         },
-        status:{
+        paymentId:{
             type:String,
         },
     });
