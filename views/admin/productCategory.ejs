@@ -128,25 +128,27 @@
                                      <% }else{%>
                                         <a class="badge bg-label-danger me-1" href="/admin/listCategory/<%= row._id %>"><i class='bx bx-list-minus'></i>
                                             unlisted</a>
-                                    <% } %>
-                                </td>
-                                <td>
-                                    <div class="dropdown">
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <a class="badge bg-label-info me-1" href="/admin/editCategory/<%= row._id %>"><i
+                                                class="bx bx-edit-alt me-1"></i> Edit</a>
+                                    <!-- <div class="dropdown">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
                                             data-bs-toggle="dropdown">
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="/admin/editCategory/<%= row._id %>"><i
+                                            <a class="dropdown-item" href="/admin/editCategory/<-%= row._id %>"><i
                                                     class="bx bx-edit-alt me-1"></i> Edit</a>
-                                            <!-- <a class="dropdown-item" href="/admin/deleteCategory/<%= row._id %>"><i class="bx bx-trash me-1"></i>
-                                                Delete</a> -->
-                                                <a class="dropdown-item btn" onclick="remove('<%= row._id %>')">
+                                            <a class="dropdown-item" href="/admin/deleteCategory/<-%= row._id %>"><i class="bx bx-trash me-1"></i>
+                                                Delete</a>
+                                                <a class="dropdown-item btn" onclick="remove('<-%= row._id %>')">
                                                   <i class="bx bx-trash me-1"></i>
                                                   Delete
                                                 </a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </td>
                                 <!-- Add hidden columns for DataTables -->
                                 <td style="display:none;"><%= row.categoryDescription %></td>

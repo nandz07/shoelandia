@@ -54,19 +54,40 @@ const editCategoryAdminPost = async (req, res) => {
     try {
         let { categoryName, categoryDescription } = req.body;
         const id = req.params.id
-        const categoryUpdate = await Category.findByIdAndUpdate(id, {
-            categoryName: categoryName,
-            categoryDescription: categoryDescription,
-            updatedOn: Date.now()
-        }).exec();
-        const category = await Category.find().exec()
-        if (categoryUpdate) {
-            res.render('admin/productCategory', { message: `Category ${categoryName} is updated sucessfully`, status: 'success', category: category, admin: req.session.admin })
-            // res.render('admin/productCategory',{category:category,message:''})
+        let forDis=await Category.findOne({_id:id})
+        let categoryNameNew=categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+        const isCategory = await Category.findOne({ categoryName: categoryNameNew })
+        if (isCategory) {
+            if(forDis.categoryName==categoryName){
+                const categoryUpdate = await Category.findByIdAndUpdate(id, {
+                    categoryName: categoryName,
+                    categoryDescription: categoryDescription,
+                    updatedOn: Date.now()
+                }).exec();
+                const category = await Category.find().exec()
+                if (categoryUpdate) {
+                    res.render('admin/productCategory', { message: `Category ${categoryName} is updated sucessfully`, status: 'success', category: category, admin: req.session.admin })
+                    // res.render('admin/productCategory',{category:category,message:''})
+                } else {
+                    res.render('admin/productCategory', { message: `failed to add color`, status: 'danger', admin: req.session.admin })
+                }
+            }
+            const category = await Category.find().exec()
+            res.render('admin/productCategory', { message: `Category ${categoryName} is already exist`, status: `warning`, category: category, admin: req.session.admin })
         } else {
-            res.render('admin/productCategory', { message: `failed to add color`, status: 'danger', admin: req.session.admin })
+            const categoryUpdate = await Category.findByIdAndUpdate(id, {
+                categoryName: categoryName,
+                categoryDescription: categoryDescription,
+                updatedOn: Date.now()
+            }).exec();
+            const category = await Category.find().exec()
+            if (categoryUpdate) {
+                res.render('admin/productCategory', { message: `Category ${categoryName} is updated sucessfully`, status: 'success', category: category, admin: req.session.admin })
+                // res.render('admin/productCategory',{category:category,message:''})
+            } else {
+                res.render('admin/productCategory', { message: `failed to add color`, status: 'danger', admin: req.session.admin })
+            }
         }
-
     } catch (error) {
         console.log(error);
     }

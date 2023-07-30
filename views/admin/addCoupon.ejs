@@ -70,4 +70,13 @@
     </div>
   </div>
 
+  <script>
+    const expiryDateInput = document.getElementById('expiryDate');
+
+// Get today's date
+const today = new Date().toISOString().split('T')[0];
+
+
+expiryDateInput.setAttribute('min', today);  
+  </script>
 <%-include('../partials/adminPartials/adminFooter')-%>

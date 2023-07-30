@@ -24,13 +24,13 @@
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>description</th>
                 <th>price</th>
                 <th>category</th>
                 <th>image</th>
                 <th>stock</th>
                 <th>status</th>
                 <th>action</th>
+                <th>description</th>
                 <th>Created on</th>
                 <th>updated on</th>
             </tr>
@@ -46,10 +46,7 @@
                     <%= row.productName %>
                   </strong>
                 </td>
-                <td>
-                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalScrollable<%= index %>"
-                        data-mydata="<%= row.productName %>">more</a>
-                </td>
+                
                 <td>
                     <%= row.price %>
                 </td>
@@ -94,21 +91,13 @@
                   ${month} ${year} ${hours}:${minutes}`; return formattedDate } %>
                   
                   <td>
-                    <div class="dropdown">
-                      <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                        <i class="bx bx-dots-vertical-rounded"></i>
-                      </button>
-                      <div class="dropdown-menu">
-                        <a class="dropdown-item" href="/admin/editProductDetails/<%= row._id %>"><i
-                            class="bx bx-edit-alt me-1"></i> Edit</a>
-                        <a class="dropdown-item btn" onclick="remove('<%= row._id %>')">
-                          <i class="bx bx-trash me-1"></i>
-                          Delete
-                        </a>
-                      </div>
-                    </div>
+                    <a class="badge bg-label-info me-1" href="/admin/editProductDetails/<%= row._id %>"><i
+                      class="bx bx-edit-alt me-1"></i> Edit</a>
                   </td>
-
+                  <td>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalScrollable<%= index %>"
+                        data-mydata="<%= row.productName %>">more</a>
+                </td>
                   <td>
                     <%= getDate(row.createdOn) %>
                   </td>
@@ -124,13 +113,13 @@
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>description</th>
               <th>price</th>
               <th>category</th>
               <th>image</th>
               <th>stock</th>
               <th>status</th>
               <th>action</th>
+              <th>description</th>
               <th>Created on</th>
               <th>updated on</th>
             </tr>
