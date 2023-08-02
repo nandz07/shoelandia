@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const otpModel = require('../models/otpModel');
 const CartModel = require('../models/cartModel');
 const wishlistModel = require('../models/wishlistModel');
+const addressModel = require('../models/addressModel');
 // const UpdateCartModel = require('../models/updateCartModel');
 
 const sendEmailChangePassword = async (userId, email) => {
@@ -290,6 +291,17 @@ const resendOtpGet = async (req, res) => {
         console.log(error);
     }
 }
+const userProfile = async (req, res) => {
+    try {
+        let address = await addressModel.findOne({userId:req.session.userId})
+        let userDb= await UserModel.findOne({_id:req.session.userId})
+        console.log(address);
+            res.render('users/userProfile', { message: '',address:address, user: userDb, count: req.cartCount })
+            
+    } catch (error) {
+        console.log(error);
+    }
+}
 const forgotPasswordEmail = async (req, res) => {
     try {
         const email = req.body.email;
@@ -405,5 +417,6 @@ module.exports = {
     resendOtpGet,
     forgotPasswordEmail,
     changePasswordGet,
-    changePasswordPost
+    changePasswordPost,
+    userProfile
 }

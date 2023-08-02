@@ -101,7 +101,174 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="/js/userValidation.js"></script>
+<!-- <script src="/js/userValidation.js"></script> -->
+
+<!-- validation -->
+<script>
+    
+$(document).ready(function () {
+  try {
+  jQuery.validator.addMethod("noSpace", function(value, element) {
+    return value.trim().length != 0 ;
+  }, "No space please and don't leave it empty");
+  
+  $('#signUpForm').validate({
+    rules: {
+      name: {
+        required: true,
+      },
+      email: {
+        required: true,
+        email: true
+      },
+      password: {
+        required: true,
+        minlength: 6
+      },
+      confirm_password: {
+        required: true,
+        equalTo: "#password"
+      }
+    },
+    messages: {
+      name: {
+        required: "Please enter your name"
+      },
+      email: {
+        required: "Please enter your email",
+        email: "Please enter a valid email address"
+      },
+      password: {
+        required: "Please enter your password",
+        minlength: "Your password must be at least 6 characters long"
+      },
+      confirm_password: {
+        required: "Please confirm your password",
+        equalTo: "Passwords do not match anymore"
+      }
+    },
+  });
+  $('#addressForm').validate({
+    rules: {
+      name: {
+        required: true,
+        noSpace:true
+      },
+      phone: {
+        required: true,
+        noSpace:true
+      },
+      email: {
+        required: true,
+        email: true,
+        noSpace:true
+      },
+      address: {
+        required: true,
+        noSpace:true
+      },
+      city: {
+        required: true,
+        noSpace:true
+      },
+      state: {
+        required: true,
+        noSpace:true
+      },
+      country: {
+        required: true,
+        noSpace:true
+      },
+      zip: {
+        num:true,
+        required: true,
+        noSpace:true
+      },
+    },
+    messages: {
+      name: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      phone: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      email: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      address: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      city: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      state:{
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      country: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+      zip: {
+        required: 'Please enter your email',
+        noSpace: 'Please enter a valid email address'
+      },
+    },
+    // submitHandler: function (form, event) {
+    //   event.preventDefault();
+    //   axios.post(form.action, new FormData(form))
+    // }
+  });
+  $('#contactForm').validate({
+    rules: {
+        email: {
+            required: true,
+            email: true
+        },
+        password: {
+            required: true,
+            minlength: 6 // Change this value to set the minimum password length
+        }
+    },
+    messages: {
+        email: {
+            required: 'Please enter your email address',
+            email: 'Please enter a valid email address'
+        },
+        password: {
+            required: 'Please enter your password',
+            minlength: 'Password must be at least {0} characters long' // The {0} placeholder will be replaced with the minlength value
+        }
+    },
+   
+});
+  $("#emailForgotPasswordForm").validate({
+    rules: {
+      emailForgotPassword: {
+        required: true,
+        email: true
+      },
+    },
+    messages: {
+      emailForgotPassword: {
+        required: 'Please enter your email ',
+            email: 'Please enter a valid email address'
+      },
+    },
+  });
+} catch (error) {
+    console.log(error)
+}
+});
+</script>
+
+<!-- validation -->
+
 <!-- razorpay -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <!-- razorpay -->
@@ -116,13 +283,16 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     </script>
 <script>
     $(function(e){
-        e.preventDefault();
+        event.preventDefault();
     $(".xzoom, .xzoom-gallery").xzoom({
         zoomwidth:400,
         tint:"#333",
         xoffset:15
     })
 })
+</script>
+<script>
+
 </script>
 <script>
     function addToCart(id){
@@ -425,7 +595,18 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
             if (result.isConfirmed) {
                 axios.post('/deleteAddress?id='+id)
                 .then((response)=>{
-                    location.reload();
+                    // location.reload();
+                    $('#reloadDiv').load('/userProfile #reloadDiv',()=>{
+						swal.fire({
+							title:'success',
+							text:'Address removed successfully ',
+							icon:'success',
+							timer:1500,
+                            showConfirmButton: false,
+						})
+					})
+                    // var newAddressHtml = response.updatedAddressHTML;
+                    // $('.contact__address').html(newAddressHtml);
                 }).catch(error => {
                 console.log(error);
                 });
@@ -594,35 +775,75 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 
 
-<!-- ----otp -->
-
+<!-- blank -->
 <script>
-    // Function to start the timer
-    function startTimer() {
-        let seconds = 10;
-        const timerElement = document.getElementById('timer');
-
-        function updateTimer() {
-            timerElement.innerText = '00:0'+seconds;
-            seconds--;
-
-            if (seconds < 0) {
-                clearInterval(timerInterval);
-                document.getElementById('reSend').removeAttribute('hidden')
-                document.getElementById('reSendp').setAttribute('hidden',true)
-                document.getElementById('timer').setAttribute('hidden',true)
-                // timerElement.innerText = '<a href="/resendOtp?email=">Resend OTP ?</a>';
-            }
-        }
-
-        updateTimer(); // Initial update
-
-        // Update the timer every second
-        const timerInterval = setInterval(updateTimer, 1000);
+    function addAdress(){
+        event.preventDefault()
+        
+        const form = document.getElementById('addressForm');
+        const formData = $('#addressForm').serialize()
+        // console.log(formData);
+        // console.log("Name: " + formData.get('name'));
+        // let name = formData.get('name')
+        axios.post('/addAddress', formData)
+        .then(function (response) {
+                if(response.data.success){
+                    $("#exampleModal").removeClass("show");
+                    $(".modal-backdrop").removeClass("modal-backdrop");
+                    $(".modal-open").removeClass("modal-open");
+                    let element=document.querySelector('#exampleModal')
+                    element.style.display = "none";
+                    // $("#addressForm").reset();
+                    // let modal=document.getElementById('exampleModal')
+                    // modal.removeClass('show')
+                    $('#reloadDiv').load('/userProfile #reloadDiv',()=>{
+						swal.fire({
+							title:'success',
+							text:'Address added successfully ',
+							icon:'success',
+                            showConfirmButton: false,
+						})
+					})
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
     }
-
-    // Start the timer when the page loads
-    window.onload = startTimer;
+    function editAdress(id,i){
+        alert(id)
+        event.preventDefault()
+        
+        // const form = document.getElementById('addressForm');
+        const formData = $('#addressForm'+id).serialize()
+        console.log(formData);
+        // console.log("Name: " + formData.get('name'));
+        // let name = formData.get('name')
+        axios.post('/updateAddress?id='+id, formData)
+        .then(function (response) {
+                if(response.data.success){
+                    $("#editAddressModal"+i).removeClass("show");
+                    $(".modal-backdrop").removeClass("modal-backdrop");
+                    $(".modal-open").removeClass("modal-open");
+                    let element=document.querySelector('#editAddressModal'+i)
+                    element.style.display = "none";
+                    // $("#addressForm").reset();
+                    // let modal=document.getElementById('exampleModal')
+                    // modal.removeClass('show')
+                    $('#reloadDiv').load('/userProfile #reloadDiv',()=>{
+						swal.fire({
+							title:'success',
+							text:'Address added successfully ',
+							icon:'success',
+                            showConfirmButton: false,
+						})
+					})
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    }
 </script>
 </body>
 

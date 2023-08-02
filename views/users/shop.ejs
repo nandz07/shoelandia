@@ -116,7 +116,7 @@ input[type="radio"]:checked {
                        
 						<% product.forEach((row, index)=> { %>
                             <div class="col-lg-4 filterDiv <%= row.category.categoryName %>">
-                                <div class="single-product">
+                                <div class="single-product p-2 card shadow">
                                     <div>
                                         <img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
                                     </div>

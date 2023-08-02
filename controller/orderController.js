@@ -59,15 +59,15 @@ const checkoutLoad = async (req, res) => {
 }
 const addAdressPost = async (req, res) => {
     try {
-
+        console.log(req.body.name)
         const address = {
-            userName: req.body.name,
-            mobile: req.body.phone,
-            email: req.body.email,
-            address: req.body.address,
-            city: req.body.city,
-            state: req.body.state,
-            pincode: req.body.zip
+            userName: req.body.name.trim(),
+            mobile: req.body.phone.trim(),
+            email: req.body.email.trim(),
+            address: req.body.address.trim(),
+            city: req.body.city.trim(),
+            state: req.body.state.trim(),
+            pincode: req.body.pincode.trim()
         }
         console.log(req.session.userId + "userId");
         const addressData = await AddressModel.findOne({ userId: req.session.userId })
@@ -81,6 +81,7 @@ const addAdressPost = async (req, res) => {
             })
             await addressSave.save()
         }
+        // res.json({ success: true });
         res.redirect('/checkout')
     } catch (error) {
         console.log(error);
@@ -141,6 +142,8 @@ const editAddressPost = async (req, res) => {
                 }
             })
         res.redirect('/checkout')
+        // res.json({ success: true });
+
     } catch (error) {
         console.log(error);
     }
@@ -149,8 +152,10 @@ const deleteAddress = async (req, res) => {
     try {
         let addressId = req.query.id
         await AddressModel.updateOne({ userId: req.session.userId, "addresses._id": addressId }, { $pull: { addresses: { _id: addressId } } }).then((data) => {
-            res.status(200).json({ success: true, message: 'address removed' });
+        
         })
+        let addressNew = await AddressModel.findOne({userId:req.session.userId})
+            res.status(200).json({ success: true, message: 'address removed',address: addressNew});
     } catch (error) {
         console.log(error);
     }

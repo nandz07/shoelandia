@@ -29,6 +29,7 @@ router.get('/resendOtp',midData.midData, userController.resendOtpGet);
 router.get('/wishlist',auth.verify_user,midData.midData, wishlistController.wishlistGet);
 router.get('/changePassword',midData.midData, userController.changePasswordGet);
 router.get('/shop',midData.midData, shopController.shopGet);
+router.get('/userProfile',auth.verify_user,midData.midData, userController.userProfile);
 
 // post
 router.post('/userSignupPost', userController.userSignupPost);
