@@ -1,6 +1,25 @@
 
 <%-include('../partials/userPartials/userHeader')-%>
 
+<style>
+    input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  
+  border: 2px solid orange; /* Set the border color to orange */
+  /* background-color: transparent; */
+  outline: none;
+  margin-right: 5px;
+}
+
+/* Custom radio button style when checked */
+input[type="checkbox"]:checked {
+  background-color: orange; /* Set the background color to orange when checked */
+}
+</style>
     <!-- Start Banner Area -->
     <section class="banner-area organic-breadcrumb">
         <div class="container">
@@ -76,7 +95,7 @@
                                 <li><a href="#">discount Price <span id="discountPrice">0</span></a></li>
                                 <li><a href="#">Total <span id="totalPrice"><%= subTotalPrice%></span></a></li>
                             </ul>
-                            <div class="payment_item">
+                            <div class="payment_item active">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option5" name="selector" value="COD" checked>
                                     <label for="f-option5">Cash on Delivery</label>
@@ -84,7 +103,7 @@
                                 </div>
                                 <p>Make your payment as COD </p>
                             </div>
-                            <div class="payment_item active">
+                            <div class="payment_item ">
                                 <div class="radion_btn">
                                     <input type="radio" id="f-option6" name="selector" value="online" >
                                     <label for="f-option6">online payment </label>
@@ -94,6 +113,18 @@
                                 <p>Pay via Razorpay; you can pay with your credit card if you don’t have a Razorpay
                                     account.</p>
                             </div>
+                            <% if(userData.wallet>=subTotalPrice){ %>
+                            <div class="payment_item ">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option7" name="selector" value="wallet" >
+                                    <div class="d-flex align-items-center">
+                                        <label for="f-option7">wallet payment </label>
+                                    </div>
+                                    <div class="check"></div>
+                                </div>
+                                <p>you have <%=userData.wallet %> in your wallet</p>
+                            </div>
+                            <% } %>
                             <a class="primary-btn text-white" onclick="placeOrder()" >Place order</a>
                         </div>
                     </div>

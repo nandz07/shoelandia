@@ -59,7 +59,6 @@ const checkoutLoad = async (req, res) => {
 }
 const addAdressPost = async (req, res) => {
     try {
-        console.log(req.body.name)
         const address = {
             userName: req.body.name.trim(),
             mobile: req.body.phone.trim(),
@@ -69,7 +68,6 @@ const addAdressPost = async (req, res) => {
             state: req.body.state.trim(),
             pincode: req.body.pincode.trim()
         }
-        console.log(req.session.userId + "userId");
         const addressData = await AddressModel.findOne({ userId: req.session.userId })
 
         if (addressData) {
@@ -114,7 +112,6 @@ const editAddressGet = async (req, res) => {
             { userId: req.session.userId }
         );
         const exist = address.addresses.filter((value) => value._id.toString() == addressId)
-        console.log(exist[0]);
         data = {
             user: req.session.user,
             count: req.cartCount,
@@ -197,7 +194,6 @@ const checkoutPost = async (req, res) => {
                 }
                 // create orders in database
                 if (cartOrders) {
-                    // console.log(deliveryAddress);
                     const exist = deliveryAddress.addresses.filter((value) => value._id.toString() == addressId)
 
                     const orderSave = new OrderModel({
@@ -221,11 +217,11 @@ const checkoutPost = async (req, res) => {
                         paymentMethod: req.body.selectedPayment,
                         userStatus: '',
                         paymentStatus: 'pending',
-                        status: selectedPayment === "COD" ? "placed" : "pending",
+                        status: selectedPayment === "online" ? "pending" : "confirm",
                     })
                     let saved = await orderSave.save().then(async (response) => {
                         var ss = response._id
-                        if (selectedPayment == 'COD') {
+                        if (selectedPayment == 'COD' || selectedPayment == 'wallet' ) {
                             const orderId = response._id;
                             await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { status: 'confirm', paymentStatus: 'pending' } }).then(() => {
                             }).then((status) => {
@@ -261,6 +257,15 @@ const checkoutPost = async (req, res) => {
                                     _id: addressId
                                 }
                             );
+                            if(selectedPayment == 'wallet'){
+                                await OrderModel.updateOne({ user_id: userId, _id: orderId }, { $set: { status: 'confirm', paymentStatus: 'success' } })
+                                let amount=orderData.totalPrice
+                                console.log(amount);
+                                let a=await UserModel.updateOne({ _id: userId }, { $inc: {  wallet: -amount } })
+
+                                console.log(a);
+                                
+                            }
                             await CartModel.deleteOne({ user_id: userId });
                             res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: exist[0] });
 
@@ -338,6 +343,12 @@ const cancelOrder = async (req, res) => {
     try {
         let id = req.query.id
         orderDetails = await orderModel.find({ _id: id })
+        console.log("-------------------------------");
+        console.log(orderDetails[0].paymentMethod);
+        if(orderDetails[0].paymentMethod=='online'){
+            console.log(orderDetails[0].totalPrice);
+            await UserModel.updateOne({_id:req.session.userId},{$inc:{wallet:orderDetails[0].totalPrice}})
+        }
         orderDetails[0].products.forEach(async (element) => {
             let orderedQnty = element.quantity
             let a = await ProductModel.findByIdAndUpdate(element.product_id, { $inc: { stockQuantity: orderedQnty } })
