@@ -734,13 +734,13 @@ $(document).ready(function () {
         if(code!=''){
             // alert('yes')
             const totalPrice=document.getElementById('totalPrice').innerText
-        // alert(totalPrice)
-        axios.post('/applyCoupon', { code:code,totalPrice})
+            const discountPrice=document.getElementById('discountPrice').innerText
+        axios.post('/applyCoupon', { code:code,totalPrice,discountPrice})
         .then(function (response) {
                 console.log(response.data.success);
                 if(response.data.success){
                     document.getElementById('totalPrice').innerText=response.data.updatedTotalPrice
-                    document.getElementById('discountPrice').innerText=response.data.discountAmount
+                    document.getElementById('discountPrice').innerText=response.data.discountAmount+parseInt(discountPrice)
                     let btn = document.getElementById('couponBtn').style.pointerEvents  ='none'
                     let element=document.getElementById('couponCode')
                     element.setAttribute("readonly","true")

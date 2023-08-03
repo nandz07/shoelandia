@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
         type:Number,
         default:0
     },
+    ref:{
+        type:String,
+        default:false
+    },
     createdOn: {
         type: Date,
         require: true,

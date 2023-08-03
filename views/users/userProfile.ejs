@@ -34,6 +34,10 @@
                                     </p>
                                 </li>
                                 <li class="mt-5 d-flex">
+                                    <h6 onclick="myFunction()"><i class="fas fa-share text-danger"></i> Share</h6>
+                                    <input class="border-0 ml-4" type="text" value="http://localhost:3000/userSignUp?referel=<%=user._id%>" id="myInput" disabled>
+                                </li>
+                                <li class="mt-5 d-flex">
                                     <button type="button" class="btn bg-white mt-5 ml-3 text-danger border-warning"
                                         data-toggle="modal" data-target="#exampleModal">
                                         <span class="lnr lnr-file-add"></span>
@@ -53,6 +57,7 @@
                 <div class="col-lg-6 ">
                     <div id="reloadDiv">
                         <div class="contact__address mt-5 ml-3">
+                            <% if(address!=null) {%>
                             <%if(address.addresses.length> 0){%>
                                 <% address.addresses.forEach((value,index)=>{ %>
                                     <div class="bg-white card addresses-item mb-4  shadow ">
@@ -75,13 +80,14 @@
                                                                                     class="btn bg-white mt-5 ml-3 text-danger border-warning"
                                                                                     data-toggle="modal" data-target="#editAddressModal<%=index %>">
                                                                                         Edit </a>
-                                                                                    
+                                                                                        <% if(address!=null) {%>
                                                                                 <% if(address.addresses.length>1) {%>
                                                                                     <span
                                                                                         class="lnr lnr-trash ml-3"></span>
                                                                                     <a class="ml-2" href=""
                                                                                         onclick="removeAddress('<%=value._id%>')">
                                                                                         Remove </a>
+                                                                                    <% } %>
                                                                                     <% } %>
 
 
@@ -94,7 +100,7 @@
                                     <%}) %>
                                         <%}else{%>
                                             No Address
-                                            <%}%>
+                                            <%}}%>
 
                         </div>
                     </div>
@@ -187,6 +193,7 @@
                         </div>
                     </div>
                     <!-- Modal Edit address-->
+                    <% if(address!=null) {%>
                     <% address.addresses.forEach((value,index)=>{ %>
                     <div class="modal fade" id="editAddressModal<%=index %>" tabindex="-1" role="dialog"
                         aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -264,6 +271,7 @@
                         </div>
                     </div>
                     <% }) %>
+                    <% } %>
 
                     <!-- Modal profile-->
                     <div class="modal fade" id="editProfile" tabindex="-1" role="dialog"
@@ -381,6 +389,23 @@
         })
 
 
+    </script>
+
+    <script>
+        function myFunction() {
+        // Get the text field
+        var copyText = document.getElementById("myInput");
+
+        // Select the text field
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the text inside the text field
+        navigator.clipboard.writeText(copyText.value);
+
+        // Alert the copied text
+        alert("Copied the text: " + copyText.value);
+        }
     </script>
 
     <%-include('../partials/userPartials/userFooter')-%>

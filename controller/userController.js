@@ -235,7 +235,14 @@ const userLoginPost = async (req, res) => {
 }
 const userSignUpGet = async (req, res) => {
     try {
-        res.render('users/userSignUp', { message: 'Please enter an active email', user: req.session.user, count: req.cartCount })
+        let ref = req.query.referel
+        console.log(ref);
+        if (ref) {
+            req.session.ref = ref
+        } else {
+            req.session.ref = false
+        }
+        res.render('users/userSignUp', { message: 'Please enter an active email', user: req.session.user, count: req.cartCount, ref })
     } catch (error) {
         console.log(error);
     }
@@ -256,6 +263,7 @@ const userSignupPost = async (req, res) => {
                 password: spassword,
                 is_admin: false,
                 is_verified: false,
+                ref: req.session.ref,
                 createdOn: Date.now(),
                 updatedOn: Date.now()
             })
@@ -293,11 +301,10 @@ const resendOtpGet = async (req, res) => {
 }
 const userProfile = async (req, res) => {
     try {
-        let address = await addressModel.findOne({userId:req.session.userId})
-        let userDb= await UserModel.findOne({_id:req.session.userId})
-        console.log(address);
-            res.render('users/userProfile', { message: '',address:address, user: userDb, count: req.cartCount })
-            
+        let address = await addressModel.findOne({ userId: req.session.userId })
+        let userDb = await UserModel.findOne({ _id: req.session.userId })
+        res.render('users/userProfile', { message: '', address: address, user: userDb, count: req.cartCount })
+
     } catch (error) {
         console.log(error);
     }

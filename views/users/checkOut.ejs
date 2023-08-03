@@ -92,8 +92,13 @@ input[type="checkbox"]:checked {
                             </ul>
                             <ul class="list list_2">
                                 <li><a href="#">Subtotal <span id="subTotalPrice"><%= subTotalPrice%></span></a></li>
+                                <% if(userData.ref){ %>
+                                    <li><a href="#">discount Price <span id="discountPrice">20</span></a></li>
+                                    <li><a href="#">Total <span id="totalPrice"><%= subTotalPrice - 20%></span></a></li>
+                                    <% }else{ %>
                                 <li><a href="#">discount Price <span id="discountPrice">0</span></a></li>
                                 <li><a href="#">Total <span id="totalPrice"><%= subTotalPrice%></span></a></li>
+                                <% } %>
                             </ul>
                             <div class="payment_item active">
                                 <div class="radion_btn">

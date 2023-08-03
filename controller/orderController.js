@@ -219,6 +219,11 @@ const checkoutPost = async (req, res) => {
                         paymentStatus: 'pending',
                         status: selectedPayment === "online" ? "pending" : "confirm",
                     })
+                    const userData=await UserModel.findOne({_id:req.session.userId})
+                    if(userData.ref){
+                        await UserModel.updateOne({_id:userData.ref},{$inc:{wallet:30}})
+                        await UserModel.updateOne({_id:req.session.userId},{$set:{ref:null},$inc:{wallet:20}})
+                    }
                     let saved = await orderSave.save().then(async (response) => {
                         var ss = response._id
                         if (selectedPayment == 'COD' || selectedPayment == 'wallet' ) {
@@ -408,10 +413,9 @@ const applyCouponPost = async (req, res) => {
     try {
         let { code, totalPrice } = req.body
         const couponData = await CouponModel.findOne({ code: code }).populate('user')
-
-        const exist = couponData.user.filter((value) => value.user_id.toString() == req.session.userId)
-        if (exist.length == 0) {
-            if (couponData && couponData.status) {
+        if (couponData !=null ) {
+            const exist = couponData.user.filter((value) => value.user_id.toString() == req.session.userId)
+                if (exist.length == 0) {
                 if (couponData.minCartAmount < parseInt(totalPrice)) {
                     if (couponData.maxUsers > 0) {
                         if (couponData.expiryDate - Date.now() > 0) {
@@ -441,13 +445,13 @@ const applyCouponPost = async (req, res) => {
                     res.status(200).json({ success: false, message: `Only applicable for min amount ${couponData.minCartAmount}` });
                 }
             } else {
-                res.status(200).json({ success: false, message: 'Invalid coupon' });
+            res.status(200).json({ success: false, message: 'This coupon is only useable once' });
             }
         } else {
-            res.status(200).json({ success: false, message: 'This coupon is only useable once' });
+            res.status(200).json({ success: false, message: 'Invalid coupon' });
         }
     } catch (error) {
-
+        console.log(error);
     }
 }
 module.exports = {
