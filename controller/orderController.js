@@ -222,7 +222,7 @@ const checkoutPost = async (req, res) => {
                     const userData=await UserModel.findOne({_id:req.session.userId})
                     if(userData.ref){
                         await UserModel.updateOne({_id:userData.ref},{$inc:{wallet:30}})
-                        await UserModel.updateOne({_id:req.session.userId},{$set:{ref:null},$inc:{wallet:20}})
+                        await UserModel.updateOne({_id:req.session.userId},{$set:{ref:null}})
                     }
                     let saved = await orderSave.save().then(async (response) => {
                         var ss = response._id

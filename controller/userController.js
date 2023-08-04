@@ -239,8 +239,6 @@ const userSignUpGet = async (req, res) => {
         console.log(ref);
         if (ref) {
             req.session.ref = ref
-        } else {
-            req.session.ref = false
         }
         res.render('users/userSignUp', { message: 'Please enter an active email', user: req.session.user, count: req.cartCount, ref })
     } catch (error) {
