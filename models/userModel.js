@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     },
     ref:{
         type:String,
-        default:false
+        default:null
     },
     createdOn: {
         type: Date,

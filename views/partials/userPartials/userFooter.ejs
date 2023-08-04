@@ -728,20 +728,24 @@ $(document).ready(function () {
             });
     }
     // ----------- apply coupon
+    var discountPrice
     function applyCoupon() {
         event.preventDefault()
         let code=document.getElementById('couponCode').value
         if(code!=''){
             // alert('yes')
             const totalPrice=document.getElementById('totalPrice').innerText
-            const discountPrice=document.getElementById('discountPrice').innerText
+            discountPrice=document.getElementById('discountPrice').innerText
         axios.post('/applyCoupon', { code:code,totalPrice,discountPrice})
         .then(function (response) {
                 console.log(response.data.success);
                 if(response.data.success){
                     document.getElementById('totalPrice').innerText=response.data.updatedTotalPrice
                     document.getElementById('discountPrice').innerText=response.data.discountAmount+parseInt(discountPrice)
-                    let btn = document.getElementById('couponBtn').style.pointerEvents  ='none'
+                    let btn = document.getElementById('couponBtn')
+                    btn.setAttribute("hidden",true)
+                    let couponCancelBtn = document.getElementById("couponCancelBtn");
+                    couponCancelBtn.removeAttribute("hidden");
                     let element=document.getElementById('couponCode')
                     element.setAttribute("readonly","true")
                     let msg=document.getElementById('couponMessage')
@@ -760,6 +764,21 @@ $(document).ready(function () {
             alert('no')
         }
         
+    }
+    function removeCoupon(){
+        event.preventDefault()
+        document.getElementById('totalPrice').innerText=document.getElementById('subTotalPrice').innerText
+        document.getElementById('discountPrice').innerText=discountPrice
+        let btn = document.getElementById('couponBtn')
+        btn.removeAttribute("hidden")
+        let couponCancelBtn = document.getElementById("couponCancelBtn");
+        couponCancelBtn.setAttribute("hidden",true);
+        let element=document.getElementById('couponCode')
+        element.removeAttribute("readonly")
+        element.value=''
+        let msg=document.getElementById('couponMessage')
+        msg.setAttribute("hidden",true);
+        document.getElementById('couponBtn').style.pointerEvents  ='none'
     }
 
     function isCode(){

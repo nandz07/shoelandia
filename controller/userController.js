@@ -225,8 +225,8 @@ const userLoginPost = async (req, res) => {
                 res.redirect(redirectUrl);
             }
         } else {
-            const userId = userDb._id
-            res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user, count: req.cartCount })
+            const userId = false
+            res.render('users/userLogin', { message: 'invalid user name or password', user: req.session.user, count: req.cartCount ,userId})
         }
         // res.render('users/userLogin',{message:''})
     } catch (error) {

@@ -23,7 +23,7 @@
                     <form class="row login_form" action="login" method="post" id="contactForm"
                         novalidate="novalidate" class="">
                         <div class="col-md-12 form-group">
-                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="girikrishna.p6@gmail.com"
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="nandakumart07@gmail.com"
                                 onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email'">
                         </div>
                         <div class="col-md-12 form-group">
@@ -69,7 +69,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" id="closeModalBtn" data-dismiss="modal">Close</button>
+          <% if(userId){ %>
           <button type="submit" onclick="forgotPasswordEmail('<%=userId %>')" class="btn btn-primary">Submit</button>
+          <% } %>
         </div>
     </form>
       </div>

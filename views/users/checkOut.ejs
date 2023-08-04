@@ -35,7 +35,7 @@ input[type="checkbox"]:checked {
         </div>
     </section>
     <!-- End Banner Area -->
-
+<div class="reloadDiv">
     <!--================Checkout Area =================-->
     <section class="checkout_area section_gap">
         <div class="container">
@@ -49,6 +49,7 @@ input[type="checkbox"]:checked {
                     <span class="ml-5 text-danger" id="couponMessage" hidden></span>
                 </div>
                 <a class="tp_btn" href="" id="couponBtn" onclick="applyCoupon()" style="pointer-events: none;">Apply Coupon</a>
+                <a class="tp_btn" href="" id="couponCancelBtn" onclick="removeCoupon()" hidden>Remove Coupon</a>
             </div>
             
             
@@ -138,5 +139,5 @@ input[type="checkbox"]:checked {
         </div>
     </section>
     <!--================End Checkout Area =================-->
-
+</div>
 <%-include('../partials/userPartials/userFooter')-%>
