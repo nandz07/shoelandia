@@ -368,6 +368,25 @@ const cancelOrder = async (req, res) => {
         console.log(error);
     }
 }
+
+const returnOrder = async (req, res) => {
+    try {
+        let id = req.query.id
+        let reason=req.body.reason
+        console.log("-------------------------------");
+        console.log(id);
+        const orderUpdate = await OrderModel.findByIdAndUpdate(id, {
+            status: 'returnRequest',
+            returnReson:reason
+
+        })
+        if (orderUpdate) {
+            res.status(200).json({ success: true, message: 'order returned' });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
 // -------------------------------- admin ------------------
 const loadOrdersAdmin = async (req, res) => {
     try {
@@ -404,6 +423,41 @@ const deliveryAdmin = async (req, res) => {
 
         }
         res.redirect('/admin/OrderDetails')
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const confirmReturn = async (req, res) => {
+    try {
+        let id = req.query.id
+        orderDetails = await orderModel.find({ _id: id })
+        console.log("-------------------------------");
+        console.log(orderDetails[0].paymentMethod);
+        await UserModel.updateOne({_id:req.session.userId},{$inc:{wallet:orderDetails[0].totalPrice}})
+        orderDetails[0].products.forEach(async (element) => {
+            let orderedQnty = element.quantity
+            let a = await ProductModel.findByIdAndUpdate(element.product_id, { $inc: { stockQuantity: orderedQnty } })
+        });
+        const orderUpdate = await OrderModel.findByIdAndUpdate(id, {
+            status: 'returned'
+        })
+        if (orderUpdate) {
+            res.status(200).json({ success: true, message: 'order returned' });
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+const cancelReturn = async (req, res) => {
+    try {
+        let id = req.query.id
+        const orderUpdate = await OrderModel.findByIdAndUpdate(id, {
+            status: 'delivered'
+        })
+        if (orderUpdate) {
+            res.status(200).json({ success: true, message: 'order return canceled' });
+        }
     } catch (error) {
         console.log(error);
     }
@@ -469,5 +523,8 @@ module.exports = {
     deliveryAdmin,
     applyCouponPost,
     verifyPayment,
-    confirmAdmin
+    confirmAdmin,
+    returnOrder,
+    confirmReturn,
+    cancelReturn
 }

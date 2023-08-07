@@ -16,10 +16,10 @@ const addToWishlistPost = async (req, res) => {
                         const exist = wishData.products.filter((value) => value.product_id.toString() == productId)
                         if (exist.length !== 0) {
                             await WishlistModel.updateOne({ user_id: userId, "products.product_id": productId }, { $pull: { products: { product_id: productId } } })
-                            res.status(200).json({ success: true, message: 'Product removed from wishlist' });
+                            res.status(200).json({ success: true, message: 'removed from 🤍',status:'removed' });
                         } else {
                             await WishlistModel.updateOne({ user_id: userId }, { $push: { products: { product_id: productId } } })
-                            res.status(200).json({ success: true, message: 'Product added to wishlist' });
+                            res.status(200).json({ success: true, message: 'added to 🤍',status:'added' });
                         }
                     } else {
                         const products = {
@@ -30,7 +30,7 @@ const addToWishlistPost = async (req, res) => {
                             user_id: userId,
                         })
                         await wishlistSave.save()
-                        res.status(200).json({ success: true, message: 'Product added to wishlist' });
+                        res.status(200).json({ success: true, message: 'Added to 🤍',status:'added' });
                     }
                 }
             } else {

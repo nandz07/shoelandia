@@ -1,8 +1,6 @@
 <%-include('../partials/userPartials/userHeader')-%>
 
     <style>
-        
-
         .containerAbc {
             margin-top: 50px;
             margin-bottom: 50px
@@ -173,164 +171,220 @@
                 <% if(data.orderData !='' ) {%>
                     <% data.orderData.forEach((element,index)=> {%>
                         <div class="col-md-4 ">
-                            <% if(element.status != 'canceled' && element.status != 'returned'){%>
-                                    <div class="card mb-3 shadow border-success">
-                                        <%} else{%>
-                                            <div class="card mb-3 shadow border-warning">
-                                    <% } %>
-                                <div class="row g-0">
-                                    <div class="col-md">
-                                        <div class="card-body">
-                                            <ul class="list">
-                                                        <ul class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
-                                                            
-                                                            <% element.products.forEach((product)=> { %>
-                                                            <img src="/productImages/<%= product.product_id.image[0]%>" width="50px" alt="Avatar" class="border p-1 m-1" />
-                                                          </li>
-                                                            <% }) %>
-                                                        </ul>
-                                                <li>Total Price : <%=element.totalPrice %>
-                                                </li>
-                                                <li>Total Quantity : <%=element.quantity %>
-                                                </li>
-                                                <li>Delivery Address : <%=element.deliveryAddress.address %>,
-                                                        <%=element.deliveryAddress.city %>,
-                                                            <%=element.deliveryAddress.state %>,
-                                                                <%=element.deliveryAddress.pincode %>
-                                                </li>
-                                                <% if(element.status !='canceled' ) {%>
-                                                    <li>Order Status : <span class="text-success font-weight-bold">
-                                                            <%= element.status %>
-                                                        </span></li>
-                                                    <% }else{ %>
-                                                        <li>Order Status : <span class="text-danger font-weight-bold">
-                                                                <%= element.status %>
-                                                            </span></li>
-                                                        <% } %>
-                                                            <li class="d-flex"><button type="button"
-                                                                    class="btn btn-sm mt-2   btn-outline-info"
-                                                                    data-toggle="modal"
-                                                                    data-target="#exLargeModal<%=index %>"> view
-                                                                    more</button><span class="middle"></span>
+                            <% if(element.status !='canceled' && element.status !='returned' ){%>
+                                <div class="card mb-3 shadow border-success">
+                                    <%} else{%>
+                                        <div class="card mb-3 shadow border-warning">
+                                            <% } %>
+                                                <div class="row g-0">
+                                                    <div class="col-md">
+                                                        <div class="card-body">
+                                                            <ul class="list">
+                                                                <ul
+                                                                    class="list-unstyled users-list m-0 avatar-group d-flex align-items-center">
 
-                                                            </li>
-                                            </ul>
+                                                                    <% element.products.forEach((product,index)=> { %>
+                                                                        <% if(index>4){
+                                                                            return
+                                                                            } %>
+                                                                            <img src="/productImages/<%= product.product_id.image[0]%>"
+                                                                                width="50px" alt="Avatar"
+                                                                                class="border p-1 m-1" />
+
+                                                                            </li>
+                                                                            <% }) %>
+                                                                </ul>
+                                                                <li>Total Price : <%=element.totalPrice %>
+                                                                </li>
+                                                                <li>Total Quantity : <%=element.quantity %>
+                                                                </li>
+                                                                <li>Delivery Address :
+                                                                    <%=element.deliveryAddress.address %>,
+                                                                        <%=element.deliveryAddress.city %>,
+                                                                            <%=element.deliveryAddress.state %>,
+                                                                                <%=element.deliveryAddress.pincode %>
+                                                                </li>
+                                                                <% if(element.status !='canceled' ) {%>
+                                                                    <li>Order Status : <span
+                                                                            class="text-success font-weight-bold">
+                                                                            <%= element.status %>
+                                                                        </span></li>
+                                                                    <% }else{ %>
+                                                                        <li>Order Status : <span
+                                                                                class="text-danger font-weight-bold">
+                                                                                <%= element.status %>
+                                                                            </span></li>
+                                                                        <% } %>
+                                                                            <li class="d-flex"><button type="button"
+                                                                                    class="btn btn-sm mt-2   btn-outline-info"
+                                                                                    data-toggle="modal"
+                                                                                    data-target="#exLargeModal<%=index %>">
+                                                                                    view
+                                                                                    more</button><span
+                                                                                    class="middle"></span>
+
+                                                                            </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
                                         </div>
+                                </div>
+                                <%}); %>
+                                    <% }else{%>
+                                        <h1 class="text-center text-secondary mt-5">
+                                            No Ordered data !
+                                        </h1>
+                                        <% } %>
+                        </div>
+
+            </div>
+            <!-- Modal description -->
+            <% if(data.orderData !='' ) {%>
+                <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+                    const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+                    const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const
+                    formattedDate=`${day} ${month} ${year} `; return formattedDate } %>
+                    <% data.orderData .forEach((row, index)=> { %>
+
+                        <div class="modal fade bd-example-modal-lg" id="exLargeModal<%=index %>" tabindex="-1"
+                            role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="containerAbc">
+                                        <article class="card">
+                                            <header class="card-header"> My Orders / Tracking
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                    aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </header>
+                                            <div class="card-body">
+                                                <h6>Order ID: OD45345345435</h6>
+                                                <article class="card">
+                                                    <div class="card-body row">
+                                                        <div class="col"> <strong>Order Confirmed On:</strong> <br>
+                                                            <%= getDate(row.orderDate) %>
+                                                        </div>
+                                                        <div class="col"> <strong>Delivery Address:</strong> <br>
+                                                            <%=row.deliveryAddress.address %>,
+                                                                <%=row.deliveryAddress.city %>,
+                                                                    <%=row.deliveryAddress.state %>,
+                                                                        <%=row.deliveryAddress.pincode %>
+                                                        </div>
+                                                        <div class="col"> <strong>Estimated Delivery time:</strong> <br>
+                                                            <%= getDate(row.deliveryDate) %>
+                                                        </div>
+                                                        <div class="col"> <strong>Status:</strong> <br>
+                                                            <%= row.status %>
+                                                        </div>
+                                                    </div>
+                                                </article>
+                                                <div class="track">
+                                                    <% if(row.status=='confirm' ){%>
+                                                        <div class="step active"> <span class="icon"> <i
+                                                                    class="fa fa-check"></i>
+                                                            </span> <span class="text">Order Confirmed</span> </div>
+                                                        <div class="step"> <span class="icon"> <i
+                                                                    class="fa fa-truck"></i> </span>
+                                                            <span class="text"> Shipping </span>
+                                                        </div>
+                                                        <div class="step"> <span class="icon"> <i class="fa fa-box"></i>
+                                                            </span>
+                                                            <span class="text">Delivered</span>
+                                                        </div>
+                                                        <%}else if(row.status=='shipping' ){%>
+                                                            <div class="step active"> <span class="icon"> <i
+                                                                        class="fa fa-check"></i>
+                                                                </span> <span class="text">Order Confirmed</span> </div>
+                                                            <div class="step active"> <span class="icon"> <i
+                                                                        class="fa fa-truck"></i> </span>
+                                                                <span class="text"> Order Shipping </span>
+                                                            </div>
+                                                            <div class="step"> <span class="icon"> <i
+                                                                        class="fa fa-box"></i> </span>
+                                                                <span class="text">Order Delivered</span>
+                                                            </div>
+                                                            <% } else if(row.status=='delivered' ){%>
+                                                                <div class="step active"> <span class="icon"> <i
+                                                                            class="fa fa-check"></i>
+                                                                    </span> <span class="text">Order Confirmed</span>
+                                                                </div>
+                                                                <div class="step active"> <span class="icon"> <i
+                                                                            class="fa fa-truck"></i> </span>
+                                                                    <span class="text"> Order Shipping </span>
+                                                                </div>
+                                                                <div class="step active"> <span class="icon"> <i
+                                                                            class="fa fa-box"></i> </span>
+                                                                    <span class="text">Order Delivered</span>
+                                                                </div>
+                                                                <% } else if(row.status=='canceled' ){%>
+                                                                    <div class="step"> <span class="icon"> <i
+                                                                                class="fa fa-close"></i></i>
+                                                                        </span> <span class="text">Order Canceled</span>
+                                                                    </div>
+                                                                    <%}else if(row.status=='returned' ){%>
+                                                                        <div class="step "> <span class="icon"> <i
+                                                                                    class="fa fa-close"></i></i>
+                                                                            </span> <span class="text">Order
+                                                                                Returned</span> </div>
+                                                                        <%} %>
+                                                </div>
+                                                <hr>
+                                                <ul class="row">
+                                                    <% row.products.forEach((product,index)=> { %>
+
+
+
+                                                        <li class="col-md-4">
+                                                            <figure class="itemside mb-3">
+                                                                <div class="aside"><img
+                                                                        src="/productImages/<%=product.product_id.image[0] %>"
+                                                                        class="img-sm border"></div>
+                                                                <figcaption class="info align-self-center">
+                                                                    <p class="title">
+                                                                        <%= product.product_id.productName%> <br>
+                                                                            price:₹ <%= product.price%>
+                                                                                <br> Quantity : <%= product.quantity%>
+                                                                                    <br> Total Price :₹ <%=
+                                                                                        product.totalPrice%>
+                                                                    </p>
+                                                                </figcaption>
+                                                            </figure>
+                                                        </li>
+
+
+                                                        <% }) %>
+                                                </ul>
+                                                <hr>
+                                                <div class="modal-footer">
+                                                    <% if(row.status !='canceled' && row.status !='delivered' &&
+                                                        row.status !='returnRequest' && row.status !='returned' ) {%>
+                                                        <a href="" class=" btn btn-danger text-white"
+                                                            onclick="cancel('<%= row._id %>')"> cancel</a>
+                                                        <% } %>
+                                                            <% if(row.status=='delivered' ) {%>
+                                                                <div>
+                                                                        <input type="textarea" class="form-control resonDiv"
+                                                                            name="reason" id="reason" placeholder="Reason for return" hidden>
+                                                                </div>
+                                                                <a href="" class=" btn btn-danger text-white"
+                                                                    onclick="orderReturn('<%= row._id %>')"> Return</a>
+                                                                <% } %>
+                                                                    <button class="btn btn-secondary"
+                                                                        data-dismiss="modal">
+                                                                        Close
+                                                                    </button>
+                                                </div>
+                                            </div>
+                                        </article>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
-                        <%}); %>
-                            <% }else{%>
-                                <h1 class="text-center text-secondary mt-5">
-                                    No Ordered data !
-                                </h1>
-                                <% } %>
-            </div>
-
-        </div>
-        <!-- Modal description -->
-        <% if(data.orderData !='' ) {%>
-            <% function getDate(dbDate) { const dateObject=new Date(dbDate); const
-                year=dateObject.getFullYear(); const
-                month=dateObject.toLocaleString('en-us', { month: 'short' }); const
-                day=dateObject.getDate(); const hours=dateObject.getHours(); const
-                minutes=dateObject.getMinutes(); const formattedDate=`${day} ${month}
-                ${year} `; return formattedDate } %>
-            <% data.orderData .forEach((row, index)=> { %>
-
-                <div class="modal fade bd-example-modal-lg" id="exLargeModal<%=index %>" tabindex="-1" role="dialog"
-                    aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="containerAbc">
-                                <article class="card">
-                                    <header class="card-header"> My Orders / Tracking
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                    </header>
-                                    <div class="card-body">
-                                        <h6>Order ID: OD45345345435</h6>
-                                        <article class="card">
-                                            <div class="card-body row">
-                                                <div class="col"> <strong>Estimated Delivery time:</strong> <br><%= getDate(row.deliveryDate) %> </div>
-                                                <div class="col"> <strong>Shipping BY:</strong> <br> S H O E L A N D I A | <i
-                                                        class="fa fa-phone"></i> +1598675986 </div>
-                                                <div class="col"> <strong>Order Confirmed On:</strong> <br> <%= getDate(row.orderDate) %>
-                                                </div>
-                                                <div class="col"> <strong>Status:</strong> <br> <%= row.status %>
-                                                </div>
-                                            </div>
-                                        </article>
-                                        <div class="track">
-                                            <% if(row.status=='confirm'){%>
-                                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i>
-                                                </span> <span class="text">Order Confirmed</span> </div>
-                                                <div class="step"> <span class="icon"> <i class="fa fa-truck"></i> </span>
-                                                <span class="text"> Shipping </span> </div>
-                                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span>
-                                                <span class="text">Delivered</span> </div>
-                                            <%}else if(row.status=='shipping'){%>
-                                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i>
-                                                </span> <span class="text">Order Confirmed</span> </div>
-                                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span>
-                                                <span class="text"> Order Shipping </span> </div>
-                                                <div class="step"> <span class="icon"> <i class="fa fa-box"></i> </span>
-                                                <span class="text">Order Delivered</span> </div>
-                                            <% } else if(row.status=='delivered'){%>
-                                                <div class="step active"> <span class="icon"> <i class="fa fa-check"></i>
-                                                </span> <span class="text">Order Confirmed</span> </div>
-                                                <div class="step active"> <span class="icon"> <i class="fa fa-truck"></i> </span>
-                                                <span class="text"> Order Shipping </span> </div>
-                                                <div class="step active"> <span class="icon"> <i class="fa fa-box"></i> </span>
-                                                <span class="text">Order Delivered</span> </div>
-                                            <% } else if(row.status=='canceled'){%>
-                                                <div class="step"> <span class="icon"> <i class="fa fa-close"></i></i>
-                                                </span> <span class="text">Order Canceled</span> </div>
-                                            <%}else if(row.status=='returned'){%>
-                                                <div class="step "> <span class="icon"> <i class="fa fa-close"></i></i>
-                                                </span> <span class="text">Order Returned</span> </div>
-                                            <%} %>
-                                        </div>
-                                        <hr>
-                                        <ul class="row">
-                                            <% row.products.forEach((product,index)=> { %>
-                                            <li class="col-md-4">
-                                                <figure class="itemside mb-3">
-                                                    <div class="aside"><img src="/productImages/<%=product.product_id.image[0] %>"
-                                                            class="img-sm border"></div>
-                                                    <figcaption class="info align-self-center">
-                                                        <p class="title"><%= product.product_id.productName%> <br> price:₹ <%= product.price%>
-                                                        <br> Quantity : <%= product.quantity%> <br> Total Price :₹ <%= product.totalPrice%></p>
-                                                    </figcaption>
-                                                </figure>
-                                            </li>
-                                            <% }) %>
-                                        </ul>
-                                        <hr>
-                                        <div class="modal-footer">
-                                                <% if(row.status !='canceled' && row.status !='delivered' ) {%>
-                                                    <a href="" class=" btn btn-danger text-white"
-                                                            onclick="cancel('<%= row._id %>')"> cancel</a>
-                                                    <% } %>
-                                                <% if(row.status =='delivered') {%>
-                                                    <a href="" class=" btn btn-danger text-white"
-                                                            onclick="orderReturn('<%= row._id %>')"> Return</a>
-                                                    <% } %>
-                                                <button class="btn btn-secondary" data-dismiss="modal">
-                                                    Close
-                                                </button>
-                                            </div>
-                                    </div>
-                                </article>
-                            </div>
-                           
-                        </div>
-                    </div>
-                </div>
-                <% }); %>
-                    <% }; %>
+                        <% }); %>
+                            <% }; %>
     </section>
     <%-include('../partials/userPartials/userFooter')-%>

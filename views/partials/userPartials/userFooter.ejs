@@ -103,6 +103,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- <script src="/js/userValidation.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/toastify-js@1.12.0/src/toastify.min.js"></script>
 
 <!-- validation -->
 <script>
@@ -305,6 +306,14 @@ $(document).ready(function () {
                     let cartSpan=document.getElementById('cartSpan')
                     cartSpan.removeAttribute("hidden");
                     cartSpan.innerHTML=parseInt(cartSpan.innerHTML)+1
+                    Toastify({
+                        text: 'Added to 🛒',
+                        backgroundColor: 'linear-gradient(to right, #fd7e14, #ffc107)',
+                        duration: 2000,
+                        close: true,
+                        gravity: 'top', 
+                        position: 'right', 
+                    }).showToast();
                 }
             })
             .catch(function (error) {
@@ -663,16 +672,93 @@ $(document).ready(function () {
             }
         })
     }
+    function orderReturn(id){
+        event.preventDefault();
+        const reasonInput = document.getElementById('reason').value;
+        const resonDiv = document.querySelector('.resonDiv');
+        resonDiv.removeAttribute('hidden');
+        resonDiv.classList.add('d-flex');
+        resonDiv.classList.add('justify-content-center');
+        resonDiv.classList.add('align-items-center');
+        if (reasonInput.trim() === '') {
+            Toastify({
+                        text: 'Please provide a reason for the return',
+                        backgroundColor: 'linear-gradient(to right, #fd7e14, #ffc107)',
+                        duration: 2000,
+                        close: true,
+                        gravity: 'top', 
+                        position: 'right', 
+                        // icon: '/static/logo/b.png',
+                        border: '1px solid #ccc',
+                        borderRadius: '10px', // Set border radius
+                        boxShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)', // Add a shadow
+                        animation: 'fade', // Choose an animation
+                        callback: function () { console.log('Toast shown!'); },
+                    }).showToast();
+            return;
+        }else{
+            const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger m-3'
+            },
+            buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, return it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
+            }).then((result) => {
+            if (result.isConfirmed) {
+                axios.put('/returnOrder?id='+id,{reason:reasonInput})
+                .then((response)=>{
+                    location.reload();
+                }).catch(error => {
+                console.log(error);
+                });
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                'Cancelled',
+                'Your imaginary file is safe :)',
+                'error'
+                )
+            }
+        })
+        }
+        
+    }
     // -------------- wish list ------------
     function addToWishlist(id){
         event.preventDefault();
         $('.addWish'+id).toggleClass("bg-danger");
         axios.post('/addToWishlistPost?id='+id, { productId: id })
             .then(function (response) {
-                if(response.data.success){
-                    // let cartSpan=document.getElementById('cartSpan')
-                    // cartSpan.removeAttribute("hidden");
-                    // cartSpan.innerHTML=parseInt(cartSpan.innerHTML)+1
+                if(response.data.status=='added'){
+                    Toastify({
+                        text: response.data.message,
+                        backgroundColor: 'linear-gradient(to right, #fd7e14, #ffc107)',
+                        duration: 2000,
+                        close: true,
+                        gravity: 'top', 
+                        position: 'right', 
+                    }).showToast();
+                }else if(response.data.status=='removed'){
+                    Toastify({
+                        text: response.data.message,
+                        backgroundColor: 'linear-gradient(to right, #fd7e14, #ffc107)',
+                        duration: 2000,
+                        close: true,
+                        gravity: 'top', 
+                        position: 'right', 
+                    }).showToast();
                 }else{
                     window.location.href = '/login?message=need to login first';
                 }

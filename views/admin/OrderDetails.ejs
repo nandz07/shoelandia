@@ -1,226 +1,254 @@
 <%-include('../partials/adminPartials/adminHeader')-%>
-<% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
-  const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
-  const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day}
-  ${month} ${year} `; return formattedDate } %>
-  <% if(message){%>
-    <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
-      <%= message %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+  <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear(); const
+    month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate(); const
+    hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const formattedDate=`${day} ${month} ${year} `;
+    return formattedDate } %>
+    <% if(message){%>
+      <div class="alert alert-<%= status %> alert-dismissible col-sm-12" role="alert">
+        <%= message %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
 
-    <% } %>
+      <% } %>
+        
+          <!-- Bootstrap Table with Header - Footer -->
+          <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+              <h5 class="mb-0">Order Details</h5>
 
-      <!-- Bootstrap Table with Header - Footer -->
-      <div class="card">
-        <div class="card-header d-flex align-items-center justify-content-between">
-          <h5 class="mb-0">Order Details</h5>
-          
-        </div>
+            </div>
 
-        <div class="table-responsive text-nowrap container table">
-          <% if (orderData !='' ) { %>
-            <table class="table table-border-bottom-1 table-hover" id="categoryTable">
-              <thead>
-                <tr>
-                  <th>order ID</th>
-                  <th>status</th>
-                  <!-- <th>user name</th> -->
-                  <th>paymentType</th>
-                  <th>more</th>
-                  <th>orderd </th>
-                  <th>delivery</th>
-                  <th>payment</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% orderData.forEach((row, index)=> { %>
-                  <tr>
-                    <td>
-                      <%= row._id%>
-                    </td>
-                    <td>
-                      <div class="btn-group">
-                        <% if(row.status=='confirm' ){%>
-                          <button class="btn btn-info btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            <%= row.status %>
-                          </button>
-                          <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="shipping?id=<%= row._id %>">shipping</a></li>
-                            <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
-                          </ul>
-                          <% } else if(row.status=='canceled' ){%>
-                            <button class="btn btn-danger btn-sm " type="button" data-bs-toggle="dropdown"
-                              aria-expanded="false">
-                              <%= row.status %>
-                            </button>
-                          <% } else if(row.status=='shipping' ){%>
-                            <button class="btn btn-warning btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown"
-                              aria-expanded="false">
-                              <%= row.status %>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
-                            </ul>
-                          <% } else if(row.status=='delivered' ){%>
-                            <button class="btn btn-success btn-sm " type="button" data-bs-toggle="dropdown"
-                              aria-expanded="false">
-                              <%= row.status %>
-                            </button>
-                            <% } if(row.status=='pending' ){%>
-                              <button class="btn btn-secondary btn-sm dropdown-toggle " type="button" data-bs-toggle="dropdown"
-                              aria-expanded="false">
-                              <%= row.status %>
-                            </button>
-                            <ul class="dropdown-menu">
-                              <li><a class="dropdown-item" href="confirm?id=<%= row._id %>">confirm</a></li>
-                            </ul>
-                              <% }  %>
-                      </div>
-                    </td>
-                    <td>
-                      <%= row.paymentMethod%>
-                    </td>
-                    <td>
-                      <a href="#" data-bs-toggle="modal" data-bs-target="#exLargeModal<%= index %>"
-                        data-mydata="<%= row.productName %>">more</a>
-                    </td>
-                    <td>
-                      <%= getDate(row.orderDate) %>
-                    </td>
-                    <td>
-                      <%= getDate(row.deliveryDate) %>
-                    </td>
-                    <td>
+            <div class="table-responsive text-nowrap container table">
+              <% if (orderData !='' ) { %>
+                <table class="table table-border-bottom-1 table-hover" id="categoryTable">
+                  <thead>
+                    <tr>
+                      <th>order ID</th>
+                      <th>status</th>
+                      <!-- <th>user name</th> -->
+                      <th>paymentType</th>
+                      <th>more</th>
+                      <th>orderd </th>
+                      <th>delivery</th>
+                      <th>payment</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% orderData.forEach((row, index)=> { %>
+                      <tr>
+                        <td>
+                          <%= row._id%>
+                        </td>
+                        <td>
+                          <div class="btn-group">
+                            <% if(row.status=='confirm' ){%>
+                              <button class="btn btn-info btn-sm dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <%= row.status %>
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="shipping?id=<%= row._id %>">shipping</a></li>
+                                <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
+                              </ul>
+                              <% } else if(row.status=='canceled' ){%>
+                                <button class="btn btn-danger btn-sm " type="button" data-bs-toggle="dropdown"
+                                  aria-expanded="false">
+                                  <%= row.status %>
+                                </button>
+                                <% } else if(row.status=='shipping' ){%>
+                                  <button class="btn btn-warning btn-sm dropdown-toggle " type="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <%= row.status %>
+                                  </button>
+                                  <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="delivered?id=<%= row._id %>">delivered</a></li>
+                                  </ul>
+                                  <% } else if(row.status=='delivered' ){%>
+                                    <button class="btn btn-success btn-sm " type="button" data-bs-toggle="dropdown"
+                                      aria-expanded="false">
+                                      <%= row.status %>
+                                    </button>
+                                    <% }else if(row.status=='pending' ){%>
+                                      <button class="btn btn-secondary btn-sm dropdown-toggle " type="button"
+                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                        <%= row.status %>
+                                      </button>
+                                      <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="confirm?id=<%= row._id %>">confirm</a></li>
+                                      </ul>
+                                      <% }else if(row.status=='returnRequest' ){%>
+                                        <button class="btn btn-secondary btn-sm dropdown-toggle " type="button"
+                                          data-bs-toggle="dropdown" aria-expanded="false">
+                                          <%= row.status %>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                          <li><a class="dropdown-item" onclick="cancelReturn('<%= row._id %>')"
+                                              href="">cancel Return</a></li>
+                                          <li><a class="dropdown-item" onclick="confirmReturn('<%= row._id %>')"
+                                              href="">confirm Return</a></li>
+                                        </ul>
+                                        <% } else if(row.status=='returned' ){%>
+                                          <button class="btn btn-dark btn-sm " type="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <%= row.status %>
+                                          </button>
+                                          <% } %>
+                          </div>
+                        </td>
+                        <td>
+                          <%= row.paymentMethod%>
+                        </td>
+                        <td>
+                          <a href="#" data-bs-toggle="modal" data-bs-target="#exLargeModal<%= index %>"
+                            data-mydata="<%= row.productName %>">more</a>
+                        </td>
+                        <td>
+                          <%= getDate(row.orderDate) %>
+                        </td>
+                        <td>
+                          <%= getDate(row.deliveryDate) %>
+                        </td>
+                        <td>
 
-                      <%= row.paymentStatus%>
-                    </td>
-                  </tr>
-                  <% }); %>
-              </tbody>
-              <tfoot class="table-border-bottom-0">
-                <tr>
-                  <th>order ID</th>
-                  <th>status</th>
-                  <!-- <th>user name</th> -->
-                  <th>paymentType</th>
-                  <th>more</th>
-                  <th>orderd </th>
-                  <th>delivery</th>
-                  <th>payment</th>
-                </tr>
-              </tfoot>
-            </table>
-            <% } else { %>
-              <h1 class="text-center text-secondary mt-5">
-                No More Order found in the database
-              </h1>
-              <% } %>
-        </div>
-        <% if (orderData !='' ) { %>
-          <% orderData.forEach((row,index)=> {%>
-            <!-- Extra Large Modal -->
-            <div class="modal fade" id="exLargeModal<%= index %>" tabindex="-1" aria-hidden="true">
-              <div class="modal-dialog modal-xl" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel4">order details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
+                          <%= row.paymentStatus%>
+                        </td>
+                      </tr>
+                      <% }); %>
                     
-                      <div class="table-responsive">
-                        <table class="table" id="myTable">
-                          <thead>
-                            <tr>
-                              <th scope="col">Product</th>
-                              <th scope="col">Price</th>
-                              <th scope="col">Quantity</th>
-                              <th scope="col">Total</th>
-                              <th scope="col"></th>
-                            </tr>
-                          </thead>
+                  </tbody>
+                  <tfoot class="table-border-bottom-0">
+                    <tr>
+                      <th>order ID</th>
+                      <th>status</th>
+                      <!-- <th>user name</th> -->
+                      <th>paymentType</th>
+                      <th>more</th>
+                      <th>orderd </th>
+                      <th>delivery</th>
+                      <th>payment</th>
+                    </tr>
+                  </tfoot>
+                
+                </table>
+                <% } else { %>
+                  <h1 class="text-center text-secondary mt-5">
+                    No More Order found in the database
+                  </h1>
+                  <% } %>
+            </div>
+            <% if (orderData !='' ) { %>
+              <% orderData.forEach((row,index)=> {%>
+                <!-- Extra Large Modal -->
+                <div class="modal fade" id="exLargeModal<%= index %>" tabindex="-1" aria-hidden="true">
+                  <div class="modal-dialog modal-xl" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel4">order details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
 
-                          <% row.products.forEach((product,index)=> { %>
-                            <tr>
-                              <td>
-                                <div class="media d-flex">
-                                  <div class="m-3">
-                                    <img src="/productImages/<%=product.product_id.image[0] %>" alt="" width="100px">
-                                  </div>
-                                  <div class="media-body mt-5 ml-2">
-                                    <h6 class="m-3">
-                                      <%= product.product_id.productName%>
-                                    </h6>
-                                  </div>
-                                </div>
-                              </td>
-                              <td>
-                                <div class="media-body mt-5 ml-2">
-                                  <h5>₹ <%= product.price%>
-                                  </h5>
-                                </div>
-                              </td>
-                              <td>
-                                <div class="media-body mt-5 ml-2">
-                                  <h5>
-                                    <%= product.quantity%>
-                                  </h5>
-                                </div>
-                              </td>
-                              <td>
-                                <div class="media-body mt-5 ml-2">
-                                  <h5>₹ <%= product.totalPrice%>
-                                  </h5>
-                                </div>
-                              </td>
-                              <td>
+                        <div class="table-responsive">
+                          <table class="table" id="myTable">
+                            <thead>
+                              <tr>
+                                <th scope="col">Product</th>
+                                <th scope="col">Price</th>
+                                <th scope="col">Quantity</th>
+                                <th scope="col">Total</th>
+                                <th scope="col"></th>
+                              </tr>
+                            </thead>
 
-                              </td>
-                            </tr>
-                            <%}); %>
+                            <% row.products.forEach((product,index)=> { %>
                               <tr>
                                 <td>
-                                  <h5>Total Products </h5>
+                                  <div class="media d-flex">
+                                    <div class="m-3">
+                                      <img src="/productImages/<%=product.product_id.image[0] %>" alt="" width="100px">
+                                    </div>
+                                    <div class="media-body mt-5 ml-2">
+                                      <h6 class="m-3">
+                                        <%= product.product_id.productName%>
+                                      </h6>
+                                    </div>
+                                  </div>
                                 </td>
                                 <td>
-                                  <h5 id="totalQuantity">
-                                    <%= row.quantity%>
-                                  </h5>
+                                  <div class="media-body mt-5 ml-2">
+                                    <h5>₹ <%= product.price%>
+                                    </h5>
+                                  </div>
                                 </td>
                                 <td>
-                                  <h5>Subtotal</h5>
+                                  <div class="media-body mt-5 ml-2">
+                                    <h5>
+                                      <%= product.quantity%>
+                                    </h5>
+                                  </div>
                                 </td>
                                 <td>
-                                  <h5 id="subTotalPrice">₹ <%= row.totalPrice%>
-                                  </h5>
+                                  <div class="media-body mt-5 ml-2">
+                                    <h5>₹ <%= product.totalPrice%>
+                                    </h5>
+                                  </div>
+                                </td>
+                                <td>
+
                                 </td>
                               </tr>
-                        </table>
+                              <%}); %>
+                                <tr>
+                                  <td>
+                                    <h5>Total Products </h5>
+                                  </td>
+                                  <td>
+                                    <h5 id="totalQuantity">
+                                      <%= row.quantity%>
+                                    </h5>
+                                  </td>
+                                  <td>
+                                    <h5>Subtotal</h5>
+                                  </td>
+                                  <td>
+                                    <h5 id="subTotalPrice">₹ <%= row.totalPrice%>
+                                    </h5>
+                                  </td>
+                                </tr>
+                          </table>
+
+                        </div>
+                        <div class="card-body">
+                          Ordered by : <%= row.deliveryAddress.userName%> <br>
+                            Delivery Address : <%= row.deliveryAddress.address %>,<%= row.deliveryAddress.city %>,<%=
+                                  row.deliveryAddress.state %>
+                                  <%= row.deliveryAddress.pincode %> <br>
+                                    Contact number: <%= row.deliveryAddress.mobile %> <br>
+                                      <% if(row.paymentMethod=='online' ){%>
+                                        payment ID: <%=row.paymentId %>
+                                          <% } %>
+                        </div>
+                        <div class="card-body">
+                          <h6>Return reason</h6>
+                          <% if(row.returnReson){%>
+                            <p>
+                              <%= row.returnReson %>
+                            </p>
+                            <%} %>
+                        </div>
                       </div>
-                      <div class="card-body">
-                        Ordered by : <%= row.deliveryAddress.userName%> <br>
-                        Delivery Address : <%= row.deliveryAddress.address %>,<%= row.deliveryAddress.city %>,<%= row.deliveryAddress.state %>
-                        <%= row.deliveryAddress.pincode %> <br>
-                        Contact number: <%= row.deliveryAddress.mobile %> <br>
-                        <% if(row.paymentMethod=='online'){%>
-                          payment ID: <%=row.paymentId %>
-                       <% } %>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                          Close
+                        </button>
                       </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
-                      Close
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
-            <% }); %>
-              <% } %>
-      </div>
+                <% }); %>
+                  <% } %>
+          </div>
 
-      </div>
+        
 
-      <%-include('../partials/adminPartials/adminFooter')-%>
+        <%-include('../partials/adminPartials/adminFooter')-%>

@@ -77,6 +77,10 @@ const orderSchema = new mongoose.Schema({
         paymentId:{
             type:String,
         },
+        returnReson:{
+            type:String,
+            default:null
+        }
     });
     
     module.exports = mongoose.model('Order', orderSchema);

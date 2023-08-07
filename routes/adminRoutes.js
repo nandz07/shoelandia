@@ -43,6 +43,9 @@ router.get('/shipping',auth.isLogin, orderController.shippingAdmin);
 router.get('/delivered',auth.isLogin, orderController.deliveryAdmin);
 router.get('/confirm',auth.isLogin, orderController.confirmAdmin);
 
+router.patch('/confirmReturn',auth.isLogin, orderController.confirmReturn);
+router.patch('/cancelReturn',auth.isLogin, orderController.cancelReturn);
+
 router.get('/coupon', auth.isLogin,couponController.couponGet);
 router.get('/addCoupon', auth.isLogin,couponController.addCouponGet);
 
@@ -60,6 +63,8 @@ router.post('/editCategoryPost/:id', categoryController.editCategoryAdminPost);
 router.post('/deleteCategory/:id', categoryController.deleteCategoryAdminGet);
 
 router.post('/addCoupon', auth.isLogin,couponController.addCouponPost);
+
+
 
 router.use((req, res, next) => {
     res.status(404).render('admin/404')
