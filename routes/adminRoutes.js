@@ -45,6 +45,7 @@ router.get('/confirm',auth.isLogin, orderController.confirmAdmin);
 
 router.patch('/confirmReturn',auth.isLogin, orderController.confirmReturn);
 router.patch('/cancelReturn',auth.isLogin, orderController.cancelReturn);
+router.put('/productOfferUpdate',auth.isLogin, productController.productOfferUpdate);
 
 router.get('/coupon', auth.isLogin,couponController.couponGet);
 router.get('/addCoupon', auth.isLogin,couponController.addCouponGet);

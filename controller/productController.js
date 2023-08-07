@@ -137,6 +137,21 @@ const listProductDetailsAdminGet = async (req, res) => {
     }
 }
 
+const productOfferUpdate = async (req, res) => {
+    try {
+        let id = req.query.id
+        let offer = req.body.offer
+        const offerUpdate = await ProductModel.findByIdAndUpdate(id, {
+            offer: offer
+        })
+        if (offerUpdate) {
+            res.status(200).json({ success: true, message: `offer updated as ${offer}`});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     productDetailsAdminGet,
     addProductAdminGet,
@@ -144,5 +159,6 @@ module.exports = {
     editProductDetailsAdminGet,
     editProductDetailsAdminPost,
     unlistProductDetailsAdminGet,
-    listProductDetailsAdminGet
+    listProductDetailsAdminGet,
+    productOfferUpdate
 }

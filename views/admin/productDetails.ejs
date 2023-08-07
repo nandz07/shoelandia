@@ -30,6 +30,7 @@
                 <th>stock</th>
                 <th>status</th>
                 <th>action</th>
+                <th>offer</th>
                 <th>description</th>
                 <th>Created on</th>
                 <th>updated on</th>
@@ -95,6 +96,52 @@
                       class="bx bx-edit-alt me-1"></i> Edit</a>
                   </td>
                   <td>
+                    <div class="btn-group">
+                      <% if(row.offer==0 ){%>
+                        <button class="btn bg-label-success btn-sm dropdown-toggle" type="button"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          <%= row.offer %>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',10)">10</a></li>
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',20)">20</a></li>
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',30)">30</a></li>
+                        </ul>
+                        <% } else if(row.offer==10 ){%>
+                          <button class="btn bg-label-info btn-sm dropdown-toggle" type="button"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          <%= row.offer %>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',0)">0</a></li>
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',20)">20</a></li>
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',30)">30</a></li>
+                        </ul>
+                          <% } else if(row.offer==20 ){%>
+                            <button class="btn bg-label-warning btn-sm dropdown-toggle" type="button"
+                          data-bs-toggle="dropdown" aria-expanded="false">
+                          <%= row.offer %>
+                        </button>
+                        <ul class="dropdown-menu">
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',0)">0</a></li>
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',10)">10</a></li>
+                          <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',30)">30</a></li>
+                        </ul>
+                            <% } else if(row.offer==30 ){%>
+                              <button class="btn bg-label-danger btn-sm dropdown-toggle" type="button"
+                              data-bs-toggle="dropdown" aria-expanded="false">
+                              <%= row.offer %>
+                            </button>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',0)">0</a></li>
+                              <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',10)">10</a></li>
+                              <li><a class="dropdown-item" onclick="productOfferUpdate('<%= row._id %>',20)">20</a></li>
+                            </ul>
+                              <% }%>
+                                
+                    </div>
+                  </td>
+                  <td>
                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalScrollable<%= index %>"
                         data-mydata="<%= row.productName %>">more</a>
                 </td>
@@ -119,6 +166,7 @@
               <th>stock</th>
               <th>status</th>
               <th>action</th>
+              <th>offer</th>
               <th>description</th>
               <th>Created on</th>
               <th>updated on</th>

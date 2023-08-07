@@ -777,10 +777,15 @@ $(document).ready(function () {
         axios.post('/addToWishlistPost?id='+id, { productId: id })
             .then(function (response) {
                 console.log(response);
-                if(response.data.success){
-                    let cartSpan=document.getElementById('cartSpan')
-                    cartSpan.removeAttribute("hidden");
-                    cartSpan.innerHTML=parseInt(cartSpan.innerHTML)+1
+                if(response.data.status=='removed'){
+                    Toastify({
+                        text: response.data.message,
+                        backgroundColor: 'linear-gradient(to right, #fd7e14, #ffc107)',
+                        duration: 2000,
+                        close: true,
+                        gravity: 'top', 
+                        position: 'right', 
+                    }).showToast();
                 }
             })
             .catch(function (error) {

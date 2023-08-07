@@ -18,6 +18,10 @@ const addProductSchema = new mongoose.Schema({
         ref:"Category",
         required:true
     },
+    offer: {
+        type:Number,
+        default:0
+    },
     stockQuantity: {
         type: Number,
         required: true

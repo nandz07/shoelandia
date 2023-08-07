@@ -176,7 +176,6 @@
   
   function confirmReturn(id){
     event.preventDefault()
-    alert(id)
     axios.patch('/admin/confirmReturn?id='+id)
     .then((response)=>{
       $('#categoryTable').load('/admin/OrderDetails #categoryTable',()=>{
@@ -193,10 +192,27 @@
   }
   function cancelReturn(id){
     event.preventDefault()
-    alert(id)
     axios.patch('/admin/cancelReturn?id='+id)
     .then((response)=>{
       $('#categoryTable').load('/admin/OrderDetails #categoryTable',()=>{
+        Toastify({
+            text: response.data.message,
+            backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
+            duration: 1500,
+            close: true,
+            gravity: 'top', // Change this to 'top' to display the toast at the top
+            position: 'right', // Change this to 'left' to display the toast on the left side
+          }).showToast();
+					})
+    })
+  }
+
+  // ----- product offer
+  function productOfferUpdate(id,offer){
+    event.preventDefault()
+    axios.put(`/admin/productOfferUpdate?id=${id}`,{offer:offer})
+    .then((response)=>{
+      $('#categoryTable').load('/admin/productDetails #categoryTable',()=>{
         Toastify({
             text: response.data.message,
             backgroundColor: 'linear-gradient(to right, #00b09b, #96c93d)',
