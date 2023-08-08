@@ -183,10 +183,21 @@
 				</div>
 				<div class="row">
 					<!-- single product -->
+					
 					<% product.forEach((row, index)=> { %>
+						<% function offerPrice(){
+							let price=row.price
+							let offer=row.offer
+							let offerPrice= price-((price/100)*offer)
+							return offerPrice
+						} %>
 					<div class="col-lg-3 col-md-6">
 						<div class="single-product p-2 card shadow">
-							<div>
+							<div class="position-relative">
+								<% if(row.offer>0){%>
+
+									<span >- <%= row.offer %> % offer</span>
+								<%} %>
 								<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
 							</div>
 							
@@ -196,7 +207,12 @@
 									
 								</div>
 								<div class="price">
-									<h6>₹ <%=row.price %></h6>
+									<% if(row.offer >0){%>
+										<h6 class="l-through">₹ <%=row.price %></h6>
+											<h6>₹ <%= offerPrice() %></h6>
+									<%} else{%>
+										<h6>₹ <%=row.price %> %></h6>
+										<% } %>
 								</div>
 								<div class="prd-bottom">
 
@@ -248,9 +264,19 @@
 				<div class="row">
 					<!-- single product -->
 					<% product.forEach((row, index)=> { %>
+						<% function offerPrice(){
+							let price=row.price
+							let offer=row.offer
+							let offerPrice= price-((price/100)*offer)
+							return offerPrice
+						} %>
 						<div class="col-lg-3 col-md-6">
 							<div class="single-product">
-								<div>
+								<div class="position-relative">
+									<% if(row.offer>0){%>
+
+										<span >- <%= row.offer %> % offer</span>
+									<%} %>
 									<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
 								</div>
 								
@@ -260,7 +286,13 @@
 										
 									</div>
 									<div class="price">
-										<h6>₹ <%=row.price %></h6>
+										<% if(row.offer >0){%>
+											<h6 class="l-through">₹ <%=row.price %></h6>
+											<h6>₹ <%= offerPrice() %></h6>
+										<%} else{%>
+											<h6>₹ <%=row.price %></h6>
+											
+											<% } %>
 									</div>
 									<div class="prd-bottom">
 	

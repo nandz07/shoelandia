@@ -478,7 +478,7 @@ const applyCouponPost = async (req, res) => {
                                 let updatedTotalPrice = totalPrice - discountAmount
                                 res.status(200).json({ success: true, message: `Coupon Valid and got ${discountAmount} discount`, updatedTotalPrice, discountAmount });
                             } else if (couponData.discountType == "percentage") {
-                                let discountAmount = ((totalPrice / 100) * couponData.discountAmount)
+                                let discountAmount =Math.ceil( ((totalPrice / 100) * couponData.discountAmount))
                                 let updatedTotalPrice = totalPrice - discountAmount
                                 if (updatedTotalPrice < couponData.maxDiscountAmount) {
                                     res.status(200).json({ success: true, message: `Coupon Valid and got ${discountAmount} discount`, updatedTotalPrice, discountAmount });

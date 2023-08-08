@@ -1,5 +1,13 @@
 const CategoryModel = require('../models/categoryModel');
 const ProductModel = require('../models/productModel');
+const CartModel = require('../models/cartModel');
+
+function offerPriceF(oPrice,oOffer){
+    let price=oPrice
+    let offer=oOffer
+    let offerPrice= price-((price/100)*offer)
+    return offerPrice
+}
 
 const productDetailsAdminGet = async (req, res) => {
     try {
@@ -143,7 +151,13 @@ const productOfferUpdate = async (req, res) => {
         let offer = req.body.offer
         const offerUpdate = await ProductModel.findByIdAndUpdate(id, {
             offer: offer
-        })
+        })  
+        let productData=await ProductModel.findOne({_id:id})
+        let offerPrice=offerPriceF(productData.price,productData.offer)
+        await CartModel.updateMany({"products.product_id": id }, { $set: {  "products.$.price": offerPrice}})
+        let cart=await CartModel.find({"products.product_id":id})
+        console.log(cart.products);
+        
         if (offerUpdate) {
             res.status(200).json({ success: true, message: `offer updated as ${offer}`});
         }

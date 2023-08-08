@@ -70,7 +70,7 @@ input[type="radio"]:checked {
 					<div class="common-filter">
 						
 						<div class="price-range-area">
-							<div id="price-range"></div>
+							<!-- <div id="price-range"></div> -->
 							<div class="value-wrapper d-flex">
 								<ul class="price">
                                     <li class="main-nav-list child mt-1">
@@ -115,6 +115,12 @@ input[type="radio"]:checked {
 						<!-- single product -->
                        
 						<% product.forEach((row, index)=> { %>
+                            <% function offerPrice(){
+                                let price=row.price
+                                let offer=row.offer
+                                let offerPrice= price-((price/100)*offer)
+                                return offerPrice
+                            } %>
                             <div class="col-lg-4 filterDiv <%= row.category.categoryName %>">
                                 <div class="single-product p-2 card shadow">
                                     <div>
@@ -126,8 +132,14 @@ input[type="radio"]:checked {
                                             <h6><%=row.productName %></h6>
                                             
                                         </div>
-                                        <div class="price">
-                                            <h6>₹ <%=row.price %></h6>
+                                        <div class="price d-flex align-items-center">
+                                            <% if(row.offer >0){%>
+                                                <p class="l-through">₹ <%=row.price %></p>
+                                                <h6 class="ml-3">₹ <%= offerPrice() %></h6>
+                                            <%} else{%>
+                                                <h6>₹ <%=row.price %></h6>
+                                                
+                                                <% } %>
                                         </div>
                                         <div class="prd-bottom">
         
