@@ -196,7 +196,7 @@
 							<div class="position-relative">
 								<% if(row.offer>0){%>
 
-									<span >- <%= row.offer %> % offer</span>
+									<span class="position-absolute text-danger" style="z-index:9999;">- <%= row.offer %> % offer</span>
 								<%} %>
 								<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
 							</div>
@@ -271,11 +271,11 @@
 							return offerPrice
 						} %>
 						<div class="col-lg-3 col-md-6">
-							<div class="single-product">
+							<div class="single-product p-2 card shadow">
 								<div class="position-relative">
 									<% if(row.offer>0){%>
-
-										<span >- <%= row.offer %> % offer</span>
+	
+										<span class="position-absolute text-danger" style="z-index:9999;">- <%= row.offer %> % offer</span>
 									<%} %>
 									<img class="img-fluid" src="/productImages/<%= row.image[0] %>" alt="" height="100px">
 								</div>
@@ -288,10 +288,9 @@
 									<div class="price">
 										<% if(row.offer >0){%>
 											<h6 class="l-through">₹ <%=row.price %></h6>
-											<h6>₹ <%= offerPrice() %></h6>
+												<h6>₹ <%= offerPrice() %></h6>
 										<%} else{%>
-											<h6>₹ <%=row.price %></h6>
-											
+											<h6>₹ <%=row.price %> %></h6>
 											<% } %>
 									</div>
 									<div class="prd-bottom">
