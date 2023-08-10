@@ -11,31 +11,31 @@
                                 <li class="mt-5 d-flex">
                                     <h6><i class="fa fa-user text-danger"></i> Name</h6>
                                     <p class="ml-5">
-                                        <%=user.name%>
+                                        <%=userDb.name%>
                                     </p>
 
                                 </li>
                                 <li class="mt-5 d-flex">
                                     <h6><i class="fa fa-phone text-danger"></i> Phone</h6>
                                     <p class="ml-5"><span>
-                                            <%=user.mobile%>
+                                            <%=userDb.mobile%>
                                         </span></p>
                                 </li>
                                 <li class="mt-5 d-flex">
                                     <h6><i class="fa fa-envelope text-danger"></i> Email</h6>
                                     <p class="ml-5">
-                                        <%=user.email%>
+                                        <%=userDb.email%>
                                     </p>
                                 </li>
                                 <li class="mt-5 d-flex">
                                     <h6><i class="fa fa-wallet text-danger"></i> Wallet</h6>
                                     <p class="ml-5">
-                                        <%=user.wallet%>
+                                        <%=userDb.wallet%>
                                     </p>
                                 </li>
                                 <li class="mt-5 d-flex" onclick="myFunction()">
                                     <h6 ><i class="fas fa-share text-danger"></i>Click to Share</h6>
-                                    <input class="border-0 ml-4" type="text" value="http://localhost:3000/userSignUp?referel=<%=user._id%>" id="myInput" disabled>
+                                    <input class="border-0 ml-4" type="text" value="http://localhost:3000/userSignUp?referel=<%=userDb._id%>" id="myInput" disabled>
                                 </li>
                                 <li class="mt-5 d-flex">
                                     <button type="button" class="btn bg-white mt-5 ml-3 text-danger border-warning"
@@ -134,21 +134,21 @@
                                                 <div class="form-group">
                                                     <label for="name">Name</label>
                                                     <input type="text" class="form-control" id="name" placeholder=""
-                                                        name="name" value="<%= user.name %>" >
+                                                        name="name" value="<%= userDb.name %>" >
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="phone">Phone</label>
                                                     <input type="text" class="form-control" id="phone" name="phone"
-                                                        value="<%= user.mobile %>">
+                                                        value="<%= userDb.mobile %>">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="email">email</label>
                                                     <input type="text" class="form-control" id="email" placeholder=""
-                                                        name="email" value="<%= user.email %>" >
+                                                        name="email" value="<%= userDb.email %>" >
                                                 </div>
                                             </div>
                                             <div class="col-md-12">
@@ -291,21 +291,21 @@
                                                 <div class="form-group">
                                                     <label for="firstname">Name</label>
                                                     <input type="text" class="form-control" placeholder=""
-                                                        value="<%=user.name%>" name="name" />
+                                                        value="<%=userDb.name%>" name="name" />
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="phone">Phone</label>
                                                     <input type="text" class="form-control" placeholder=""
-                                                        value="<%=user.number%>" name="phone" required />
+                                                        value="<%=userDb.number%>" name="phone" required />
                                                 </div>
                                             </div>
                                             <div class="col-12">
                                                 <div class="form-group">
                                                     <label for="firstname">Email</label>
                                                     <input type="email" class="form-control" placeholder=""
-                                                        value="<%=user.email%>" name="email" required />
+                                                        value="<%=userDb.email%>" name="email" required />
                                                 </div>
                                             </div>
                                         </div>

@@ -130,7 +130,7 @@ const userCartGet = async (req, res) => {
                             const carts = await CartModel.findOne({ user_id: userId });
                             const subTotalPrice = carts ? carts.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
                             const totalQuantity = carts ? carts.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
-                            res.render('users/cart', { cartData, user, subTotalPrice, totalQuantity, count: req.cartCount });
+                            res.render('users/cart', { cartData, user:req.session.user, subTotalPrice, totalQuantity, count: req.cartCount });
                         }
 
                     })
@@ -138,7 +138,7 @@ const userCartGet = async (req, res) => {
 
             }
             else {
-                res.render('users/cart', { cartData: '', user, subTotalPrice: '', totalQuantity: '', count: req.cartCount });
+                res.render('users/cart', { cartData: '', user:req.session.user, subTotalPrice: '', totalQuantity: '', count: req.cartCount });
             }
         } else {
             const oldCartData = await CartModel.findOne({ session_id: req.sessionID }).populate('products.product_id');
@@ -160,11 +160,11 @@ const userCartGet = async (req, res) => {
                             const carts = await CartModel.findOne({ session_id: req.sessionID });
                             const subTotalPrice = carts ? carts.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
                             const totalQuantity = carts ? carts.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
-                            res.render('users/cart', { cartData, user, subTotalPrice, totalQuantity, count: req.cartCount });
+                            res.render('users/cart', { cartData, user:req.session.user, subTotalPrice, totalQuantity, count: req.cartCount });
                         }
                     })
             } else {
-                res.render('users/cart', { cartData: '', user, subTotalPrice: '', totalQuantity: '', count: req.cartCount });
+                res.render('users/cart', { cartData: '', user:req.session.user, subTotalPrice: '', totalQuantity: '', count: req.cartCount });
             }
         }
 

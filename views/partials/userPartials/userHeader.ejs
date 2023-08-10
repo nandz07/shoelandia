@@ -107,10 +107,10 @@ integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeV
 							</span></span></a></li>
 
 								<% if(!user) {%>
-									<li class="nav-item"><a class="nav-link" href="/login"><span class="lnr lnr-user"></span>login</a></li>
+									<li class="nav-item"><a class="nav-link" href="/login"><span class="lnr lnr-user mr-1"></span>login</a></li>
 								<% }else{%>
-									<li class="nav-item submenu dropdown"><span class="lnr lnr-user"></span>
-										<a class="nav-link" href="/logout">Logout</a>
+									<li class="nav-item submenu dropdown"><span class="lnr lnr-user mr-1"></span>
+										<a class="nav-link"><%= user %></a>
 										<ul class="dropdown-menu">
 											<li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
 											<li class="nav-item"><a class="nav-link" href="/userProfile">User Profile</a></li>

@@ -301,7 +301,7 @@ const userProfile = async (req, res) => {
     try {
         let address = await addressModel.findOne({ userId: req.session.userId })
         let userDb = await UserModel.findOne({ _id: req.session.userId })
-        res.render('users/userProfile', { message: '', address: address, user: userDb, count: req.cartCount })
+        res.render('users/userProfile', { message: '', address: address, user:req.session.user, userDb, count: req.cartCount })
 
     } catch (error) {
         console.log(error);
