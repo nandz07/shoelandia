@@ -51,9 +51,10 @@ router.get('/coupon', auth.isLogin,couponController.couponGet);
 router.get('/addCoupon', auth.isLogin,couponController.addCouponGet);
 
 
+router.get('/sales',auth.isLogin,orderController.getSalesReport);
 
 
-// post
+
 router.post('/adminLoginPost', adminController.adminLoginPost);
 
 router.post('/addProduct',upload.array('image',10), productController.addProductAdminPost);

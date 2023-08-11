@@ -18,7 +18,7 @@
                             </div>
                           </div>
                           <span class="d-block mb-1">Total Revenue</span>
-                          <h3 class="card-title text-nowrap mb-2">₹ <%= todayIncome %></h3>
+                          <h3 class="card-title text-nowrap mb-2">₹ <%= totalRevenue%></h3>
                           <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +14.82%</small>
                         </div>
                       </div>
@@ -150,7 +150,7 @@
                               <h6 class="mb-0">Today's Income</h6>
                             </div>
                             <div class="user-progress d-flex align-items-center gap-1">
-                              <h6 class="mb-0"><%= totalRevenue %></h6>
+                              <h6 class="mb-0"><%= todayIncome %></h6>
                               <!-- <span class="text-muted">USD</span> -->
                             </div>
                           </div>
@@ -182,15 +182,15 @@
                 const myChart = new Chart(ctx, {
                     type: 'pie',
                     data: {
-                        labels: ["Online", "COD"],
+                        labels: ["Online", "COD","Wallet"],
                         datasets: [{
                             label: 'Amount',
-                            data: ['<%= razorPayAmount %>','<%= codPayAmount %>',],
+                            data: ['<%= razorPayAmount %>','<%= codPayAmount %>','<%= walletPayAmount %>'],
                             // backgroundColor: ["#0074D9", "#FF4136", "#2ECC40",
                             //     "#FF851B", "#7FDBFF", "#B10DC9", "#FFDC00",
                             //     "#001f3f", "#39CCCC", "#01FF70", "#85144b",
                             //     "#F012BE", "#3D9970", "#111111", "#AAAAAA"]
-                            backgroundColor: ["violet", "lightgreen"]
+                            backgroundColor: ["violet", "lightgreen","#F4A460"]
                         }]
                     },
                 });

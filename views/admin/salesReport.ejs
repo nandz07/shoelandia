@@ -1,0 +1,227 @@
+
+<%-include('../partials/adminPartials/adminHeader')-%>
+
+
+
+<div class="container-fluid py-4">
+  
+  <div class="row mt-5">
+    
+      <div class="row mt-3">
+
+        
+          <div class="row m-0">
+
+            <!-- <div class="col-md-4">
+              <div class="form-group row">
+                <div class="col-sm-12">
+                  <form action="/admin/sales">
+                    <select name="sortData" class="form-control">
+                      <option value="date">Date</option>
+                      <option value="totalAmount">Amount</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group row">
+                <div class="col-sm-12">
+                    <select name="sortOrder" class="form-control">
+                      <option >Ascending</option>
+                      <option >Descending</option>
+                    </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="sort form-group col-sm-12 col-md-4" >
+              <button class="btn btn-primary" >sort</button>
+            </div>
+          </form>
+
+          <div class="row d-flex">
+            <div>
+            <form action="/admin/sales" id="sales-report-form">
+              <label for="from">From</label>
+              <input type="date" value="<%= from %>" name="from" id="from">
+              <label class="ms-3" for="to">To</label>
+              <input type="date" value="<%= from %>" name="to" id="to">
+              <button class="btn btn-primary ms-3" type="submit">filter</button>
+            </form>
+            </div>
+            <div>
+              <button type="button" onclick="excelDownload()" class="btn btn-success" >Excel</button>
+              <button type="button" onclick="printDiv('Print')" class="btn btn-success" >Print</button>
+            </div>
+            
+          </div> -->
+
+
+
+          </div>
+        
+      </div>
+    
+  </div>
+
+
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card my-4">
+        <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+          <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">Sales Report</h6>
+          </div>
+        </div>
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive p-0" id="Print">
+            <table id="sales-table" class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">OrderId</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Amount</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Order Status</th>
+                </tr>
+              </thead>
+              <tbody>
+              
+                  <% 
+                    if(orders.length>0){
+                      for(let i=0;i<orders.length;i++){
+                        %>
+                        <tr>
+                  <td>
+                    <% if (orders[i] && orders[i].orderDate) { %>
+                    <p class="text-xs font-weight-bold mb-0"><%= orders[i].orderDate.toISOString().substr(0,10) %></p>
+                    <% } else { %>
+                    <p class="text-xs font-weight-bold mb-0">N/A</p>
+                    <% } %>
+                  </td>
+                  <td class="text-center">
+                    <p class="text-xs font-weight-bold mb-0"><%= orders[i]._id %></p>
+                  </td>
+                  <td class="text-center">
+                    <p class="text-xs font-weight-bold mb-0"><%= orders[i].paymentMethod %></p>
+                  </td>
+                  <td class="text-center">
+                    <p class="text-xs font-weight-bold mb-0"><%= orders[i].totalPrice %></p>
+                  </td>
+                  <td class="text-center">
+                    <% if(orders[i].status){ %> <%= orders[i].status %> <% }else{ %> Pending <% } %> 
+                  </td>
+                        </tr>
+                        <%
+                      }
+                    }else{
+                      %>
+                      <tr>
+                        <td>
+                    <p class="font-weight-bold mb-0">Orders not found</p>
+                  </td>
+                      </tr>
+                      <%
+                    }  
+                  %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        
+
+      </div>
+    </div>
+
+    <div class="text-center">
+      <div >
+          <% if( currentPage !== 1){ %>
+            <a href="/admin/sales?page=1&sortData=<%= sortData %>&sortOrder=<%= sortOrder %>" class="btn btn-outline-secondary 1">1</a>
+          <% } %>
+          <% if(currentPage > 2){ %>
+            <a href="/admin/sales?page=<%= prevPage %>&sortData=<%= sortData %>&sortOrder=<%= sortOrder %>" class="btn btn-outline-secondary 2"><%= prevPage %></a>
+          <% } %>
+          <a href="/admin/sales?page=<%= currentPage %>&sortData=<%= sortData %>&sortOrder=<%= sortOrder %>" class="btn btn-outline-secondary 3 active"><%= currentPage %></a>
+          <% if(hasNextPage){ %>
+            <a href="/admin/sales?page=<%= nextPage %>&sortData=<%= sortData %>&sortOrder=<%= sortOrder %>" class="btn btn-outline-secondary 4"><%= nextPage %></a>
+          <% } %>
+          <% if(nextPage !== lastPage && currentPage !== lastPage){ %>
+            <a href="/admin/sales?page=<%= lastPage %>&sortData=<%= sortData %>&sortOrder=<%= sortOrder %>" class="btn btn-outline-secondary 5"><%= lastPage %></a>
+          <% } %>
+        </div>
+    </div>
+
+
+  </div>
+</div>
+
+<script>
+
+  function excelDownload(){
+    const orders = document.querySelectorAll('.table tbody tr');
+
+        const orderData = [];
+        orders.forEach(order => {
+            const date = order.cells[0].innerText;
+            const orderId = order.cells[1].innerText;
+            const payment = order.cells[2].innerText;
+            const amount = order.cells[3].innerText;
+            const status = order.cells[4].innerText;
+
+            orderData.push([date,orderId, payment, amount, status]);
+        });
+
+        const header = ['Date','Order #ID', 'Payment', 'Amount', 'Status',];
+        const data = [header, ...orderData];
+
+        const ws = XLSX.utils.aoa_to_sheet(data);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
+
+        // Generating filename based on the current date and time
+        const filename = 'Sales_Report_' + new Date().toISOString().slice(0, 19).replace(/:/g, '-') + '.xlsx';
+
+        // Convert the workbook to a binary Excel file and trigger the download
+        XLSX.writeFile(wb, filename);
+  }
+
+  const dateForm = document.getElementById('sales-report-form');
+
+  dateForm.addEventListener('submit', function(event){
+    event.preventDefault();
+    const now = new Date()
+    const from = document.getElementById('from').value;
+    const to = document.getElementById('to').value;
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+    if(fromDate > now){
+      Swal.fire('warning','From date cannot be greater than Today','warning');
+    }
+    if(toDate > now){
+      Swal.fire('warning','To date cannot be greater than Today','warning');
+    }
+    if(fromDate > toDate){
+      Swal.fire('Warning', 'From date cannot be greater than To date','warning');
+    }
+
+  })
+
+  function printDiv(divName){
+    const printContents = document.getElementById(divName).innerHTML;
+    const originalContents = document.body.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    document.body.innerHTML = originalContents;
+    return;
+  }
+
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+
+
+
+<%- include('../partials/adminPartials/adminFooter.ejs') %>

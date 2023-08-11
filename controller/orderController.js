@@ -508,6 +508,64 @@ const applyCouponPost = async (req, res) => {
         console.log(error);
     }
 }
+
+ // --------- sales -------------------
+ const getSalesReport = async(req,res,next)=>{
+    try {
+      const {from,to,sortData,sortOrder} = req.query;
+      let page = Number(req.query.page);
+      if(isNaN(page) || page < 1){
+        page = 1;
+      }
+      const conditions = {status:"delivered"}
+      if(from && to){
+        conditions.orderDate = {
+          $gte:from,
+          $lte:to
+        }
+      } else if(from){
+        conditions.orderDate = {
+          $gte:from
+        }
+      }else if(to){
+        conditions.orderDate = {
+          $lte:to
+        }
+      }
+      const sort ={}
+      if(sortData){
+        if(sortOrder === "Ascending"){
+          sort[sortData] = 1;
+        }else{
+          sort[sortData] = -1;
+        }
+      }else{
+        sort['date'] = -1;
+      }
+      const orderCount = await OrderModel.count();
+      console.log(orderCount);
+      const limit = orderCount;
+      const orders = await OrderModel.find(conditions).sort(sort).skip((page - 1) * 10).limit(10);
+      console.log(orders);
+      res.render('admin/salesReport',{
+        orders,
+        from,
+        to,
+        currentPage :page,
+        hasNextPage:page * 10 < orderCount,
+        hasPrevPage : page > 1,
+        nextPage:page+1,
+        prevPage:page-1,
+        lastPage:Math.ceil(orderCount/10),
+        sortData,
+        sortOrder
+      })
+  
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  }
 module.exports = {
     checkoutLoad,
     addAdress,
@@ -526,5 +584,6 @@ module.exports = {
     confirmAdmin,
     returnOrder,
     confirmReturn,
-    cancelReturn
+    cancelReturn,
+    getSalesReport
 }

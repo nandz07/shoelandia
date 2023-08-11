@@ -33,7 +33,6 @@ const dashboardAdminGet = async (req, res) => {
             dashboardHelper.categorySales()
         ]
         const results = await Promise.all(promises);
-        console.log(results);
 
         const revenueCurrentMonth = results[0]
         const revenuePreviousMonth = results[1]
@@ -48,16 +47,21 @@ const dashboardAdminGet = async (req, res) => {
         const dailyChart = results[10]
         const categorySales = results[11]
        
-        const razorPayAmount = paymentMethodAmount && paymentMethodAmount.length > 0 ? paymentMethodAmount.find(payment => payment._id === 'wallet' || payment._id === 'online')?.amount.toString() : 0;
-        // const razorPayAmount = paymentMethodAmount && paymentMethodAmount.length > 0 ? paymentMethodAmount.find(payment => payment._id === 'online')?.amount.toString() : 0;
+        // const onlinePayment = paymentMethodAmount.find(payment => payment._id === 'online');
+        // const walletPayment = paymentMethodAmount.find(payment => payment._id === 'wallet');
+        // const onlineAmount = onlinePayment ? onlinePayment.amount : 0;
+        // const walletAmount = walletPayment ? walletPayment.amount : 0;
+
+        // const combinedAmount = onlineAmount + walletAmount;
+        // const razorPayAmount = combinedAmount.toString();
+        const razorPayAmount = paymentMethodAmount && paymentMethodAmount.length > 0 ? paymentMethodAmount.find(payment => payment._id === 'online')?.amount.toString() : 0;
+        const walletPayAmount = paymentMethodAmount && paymentMethodAmount.length > 0 ? paymentMethodAmount.find(payment => payment._id === 'wallet')?.amount.toString() : 0;
         const codPayAmount = paymentMethodAmount && paymentMethodAmount.length > 0 ? paymentMethodAmount.find(payment => payment._id === 'COD')?.amount.toString() : 0;
         
     
         const monthlyGrowth = revenuePreviousMonth === 0 ? 100 : (((revenueCurrentMonth - revenuePreviousMonth)/revenuePreviousMonth)*100).toFixed(1);
     
         const dailyGrowth = (((todayIncome - yesterdayIncome)/yesterdayIncome)*100).toFixed(1);
-        console.log(monthlyGrowth);
-        console.log(dailyGrowth);
         
         res.render('admin/dashBoard', { 
             admin: req.session.admin ,
@@ -66,7 +70,7 @@ const dashboardAdminGet = async (req, res) => {
             totalRevenue,
             revenueCurrentMonth,
             monthlyGrowth,
-            // walletPayAmount,
+            walletPayAmount,
             razorPayAmount,
             codPayAmount,
             userCount,
