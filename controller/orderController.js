@@ -11,7 +11,8 @@ const ejs = require('ejs');
 const path = require('path');
 const { log } = require('console');
 const orderModel = require('../models/orderModel');
-const instance = require('../config/paymentGateway')
+const instance = require('../config/paymentGateway');
+const couponModel = require('../models/couponModel');
 
 const RAZORKEY = process.env.RAZORKEY
 
@@ -27,6 +28,7 @@ const checkoutLoad = async (req, res) => {
                 const subTotalPrice = carts ? carts.products.reduce((acc, cur) => acc + cur.totalPrice, 0) : 0;
                 const totalQuantity = carts ? carts.products.reduce((acc, cur) => acc + cur.quantity, 0) : 0;
                 const addressDb = await AddressModel.findOne({ userId: userId }).populate('userId')
+                const couponData=await CouponModel.find({})
                 // console.log(addressDb.addresses);
                 if (addressDb) {
                     res.render('users/checkOut', {
@@ -36,7 +38,8 @@ const checkoutLoad = async (req, res) => {
                         subTotalPrice,
                         totalQuantity,
                         addressDb,
-                        userData
+                        userData,
+                        couponData
                     })
                 } else {
                     res.render('users/checkOut_1', {

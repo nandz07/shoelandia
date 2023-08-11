@@ -41,7 +41,7 @@ input[type="checkbox"]:checked {
         <div class="container">
             <div class="cupon_area">
                 <div class="check_title">
-                    <h2>Have a coupon? </h2>
+                    <h2 data-toggle="modal" data-target="#myModal">Have a coupon? or click here</h2>
                 </div>
                 <div class="mb-3">
 
@@ -140,4 +140,67 @@ input[type="checkbox"]:checked {
     </section>
     <!--================End Checkout Area =================-->
 </div>
+<!-- modal starts -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+      
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Your Coupons</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        
+        <!-- Modal Body -->
+        <div class="modal-body">
+            <% function getDate(dbDate) { const dateObject=new Date(dbDate); const year=dateObject.getFullYear();
+                const month=dateObject.toLocaleString('en-us', { month: 'short' }); const day=dateObject.getDate();
+                const hours=dateObject.getHours(); const minutes=dateObject.getMinutes(); const
+                formattedDate=`${day} ${month} ${year} `; return formattedDate } %>
+            <table class="table" >
+                <thead> 
+                   <tr>
+                        <th >Code</th>
+                        <th >Discount</th>
+                        <th >ExpDate</th>
+                        <th >&nbsp;</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(couponData){ %>
+                        <%couponData.forEach(function(couponData){%>
+                            <a href="#" class="table-link" data-toggle="modal" data-target="#couponDetailsModal">
+                        <tr>
+                            <td><%=couponData.code%></td>
+                            <% if(couponData.discountType=="fixedAmount"){%>
+                                <td><%=couponData.discountAmount%> % discount</td>
+                           <% } else{%>
+                            <td>₹<%=couponData.discountAmount%> discount</td>
+                            <% } %>
+                            <td><%=getDate(couponData.expiryDate)%></td>
+                            <td >
+                                <button id="applyButton" class="btn btn-success text-white font-weight-bold apply-coupon" data-dismiss="modal" data-coupon="<%= couponData.code %>" onclick="addCoupon('<%= couponData.code %>')">
+                                    Apply
+                                </button>
+                              </td>
+                        </tr>
+                    </a>
+                            <%})%>
+                            <%}else{%>
+                                <div><H3>Empty Coupon</H3></div>
+                            <%}%>
+                        </tbody>
+                    </table>
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+        </div>
+        
+      </div>
+    </div>
+  </div>
+  
+<!-- modal ends -->
 <%-include('../partials/userPartials/userFooter')-%>
