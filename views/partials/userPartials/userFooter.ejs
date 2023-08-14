@@ -475,7 +475,7 @@ $(document).ready(function () {
         }
 
         function verifyPayment(payment, order) {
-            alert('verify')
+            // alert('verify')
             $.ajax({
                 url: '/verify-payment', // replace with your server endpoint
                 method: 'post',
@@ -484,7 +484,6 @@ $(document).ready(function () {
                     order,
                 },
                 success: function (response) {
-                    alert(response.success)
                     if (response.success) {
                         let product=''
                     response.orderData.products.forEach(element => {
@@ -864,7 +863,6 @@ $(document).ready(function () {
             });
     }
     function editAdress(id,i){
-        alert(id)
         event.preventDefault()
         
         // const form = document.getElementById('addressForm');

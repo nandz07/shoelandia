@@ -278,6 +278,7 @@ const checkoutPost = async (req, res) => {
                             res.status(200).json({ success: true, redirectUrl: '/myOrder', orderData, addressData: exist[0] });
 
                         } else if (selectedPayment == 'online') {
+
                             const totalAmount = orderSave.totalPrice;
                             var options = {
                                 amount: totalAmount * 100,
@@ -307,6 +308,9 @@ const checkoutPost = async (req, res) => {
 
 const verifyPayment = async (req, res) => {
     try {
+        const cartData = await CartModel.findOne({ user_id: req.session.userId }).populate('products.product_id');
+        const cartOrders = cartData.products;
+        console.log('ver');
         const totalPrice = req.body.amount2;
         const total = req.body.amount;
         const wal = totalPrice - total;
@@ -317,7 +321,26 @@ const verifyPayment = async (req, res) => {
         hmac.update(details['payment[razorpay_order_id]'] + '|' + details['payment[razorpay_payment_id]']);
         hmac = hmac.digest('hex');
         if (hmac == details['payment[razorpay_signature]']) {
-            await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { status: "confirm", paymentStatus: "success" } });
+            await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { status: "confirm", paymentStatus: "success" } }).then(async() => {
+        console.log('then');
+
+                for (let i = 0; i < cartOrders.length; i++) {
+                    const productId = cartOrders[i].product_id;
+                    const productQty = cartOrders[i].quantity;
+                    const productActQty = await ProductModel.findOne({ _id: productId });
+
+                    if (productActQty.stockQuantity >= 1 || productActQty.status) {
+                        const updateQty = productActQty.stockQuantity - productQty
+                        await ProductModel.updateOne({ _id: productId }, { $set: { stockQuantity: updateQty } }).then(p => { }).then(async () => {
+                            if (updateQty === 0) {
+                                await ProductModel.updateOne({ _id: productId }, { $set: { status: false } })
+                            } else {
+                                await ProductModel.updateOne({ _id: productId }, { $set: { status: true } })
+                            }
+                        })
+                    }
+                }
+            })  
             await OrderModel.findByIdAndUpdate({ _id: details['order[receipt]'] }, { $set: { paymentId: details['payment[razorpay_order_id]'] } });
             await CartModel.deleteOne({ userName: req.session.user_id });
             const orderData = await OrderModel.findOne({ user_id: req.session.userId }).sort({ orderDate: -1 }).populate('products.product_id');
