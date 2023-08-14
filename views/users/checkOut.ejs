@@ -174,9 +174,9 @@ input[type="checkbox"]:checked {
                         <tr>
                             <td><%=couponData.code%></td>
                             <% if(couponData.discountType=="fixedAmount"){%>
-                                <td><%=couponData.discountAmount%> % discount</td>
+                                <td>₹ <%=couponData.discountAmount%> discount</td>
                            <% } else{%>
-                            <td>₹<%=couponData.discountAmount%> discount</td>
+                            <td><%=couponData.discountAmount%> % discount</td>
                             <% } %>
                             <td><%=getDate(couponData.expiryDate)%></td>
                             <td >
