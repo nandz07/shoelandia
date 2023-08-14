@@ -25,7 +25,7 @@ const sendEmailChangePassword = async (userId, email) => {
             from: 'nandakumart07@gmail.com',
             to: email,
             subject: 'Change password',
-            html: `please click here to change password http://localhost:3000/changePassword?id=${userId}`
+            html: `please click here to change password https://www.shoelandia.shop/changePassword?id=${userId}`
         }
         transporter.sendMail(options, function (error, info) {
             if (error) {
@@ -56,6 +56,7 @@ function generateOTP() {
 let otp
 const creatOtp = async (name, email) => {
     otp = generateOTP()
+    console.log(email);
     const transporter = nodemailer.createTransport({
         host: 'smtp.gmail.com',
         port: 587,
@@ -70,15 +71,9 @@ const creatOtp = async (name, email) => {
         from: 'nandakumart07@gmail.com',
         to: email,
         subject: 'For email verification',
-        html: `Dear <strong>${name}</strong>,<br><br>
-        Thank you for choosing ! To complete your registration/account setup, we require you to verify your email address using the provided OTP.<br><br>
-        Please find below your One-Time Password (OTP) and enter it on the verification page:http://localhost:3000/userSignupPost<br><br>
+        html: `
         OTP: <h3>${otp}</h3><br><br>
-        Please note that this OTP is only valid for a limited time period and can only be used once. If you haven't initiated this request, please ignore this email.<br><br>
-        If you have any questions or need assistance, please don't hesitate to reach out to our support team at nandakumart07@gmail.com.<br><br>
-        Thank you for using <h3>S H O E L A N D I A !</h3><br><br>
-        Best regards,<br>
-        <strong>Nandakumar T (CEO)</strong>
+        
         `
     }
     transporter.sendMail(options, function (error, info) {

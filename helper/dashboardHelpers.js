@@ -29,9 +29,10 @@ const previousMonthRevenue = async(previousMonthStratDate,previousMonthEndDate)=
   }
   const todayIncome = async(today, now) =>{
     const todayOrders = await OrderModel.aggregate([
-      {$match:{orderDate:{$gte:today,$lt:now}}},
-      {$unwind:"$products"},
-      {$group:{_id:null,todayIncome:{$sum:{$multiply:[{$toDouble:"$products.quantity"},{$toDouble:"$products.price"}]}}}},
+      {$match:{orderDate:{$gte:today,$lt:now},status:{$eq:"delivered"}}},
+      // {$unwind:"$products"},
+      // {$group:{_id:null,todayIncome:{$sum:{$multiply:[{$toDouble:"$products.quantity"},{$toDouble:"$products.price"}]}}}},
+      {$group:{_id:null,todayIncome:{$sum:"$totalPrice"}}},
       {$project:{todayIncome:1}}
     ]);
     const todayIncome = todayOrders.length > 0 ? todayOrders[0].todayIncome : 0;
